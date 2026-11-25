@@ -4,22 +4,62 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -o pipefail {0}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: mkdir -p ci-logs
+
+      # Every check runs even when an earlier one fails, so one CI run
+      # surfaces every lesson at once instead of one per push.
       - name: Typecheck
-        run: pnpm typecheck
+        id: typecheck
+        run: pnpm typecheck 2>&1 | tee ci-logs/typecheck.log
       - name: Validate curriculum packs
-        run: pnpm curriculum:validate
+        id: curriculum
+        if: ${{ !cancelled() }}
+        run: pnpm curriculum:validate 2>&1 | tee ci-logs/curriculum.log
       - name: Rubric regression tests
-        run: pnpm test:rubric
+        id: rubric
+        if: ${{ !cancelled() }}
+        run: pnpm test:rubric 2>&1 | tee ci-logs/rubric.log
       - name: Build
-        run: pnpm build
+        id: build
+        if: ${{ !cancelled() }}
+        run: pnpm build 2>&1 | tee ci-logs/build.log
+
+      # BMAD learnings: turn this run into a structured entry that the BMAD
+      # agents (bmad-retrospective, bmad-code-review, bmad-agent-dev) read
+      # before the next change. See AGENTS.md, "BMAD and CI learnings".
+      - name: BMAD CI learnings
+        if: ${{ !cancelled() }}
+        env:
+          OUTCOME_TYPECHECK: ${{ steps.typecheck.outcome }}
+          OUTCOME_CURRICULUM: ${{ steps.curriculum.outcome }}
+          OUTCOME_RUBRIC: ${{ steps.rubric.outcome }}
+          OUTCOME_BUILD: ${{ steps.build.outcome }}
+        run: node scripts/ci-learnings.mjs
+      - name: Upload learnings
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bmad-ci-learnings
+          path: |
+            _bmad-output/ci-learnings/
+            ci-logs/
+          retention-days: 30
