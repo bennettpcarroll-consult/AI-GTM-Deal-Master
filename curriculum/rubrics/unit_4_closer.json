@@ -1,7 +1,6 @@
 {
-  "id": "tier_4_closer",
+  "id": "unit_4_closer",
   "tier": 4,
-  "pillar": "04",
   "role_title": "Enterprise AI Closer",
   "pillar_theme": "Executive Close",
   "color": "#0D9488",
@@ -34,7 +33,6 @@
   ],
   "artifact": "One-page AWS-style PRFAQ and CFO P&L business case",
   "transition_banner": {
-    "kicker": "04 · ENTERPRISE AI CLOSER",
     "title": "Lead with the answer. Close with the P&L.",
     "body": "Executives decide on the financial thesis in the first minute."
   },

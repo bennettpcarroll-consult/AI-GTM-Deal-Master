@@ -1,4 +1,4 @@
-/** Non-pillar brand tokens. Pillar accents come from the rubric JSON. */
+/** Shared brand tokens. Unit accent colors come from the rubric JSON. */
 export const BRAND = {
   ink: '#111827',
   muted: '#64748B',
@@ -11,7 +11,7 @@ export const BRAND = {
   redTint: '#FEF2F2'
 } as const;
 
-export const PILLAR_TINT: Record<1 | 2 | 3 | 4, string> = {
+export const UNIT_TINT: Record<1 | 2 | 3 | 4, string> = {
   1: '#FFF7ED',
   2: '#EFF6FF',
   3: '#F5F3FF',

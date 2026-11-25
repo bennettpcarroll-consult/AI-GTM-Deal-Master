@@ -1,4 +1,4 @@
-import { CREDIT_THRESHOLD, DRILL_IDS, STAGES, type Stage } from './constants';
+import { CREDIT_THRESHOLD } from './constants';
 import { trajectoryId } from './composer';
 import { TIERS, type ClusterId, type SignalId, type Tier, type VerticalId } from './curriculum/schema';
 import type { Binding, Turn } from './simulator';
@@ -133,37 +133,6 @@ export function resetTrajectory(state: AppState, trajectoryIdToReset: string): A
   };
 }
 
-export function drillsPassed(trajectory: Trajectory, tier: Tier): number {
-  return DRILL_IDS.filter((drillId) => trajectory.drills[drillKey(tier, drillId)]?.passed).length;
-}
-
 export function bossesPassed(trajectory: Trajectory): number {
   return TIERS.filter((tier) => trajectory.boss[String(tier)]?.passed).length;
-}
-
-export function tierUnlocked(trajectory: Trajectory, tier: Tier): boolean {
-  if (tier === 1) return true;
-  const previous = tier - 1 as Tier;
-  return trajectory.boss[String(previous)]?.passed === true;
-}
-
-export function pillarStage(trajectory: Trajectory, tier: Tier): Stage {
-  const boss = trajectory.boss[String(tier)];
-  if (boss?.passed) return boss.bestScore >= 100 ? STAGES[4] : STAGES[3];
-  const passed = drillsPassed(trajectory, tier);
-  if (passed === DRILL_IDS.length) return STAGES[2];
-  return passed > 0 ? STAGES[1] : STAGES[0];
-}
-
-export function stageIndex(stage: Stage): number {
-  return STAGES.indexOf(stage);
-}
-
-/** The lowest-stage pillar. Ties go to the earlier pillar. */
-export function weakestTier(trajectory: Trajectory): Tier {
-  let worst: Tier = 1;
-  for (const tier of TIERS) {
-    if (stageIndex(pillarStage(trajectory, tier)) < stageIndex(pillarStage(trajectory, worst))) worst = tier;
-  }
-  return worst;
 }

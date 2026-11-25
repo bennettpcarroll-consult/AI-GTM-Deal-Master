@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addOrActivateTrajectory, drillKey, emptyAppState, pillarStage, recordSession, resetTrajectory, setActiveTrajectory, tierUnlocked, weakestTier, type SessionRecord } from '../../src/lib/store';
+import { addOrActivateTrajectory, drillKey, emptyAppState, recordSession, resetTrajectory, setActiveTrajectory, type SessionRecord } from '../../src/lib/store';
 import { loadCurriculum, signalDefinitions } from '../../src/lib/curriculum/load';
 import { SIGNAL_IDS, type Tier } from '../../src/lib/curriculum/schema';
 import { composeScenario, trajectoryId } from '../../src/lib/composer';
@@ -41,31 +41,6 @@ describe('state store', () => {
     expect(state.trajectories[1]?.drills['1:d1']).toEqual({ passed: true, bestScore: 85, credited: true });
   });
 
-  it('unlocks tier 2 only after the tier 1 boss fight is passed', () => {
-    let state = addOrActivateTrajectory(emptyAppState(), 'compute_infra', 'law_firms', []);
-    const trajectory = () => state.trajectories[0]!;
-    expect(tierUnlocked(trajectory(), 2)).toBe(false);
-    state = recordSession(state, trajectory().id, record(1, 'boss', null, true, 88));
-    expect(tierUnlocked(trajectory(), 2)).toBe(true);
-    expect(tierUnlocked(trajectory(), 3)).toBe(false);
-  });
-
-  it('moves a pillar through the maturity stages in order', () => {
-    let state = addOrActivateTrajectory(emptyAppState(), 'agentic_harness', 'insurance', []);
-    const id = state.trajectories[0]!.id;
-    const stage = () => pillarStage(state.trajectories[0]!, 1);
-    expect(stage()).toBe('LAGGING');
-    state = recordSession(state, id, record(1, 'drill', 'd1', true, 88));
-    expect(stage()).toBe('EXPERIMENTING');
-    state = recordSession(state, id, record(1, 'drill', 'd2', true, 88));
-    state = recordSession(state, id, record(1, 'drill', 'd3', true, 88));
-    expect(stage()).toBe('PILOT PURGATORY');
-    state = recordSession(state, id, record(1, 'boss', null, true, 88));
-    expect(stage()).toBe('IN PRODUCTION');
-    state = recordSession(state, id, record(1, 'boss', null, true, 100));
-    expect(stage()).toBe('PROFIT');
-  });
-
   it('keeps the best score and never lowers it on retake', () => {
     let state = addOrActivateTrajectory(emptyAppState(), 'vertical_agents', 'law_firms', []);
     const id = state.trajectories[0]!.id;
@@ -82,11 +57,6 @@ describe('state store', () => {
     expect(state.trajectories).toHaveLength(1);
     expect(state.trajectories[0]?.boss).toEqual({});
     expect(state.trajectories[0]?.sessions).toEqual([]);
-  });
-
-  it('identifies the weakest pillar, breaking ties toward the earlier pillar', () => {
-    const state = addOrActivateTrajectory(emptyAppState(), 'data_context', 'consumer_brands', []);
-    expect(weakestTier(state.trajectories[0]!)).toBe(1);
   });
 
   it('records a real graded session end to end', () => {

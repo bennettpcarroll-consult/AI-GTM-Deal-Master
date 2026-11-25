@@ -1,7 +1,6 @@
 {
-  "id": "tier_2_challenger",
+  "id": "unit_2_challenger",
   "tier": 2,
-  "pillar": "02",
   "role_title": "Value Challenger",
   "pillar_theme": "Reframing",
   "color": "#2563EB",
@@ -35,7 +34,6 @@
   ],
   "artifact": "Recorded three-minute commercial reframe with a trap-setting matrix",
   "transition_banner": {
-    "kicker": "02 · VALUE CHALLENGER",
     "title": "Teach them something they did not know.",
     "body": "Reframe the problem before you discuss price."
   },

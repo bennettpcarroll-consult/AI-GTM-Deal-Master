@@ -1,7 +1,6 @@
 {
-  "id": "tier_3_consumption",
+  "id": "unit_3_consumption",
   "tier": 3,
-  "pillar": "03",
   "role_title": "Consumption Architect",
   "pillar_theme": "Consumption",
   "color": "#7C3AED",
@@ -35,7 +34,6 @@
   ],
   "artifact": "14-day eval-harness mutual plan and 90-day consumption ramp",
   "transition_banner": {
-    "kicker": "03 · CONSUMPTION ARCHITECT",
     "title": "Close the deal, then close the workload.",
     "body": "Consumption grows only when the eval harness proves value."
   },

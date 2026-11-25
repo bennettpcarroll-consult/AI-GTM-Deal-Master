@@ -1,8 +1,8 @@
-# AI GTM: Deal Master
+# AI GTM; Deal Master
 
-An open-source, gamified AI GTM training platform from the [Profit, Not Pilot](https://profitnotpilot.com/) brand system.
+An open-source, gamified AI GTM training platform with a single linear path, in the style of Duolingo.
 
-Learners choose an AI value-chain cluster and a customer vertical, then run deal simulations. Every MEDDPICC signal is graded on verbatim buyer evidence, not on checkboxes.
+Learners choose an AI value-chain cluster and a customer vertical, then work down one path of drills and boss fights. Every MEDDPICC signal is graded on verbatim buyer evidence, not on checkboxes.
 
 ## Run it
 
@@ -31,7 +31,7 @@ All domain content lives in `curriculum/`, not in React components:
 | `curriculum/clusters/` | 5 AI value-chain clusters: pricing unit, threats, objections, lineage links |
 | `curriculum/verticals/` | 4 customer verticals: buying committee, regulatory blockers, buyer reveals |
 | `curriculum/frameworks/` | MEDDPICC (with signal probes), Command of the Message, Challenger, SPICED Bowtie, Minto Pyramid |
-| `curriculum/rubrics/` | 4 mastery tiers: gates, drills, boss fights, auto-fail red flags |
+| `curriculum/rubrics/` | 4 mastery units (`unit_<n>_<name>.json`): gates, drills, boss fights, auto-fail red flags |
 
 To fork the academy for your own market, edit or add JSON, then run `pnpm curriculum:validate`. The validator checks every file against the Zod schemas in `src/lib/curriculum/schema.ts` and cross-checks references.
 
@@ -46,18 +46,18 @@ To fork the academy for your own market, edit or add JSON, then run `pnpm curric
 ```text
 curriculum/            declarative JSON packs (validated at build time)
 scripts/               curriculum validator
-src/app/               Next.js routes: onboarding, dashboard, deal room, settings
+src/app/               Next.js routes: path home (/), new trajectory (/new), deal room, settings
 src/components/        UI components
-src/lib/               composer, simulator, grader, state store, curriculum loader
+src/lib/               composer, simulator, grader, linear path, state store, curriculum loader
 src/db/schema.ts       Drizzle schema for the v2 Supabase backend
 tests/rubric/          Vitest regression suites
 ```
 
 ## Status (v1 core)
 
-Included: curriculum packs and validator, 20 trajectories, the runtime composer, a scripted buyer simulator with evidence binding, the deterministic grader, multi-trajectory progress with placement credit, the maturity spectrum dashboard, the deal room with a live signal rail, and the Drizzle schema.
+Included: curriculum packs and validator, 20 trajectories, the runtime composer, a scripted buyer simulator with evidence binding, the deterministic grader, multi-trajectory progress with placement credit, two-step onboarding, the linear path home, the deal room with a live signal rail, and the Drizzle schema.
 
-Not yet included: Supabase auth and hosted persistence (state lives in the browser's local storage), a live LLM buyer engine and LLM-as-Judge grader (the grader interface is ready for one), voice streaming, shareable credential pages, the `pnpm fork:init` CLI, and the weekly forecast drill.
+Not yet included: the single-card drill runner with multiple-choice drills and a feedback drawer, the streak, Supabase auth and hosted persistence (state lives in the browser's local storage), a live LLM buyer engine and LLM-as-Judge grader (the grader interface is ready for one), voice streaming, shareable credential pages, the `pnpm fork:init` CLI, and the weekly forecast drill.
 
 ## License
 

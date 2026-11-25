@@ -112,15 +112,15 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: rubric.text_color }}>
-            {rubric.pillar} · {rubric.role_title} · {isBoss ? 'Boss fight' : `Drill ${drillIndex + 1} of 3`}
+            Unit {tier} · {rubric.role_title} · {isBoss ? 'Boss fight' : `Drill ${drillIndex + 1} of 3`}
           </p>
           <h1 className="text-2xl font-extrabold tracking-tight">{isBoss ? rubric.boss_fight.title : rubric.drills[drillIndex]?.title}</h1>
           <p className="text-sm text-[#64748B]">
             {cluster.display_name} × {vertical.short_name} · {isBoss ? rubric.boss_fight.learner_brief : rubric.drills[drillIndex]?.prompt}
           </p>
         </div>
-        <Link href="/dashboard" className="text-sm font-semibold text-[#475569] underline-offset-4 hover:underline">
-          Back to dashboard
+        <Link href="/" className="text-sm font-semibold text-[#475569] underline-offset-4 hover:underline">
+          Back to path
         </Link>
       </div>
 
@@ -159,7 +159,7 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
               <button
                 type="submit"
                 disabled={locked || draft.trim().length === 0}
-                className="spectrum-cta inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-bold text-white disabled:opacity-40"
+                className="cta rounded-full px-5 py-2 text-sm"
               >
                 <Send className="h-4 w-4" aria-hidden="true" /> Send
               </button>
@@ -261,7 +261,7 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
             type="button"
             onClick={finish}
             disabled={locked}
-            className="spectrum-cta w-full rounded-full px-5 py-3 text-sm font-bold text-white disabled:opacity-40"
+            className="cta w-full rounded-full text-sm"
           >
             {isBoss ? 'Grade boss fight' : 'Finish drill'}
           </button>
@@ -423,11 +423,11 @@ function Debrief({
         <button type="button" onClick={onRetake} className="rounded-full border border-[#E5E7EB] bg-white px-5 py-2 text-sm font-semibold hover:bg-[#F8FAFC]">
           Retake
         </button>
-        <Link href="/dashboard" className="spectrum-cta rounded-full px-5 py-2 text-sm font-bold text-white">
-          Back to dashboard
+        <Link href="/" className="cta rounded-full px-5 py-2 text-sm">
+          Back to path
         </Link>
         {isBoss && grade.passed && tier < 4 && (
-          <span className="text-sm font-semibold text-[#047857]">Pillar 0{tier + 1} is now unlocked.</span>
+          <span className="text-sm font-semibold text-[#047857]">Unit {tier + 1} is now unlocked.</span>
         )}
       </div>
     </div>

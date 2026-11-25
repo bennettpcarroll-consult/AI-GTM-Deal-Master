@@ -1,7 +1,7 @@
 import type { IconId } from '@/lib/curriculum/schema';
 
-/** Thin-stroke line-art icons for the four pillars. */
-export function PillarIcon({ name, className }: { name: IconId; className?: string }) {
+/** Thin-stroke line-art icons for the four units. */
+export function UnitIcon({ name, className }: { name: IconId; className?: string }) {
   const stroke = {
     fill: 'none',
     stroke: 'currentColor',

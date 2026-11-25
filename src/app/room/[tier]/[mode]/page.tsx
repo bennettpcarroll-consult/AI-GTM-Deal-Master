@@ -3,10 +3,11 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import { Header } from '@/components/header';
 import { RoomSession } from '@/components/room-session';
+import { TopBar } from '@/components/top-bar';
+import { loadCurriculum } from '@/lib/curriculum/load';
 import { TIERS, type Tier } from '@/lib/curriculum/schema';
-import { tierUnlocked } from '@/lib/store';
+import { buildPath, canOpenStep } from '@/lib/path';
 import { useAppState } from '@/lib/use-app-state';
 
 export default function RoomPage() {
@@ -24,11 +25,11 @@ export default function RoomPage() {
   if (!state) {
     body = <p className="text-sm text-[#64748B]">Loading your deal room…</p>;
   } else if (!trajectory) {
-    body = <Notice title="No active trajectory" text="Pick a cluster and vertical on the home page to start." />;
+    body = <Notice title="No active trajectory" text="Pick what you sell and who you sell into to start your path." />;
   } else if (!validRoute) {
-    body = <Notice title="Unknown session" text="That drill or boss fight does not exist in this pillar." />;
-  } else if (!tierUnlocked(trajectory, tier as Tier)) {
-    body = <Notice title="Pillar locked" text={`Pass the Pillar 0${tier - 1} boss fight to unlock this pillar.`} />;
+    body = <Notice title="Unknown session" text="That drill or boss fight does not exist in this unit." />;
+  } else if (!canOpenStep(buildPath(trajectory, loadCurriculum().rubrics), tier as Tier, params.mode)) {
+    body = <Notice title="Step locked" text="Finish the earlier steps on your path to open this one." />;
   } else {
     body = (
       <RoomSession
@@ -45,7 +46,7 @@ export default function RoomPage() {
 
   return (
     <>
-      <Header workspace />
+      <TopBar />
       <main className="mx-auto max-w-6xl px-4 py-8">{body}</main>
     </>
   );
@@ -56,8 +57,8 @@ function Notice({ title, text }: { title: string; text: string }) {
     <div className="card mx-auto max-w-lg p-8 text-center">
       <h1 className="text-xl font-extrabold">{title}</h1>
       <p className="mt-2 text-sm text-[#64748B]">{text}</p>
-      <Link href="/dashboard" className="mt-5 inline-block rounded-full border border-[#E5E7EB] px-5 py-2 text-sm font-semibold hover:bg-[#F8FAFC]">
-        Back to dashboard
+      <Link href="/" className="cta mt-5">
+        Back to path
       </Link>
     </div>
   );

@@ -1,7 +1,6 @@
 {
-  "id": "tier_1_inspector",
+  "id": "unit_1_inspector",
   "tier": 1,
-  "pillar": "01",
   "role_title": "Deal Inspector",
   "pillar_theme": "Qualification",
   "color": "#F97316",
@@ -32,7 +31,6 @@
   ],
   "artifact": "Verified MEDDPICC scorecard with verbatim buyer citations",
   "transition_banner": {
-    "kicker": "01 · DEAL INSPECTOR",
     "title": "Qualify before you pitch.",
     "body": "Every deal starts with proof from the buyer, not with your notes."
   },

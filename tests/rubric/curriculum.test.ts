@@ -65,7 +65,7 @@ describe('curriculum packs', () => {
 
   it('rejects a rubric whose regular expression does not compile', () => {
     const sources = CURRICULUM_SOURCES.map((source) => {
-      if (source.file !== 'rubrics/tier_1_inspector.json') return source;
+      if (source.file !== 'rubrics/unit_1_inspector.json') return source;
       const broken = JSON.parse(JSON.stringify(source.data).replace('"is (our|my) champion"', '"is (our|my champion"')) as unknown;
       return { ...source, data: broken };
     });
@@ -73,13 +73,13 @@ describe('curriculum packs', () => {
   });
 
   it('rejects a missing tier rubric', () => {
-    const sources = CURRICULUM_SOURCES.filter((source) => source.file !== 'rubrics/tier_4_closer.json');
+    const sources = CURRICULUM_SOURCES.filter((source) => source.file !== 'rubrics/unit_4_closer.json');
     expect(() => buildCurriculum(sources)).toThrow(/missing rubric for tier 4/);
   });
 
   it('rejects a rubric that references an unknown framework', () => {
     const sources = CURRICULUM_SOURCES.map((source) => {
-      if (source.file !== 'rubrics/tier_2_challenger.json') return source;
+      if (source.file !== 'rubrics/unit_2_challenger.json') return source;
       const data = JSON.parse(JSON.stringify(source.data).replace('"challenger"', '"not_a_framework"')) as unknown;
       return { ...source, data };
     });

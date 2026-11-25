@@ -4,8 +4,8 @@ import '@fontsource-variable/plus-jakarta-sans';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'AI GTM: Deal Master',
-  description: 'Gamified AI GTM training from the Profit, Not Pilot brand system. Graded on verbatim buyer evidence.'
+  title: 'AI GTM; Deal Master',
+  description: 'Open-source, gamified AI GTM training. One linear path, graded on verbatim buyer evidence.'
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

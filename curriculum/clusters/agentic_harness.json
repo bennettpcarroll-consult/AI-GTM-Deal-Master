@@ -4,7 +4,7 @@
   "value_chain_layer": "Agentic Harness & Observability",
   "archetypal_vendors": ["LangChain and LangSmith", "Arize", "Braintrust", "MuleSoft Agent Fabric"],
   "pricing_unit": {
-    "model": "Product-led seats that grow into hybrid VPC deployments, plus compute and trace units",
+    "model": "Seats that grow into hybrid VPC, plus compute and trace units",
     "units": ["Seats", "Trace units", "Compute units (LCUs and LSUs)"],
     "summary": "Land with developer seats, then expand into hybrid deployments as trace volume and governance needs grow."
   },

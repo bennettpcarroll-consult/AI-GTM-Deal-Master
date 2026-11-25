@@ -4,24 +4,23 @@
 
 @layer components {
   .card {
-    @apply rounded-[20px] border border-[#E5E7EB] bg-white;
+    @apply rounded-2xl border border-[#E5E7EB] bg-white;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -12px rgba(15, 23, 42, 0.12);
   }
 
-  .spectrum-text {
-    background-image: linear-gradient(90deg, #f97316 0%, #ec4899 35%, #7c3aed 65%, #06b6d4 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  .cta {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-[#111827] px-5 py-3 text-base font-bold text-white transition-colors;
   }
 
-  .spectrum-cta {
-    background-image: linear-gradient(90deg, #f97316, #ec4899, #7c3aed, #06b6d4);
-    box-shadow: 0 10px 28px -10px rgba(236, 72, 153, 0.55);
-    transition: filter 150ms ease;
+  .cta:hover:not(:disabled) {
+    @apply bg-[#1F2937];
   }
 
-  .spectrum-cta:hover:not(:disabled) {
-    filter: brightness(1.05);
+  .cta:focus-visible {
+    @apply outline-none ring-2 ring-[#111827] ring-offset-2;
+  }
+
+  .cta:disabled {
+    @apply cursor-not-allowed bg-[#E5E7EB] text-[#64748B];
   }
 }

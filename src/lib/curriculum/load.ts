@@ -12,10 +12,10 @@ import commandOfTheMessage from '../../../curriculum/frameworks/command_of_the_m
 import challenger from '../../../curriculum/frameworks/challenger.json';
 import spicedBowtie from '../../../curriculum/frameworks/spiced_bowtie.json';
 import mintoPyramid from '../../../curriculum/frameworks/minto_pyramid.json';
-import tier1 from '../../../curriculum/rubrics/tier_1_inspector.json';
-import tier2 from '../../../curriculum/rubrics/tier_2_challenger.json';
-import tier3 from '../../../curriculum/rubrics/tier_3_consumption.json';
-import tier4 from '../../../curriculum/rubrics/tier_4_closer.json';
+import tier1 from '../../../curriculum/rubrics/unit_1_inspector.json';
+import tier2 from '../../../curriculum/rubrics/unit_2_challenger.json';
+import tier3 from '../../../curriculum/rubrics/unit_3_consumption.json';
+import tier4 from '../../../curriculum/rubrics/unit_4_closer.json';
 import { z } from 'zod';
 import {
   CLUSTER_IDS,
@@ -63,10 +63,10 @@ export const CURRICULUM_SOURCES: CurriculumSource[] = [
   { file: 'frameworks/challenger.json', data: challenger },
   { file: 'frameworks/spiced_bowtie.json', data: spicedBowtie },
   { file: 'frameworks/minto_pyramid.json', data: mintoPyramid },
-  { file: 'rubrics/tier_1_inspector.json', data: tier1 },
-  { file: 'rubrics/tier_2_challenger.json', data: tier2 },
-  { file: 'rubrics/tier_3_consumption.json', data: tier3 },
-  { file: 'rubrics/tier_4_closer.json', data: tier4 }
+  { file: 'rubrics/unit_1_inspector.json', data: tier1 },
+  { file: 'rubrics/unit_2_challenger.json', data: tier2 },
+  { file: 'rubrics/unit_3_consumption.json', data: tier3 },
+  { file: 'rubrics/unit_4_closer.json', data: tier4 }
 ];
 
 export class CurriculumError extends Error {

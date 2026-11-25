@@ -112,9 +112,8 @@ export const detectorSchema = z.discriminatedUnion('type', [
 export type Detector = z.infer<typeof detectorSchema>;
 
 export const rubricSchema = z.object({
-  id: z.string().regex(/^tier_[1-4]_[a-z_]+$/, 'Expected tier_<n>_<name>'),
+  id: z.string().regex(/^unit_[1-4]_[a-z_]+$/, 'Expected unit_<n>_<name>'),
   tier: tierSchema,
-  pillar: z.string().regex(/^0[1-4]$/),
   role_title: nonEmpty,
   pillar_theme: nonEmpty,
   color: hexColor,
@@ -136,7 +135,7 @@ export const rubricSchema = z.object({
     )
     .min(1),
   artifact: nonEmpty,
-  transition_banner: z.object({ kicker: nonEmpty, title: nonEmpty, body: nonEmpty }),
+  transition_banner: z.object({ title: nonEmpty, body: nonEmpty }),
   drills: z
     .array(
       z.object({

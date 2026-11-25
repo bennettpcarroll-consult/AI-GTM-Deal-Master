@@ -4,7 +4,7 @@
   "value_chain_layer": "Vertical & Autonomous Agents",
   "archetypal_vendors": ["Cognition (Devin)", "Sierra", "Harvey", "Salesforce Agentforce"],
   "pricing_unit": {
-    "model": "Outcome-based pricing per resolution, with action credits or flex credits",
+    "model": "Outcome pricing per resolution, plus action or flex credits",
     "units": ["Resolutions", "Agent credit units", "Flex credits"],
     "summary": "The buyer pays for completed work, so variable spend follows volume and the seller must cap it with a commitment."
   },
