@@ -37,7 +37,6 @@ export default function RoomPage() {
         tier={tier as Tier}
         mode={isBoss ? 'boss' : 'drill'}
         drillIndex={drillMatch ? Number(drillMatch[1]) - 1 : 0}
-        globalMeddpicc={state.globalCompetencies.meddpicc}
         update={update}
         onRetake={() => setAttempt((count) => count + 1)}
       />
