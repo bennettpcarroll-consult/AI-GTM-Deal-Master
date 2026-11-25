@@ -17,6 +17,7 @@ This repo follows the spec in the PRD. Read the PRD section that matches your ch
    - Pillars (base, soft, ink): value #FF9E6B / #FFF0E8 / #B85A24, work #4C9DFF / #E8F2FF / #1F6FD1, people #C77DFF / #F6EBFF / #8A3CC7, scale #2EC4A6 / #E2F8F3 / #12806B. Profit #0B9F6E (ink #08734F) for verified proof. Leak #F03E3E (ink #C92A2A) for red flags.
    - The spectrum gradient (`.btn-lit`) appears once per view, on the primary action only.
    - One decision per screen: `FocusScreen` with a sticky footer for flows, `AppShell` with the bottom nav for hubs. Feedback arrives as a profit or leak sheet with a short "why".
+   - Say each thing once. A buyer quote appears once, in the conversation. Coaching ("why it worked") shows only the first time a learner earns that proof. Feedback panels never stack accordions of repeated content.
    - Thin-stroke lucide icons, four-bar mastery and signal indicators, dashed borders for unverified or locked states.
    - Gamification stays performance based: streak, daily goal of 5 reps and proof points. Keep it enterprise in tone: no confetti, mascots or cartoon copy.
 5. The grader is deterministic in v1. If you add an LLM judge, it must output the same binding shape and pass through `assertEvidenceInvariant`.
