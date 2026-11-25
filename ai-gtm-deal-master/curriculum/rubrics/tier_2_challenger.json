@@ -1,0 +1,67 @@
+{
+  "id": "tier_2_challenger",
+  "tier": 2,
+  "pillar": "02",
+  "role_title": "Value Challenger",
+  "pillar_theme": "Reframing",
+  "color": "#2563EB",
+  "text_color": "#1D4ED8",
+  "icon": "node-graph",
+  "acv_band": "$250K to $500K",
+  "frameworks": ["command_of_the_message", "challenger"],
+  "supporting_frameworks": ["ValueSelling"],
+  "core_gate_pass_min": 85,
+  "boss_pass_min": 85,
+  "auto_fail_flags": [
+    {
+      "id": "discount_before_pbo",
+      "label": "Discount before business outcomes",
+      "description": "The seller offered a price cut before establishing the business outcome or the case for it.",
+      "detector": {
+        "type": "pattern_without",
+        "trigger": ["discount", "lower (the )?price", "cheaper per", "cut (the )?price"],
+        "required": ["cost of inaction", "business outcome", "business case", "value case", "cost of waiting", "outcome"]
+      }
+    },
+    {
+      "id": "no_cost_of_inaction",
+      "label": "Cost of inaction never raised",
+      "description": "The seller never framed what the status quo costs the buyer.",
+      "detector": {
+        "type": "pattern_never_seen",
+        "patterns": ["cost of inaction", "cost of waiting", "doing nothing", "status quo"]
+      }
+    }
+  ],
+  "artifact": "Recorded three-minute commercial reframe with a trap-setting matrix",
+  "transition_banner": {
+    "kicker": "02 · VALUE CHALLENGER",
+    "title": "Teach them something they did not know.",
+    "body": "Reframe the problem before you discuss price."
+  },
+  "drills": [
+    {
+      "id": "d1",
+      "title": "Teach a commercial insight",
+      "target_signals": ["identify_pain", "metrics"],
+      "prompt": "Share an insight about the buyer's cost structure, then ask what the number means for their plan."
+    },
+    {
+      "id": "d2",
+      "title": "Tailor value to the committee",
+      "target_signals": ["economic_buyer", "decision_criteria"],
+      "prompt": "Tailor the case to the economic buyer's approval threshold and the criteria that matter to each reviewer."
+    },
+    {
+      "id": "d3",
+      "title": "Quantify the cost of inaction",
+      "target_signals": ["identify_pain", "competition"],
+      "prompt": "Make the status quo expensive in the buyer's numbers, then find out what else they are weighing."
+    }
+  ],
+  "boss_fight": {
+    "title": "Boss fight · Commercial reframe",
+    "persona_count": 3,
+    "learner_brief": "Reframe a Tier-2 deal before the committee discusses price. Hold the cost of inaction in front of all three buyers."
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": "minto_pyramid",
+  "display_name": "Minto Pyramid Principle",
+  "summary": "Answer first, then supporting arguments grouped into MECE branches and ordered by impact.",
+  "core_moves": [
+    "Lead with the answer and the decision you need",
+    "Group the supporting arguments into MECE branches",
+    "Order each branch by financial impact",
+    "Close the financial thesis on one page"
+  ],
+  "used_in_tiers": [4]
+}

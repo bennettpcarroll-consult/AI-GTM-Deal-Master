@@ -1,0 +1,12 @@
+{
+  "id": "spiced_bowtie",
+  "display_name": "SPICED and Bowtie",
+  "summary": "SPICED structures the discovery: Situation, Pain, Impact, Critical Event, Decision. The bowtie maps where value lands along the buyer's value chain and where lock-in forms.",
+  "core_moves": [
+    "Map each pain to a measured impact on a single bottleneck",
+    "Find the critical event that forces a decision date",
+    "Use the bowtie to show which stage the value lands in and where lock-in forms",
+    "Build the evaluation harness around the critical event, with accuracy and latency exit gates"
+  ],
+  "used_in_tiers": [3]
+}

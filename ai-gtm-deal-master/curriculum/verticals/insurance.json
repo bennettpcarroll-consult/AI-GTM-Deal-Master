@@ -1,0 +1,89 @@
+{
+  "id": "insurance",
+  "display_name": "Insurance (Underwriting & Claims)",
+  "short_name": "Insurance",
+  "regulatory_and_risk_profile": [
+    "Explainability required for claim and pricing denials",
+    "State rate-filing and fair-claims rules",
+    "Governance expectations for third-party models",
+    "Legacy policy-administration systems with limited APIs",
+    "Catastrophe surge capacity limits"
+  ],
+  "paper_process_blockers": [
+    "Actuarial review of any pricing model change",
+    "Regulatory filing clocks for rate or form changes",
+    "Compliance review of claims-handling changes before automation touches live files",
+    "Change requests to the core policy system"
+  ],
+  "dominant_friction": "Combined-ratio pressure makes every change look expensive, and every denial must be explainable to a regulator.",
+  "value_frame": "Anchor on loss-ratio compression, claims cycle-time reduction, human-in-the-loop audit trails, and elastic peak-volume pricing.",
+  "buying_committee": [
+    {
+      "role": "Chief Underwriting Officer",
+      "kpis": ["Loss ratio", "Combined ratio", "Quote-to-bind time"],
+      "primary_fear": "Automated pricing drifts, and we find out only after a bad loss year."
+    },
+    {
+      "role": "Head of Claims",
+      "kpis": ["Claims cycle time", "Severity leakage", "Policyholder satisfaction"],
+      "primary_fear": "Automation denies a valid claim and triggers a regulatory complaint."
+    },
+    {
+      "role": "General Counsel",
+      "kpis": ["Regulatory exam outcomes", "Litigation exposure"],
+      "primary_fear": "We cannot explain a denial to a regulator in plain language."
+    },
+    {
+      "role": "Chief Actuary",
+      "kpis": ["Reserve adequacy", "Model documentation"],
+      "primary_fear": "A model change goes live without actuarial sign-off."
+    }
+  ],
+  "signature_objections": [
+    "Our combined ratio is already under pressure. Why would we add a new variable cost line?",
+    "When a claim gets denied by your model, what does the adjuster tell the policyholder?",
+    "Catastrophe season triples our claim volume for six weeks. Does your pricing spike with it?"
+  ],
+  "buyer_reveals": {
+    "metrics": {
+      "speaker": "Chief Underwriting Officer",
+      "partial": "We track loss ratio every month, but the AI piece is not in the scorecard yet.",
+      "verbatim": "I need claims cycle time down from twenty-one days to seven, and loss ratio must improve by at least two points, or this does not get funded."
+    },
+    "economic_buyer": {
+      "speaker": "Head of Claims",
+      "partial": "Claims owns the workflow, but underwriting controls the budget for shared tools.",
+      "verbatim": "I own the claims operations budget and can approve up to the pilot cap alone. The production tier goes to the CFO."
+    },
+    "decision_criteria": {
+      "speaker": "General Counsel",
+      "partial": "Explainability and fair-claims compliance matter a lot to my team.",
+      "verbatim": "Every denial needs a plain-language reason an adjuster can read to a policyholder, and we will not go live without that."
+    },
+    "decision_process": {
+      "speaker": "General Counsel",
+      "partial": "Anything touching pricing goes through actuarial review, and the timing depends on the filing.",
+      "verbatim": "Pricing changes go to actuarial review, then the rate filing on a sixty-day clock. Claims automation goes to compliance first."
+    },
+    "paper_process": {
+      "speaker": "General Counsel",
+      "partial": "Claims-handling changes need a compliance review before anything runs on live files.",
+      "verbatim": "No automation touches a live claim file until compliance signs off on the claims-handling change, and that review takes about six weeks."
+    },
+    "identify_pain": {
+      "speaker": "Head of Claims",
+      "partial": "Adjusters are buried in simple claims while complex ones wait.",
+      "verbatim": "We have a backlog of 4,000 open claims, and severity leakage on simple auto claims costs us real money every quarter."
+    },
+    "champion": {
+      "speaker": "Chief Underwriting Officer",
+      "partial": "I like where this is going, and my team has been asking for something like it.",
+      "verbatim": "I will take this to the leadership team myself, and I need the audit trail design in writing before I do."
+    },
+    "competition": {
+      "speaker": "Head of Claims",
+      "partial": "Our core policy vendor has a claims module we have been meaning to look at.",
+      "verbatim": "Our core policy vendor is quoting its own claims automation for free if we renew, so you must show a better loss-ratio case than that."
+    }
+  }
+}

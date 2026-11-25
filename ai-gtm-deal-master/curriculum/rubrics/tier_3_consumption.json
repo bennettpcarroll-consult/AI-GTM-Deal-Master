@@ -1,0 +1,67 @@
+{
+  "id": "tier_3_consumption",
+  "tier": 3,
+  "pillar": "03",
+  "role_title": "Consumption Architect",
+  "pillar_theme": "Consumption",
+  "color": "#7C3AED",
+  "text_color": "#6D28D9",
+  "icon": "users",
+  "acv_band": "$500K to $1M",
+  "frameworks": ["spiced_bowtie"],
+  "supporting_frameworks": ["Snowflake two-cycle close", "Databricks Field Engineering", "Palantir proof of value"],
+  "core_gate_pass_min": 90,
+  "boss_pass_min": 85,
+  "auto_fail_flags": [
+    {
+      "id": "unbounded_pilot",
+      "label": "Unbounded free pilot",
+      "description": "The seller agreed to a free pilot without accuracy, latency, or exit gates.",
+      "detector": {
+        "type": "pattern_without",
+        "trigger": ["free pilot", "free trial", "no-cost pilot", "proof of concept"],
+        "required": ["exit", "success criteria", "accuracy", "latency", "kill", "gate"]
+      }
+    },
+    {
+      "id": "no_eval_harness",
+      "label": "No evaluation harness",
+      "description": "Accuracy and latency exit gates never came up in the conversation.",
+      "detector": {
+        "type": "pattern_never_seen",
+        "patterns": ["eval", "harness", "accuracy", "latency"]
+      }
+    }
+  ],
+  "artifact": "14-day eval-harness mutual plan and 90-day consumption ramp",
+  "transition_banner": {
+    "kicker": "03 · CONSUMPTION ARCHITECT",
+    "title": "Close the deal, then close the workload.",
+    "body": "Consumption grows only when the eval harness proves value."
+  },
+  "drills": [
+    {
+      "id": "d1",
+      "title": "Paper process and decision process",
+      "target_signals": ["paper_process", "decision_process"],
+      "prompt": "Map the approval path and the legal and security lead times before you agree to any pilot scope."
+    },
+    {
+      "id": "d2",
+      "title": "Economic buyer and competition",
+      "target_signals": ["economic_buyer", "competition"],
+      "prompt": "Find who can approve a seasonal commitment, and find out what the buyer already has in place."
+    },
+    {
+      "id": "d3",
+      "title": "Metrics for a consumption ramp",
+      "target_signals": ["metrics", "identify_pain"],
+      "prompt": "Set the metric the ramp must hit and the pain that makes the consumption worth paying for."
+    }
+  ],
+  "boss_fight": {
+    "title": "Boss fight · Eval harness",
+    "persona_count": 3,
+    "learner_brief": "Turn a Tier-3 pilot request into a bounded 14-day eval harness with exit gates, then map the 90-day consumption ramp."
+  }
+}

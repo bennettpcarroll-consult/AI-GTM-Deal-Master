@@ -1,0 +1,12 @@
+{
+  "id": "command_of_the_message",
+  "display_name": "Command of the Message",
+  "summary": "A value framework that ties every claim to a measured business outcome in the buyer's own language.",
+  "core_moves": [
+    "Quantify the business value in the buyer's own metric",
+    "State the cost of inaction in dollars and time",
+    "Tie every proof point to a measured outcome",
+    "Restate the buyer's language before you make a value claim"
+  ],
+  "used_in_tiers": [2]
+}

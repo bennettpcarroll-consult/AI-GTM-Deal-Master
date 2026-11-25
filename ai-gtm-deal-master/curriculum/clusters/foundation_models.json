@@ -1,0 +1,20 @@
+{
+  "id": "foundation_models",
+  "display_name": "Foundation Models",
+  "value_chain_layer": "Foundation Model Labs",
+  "archetypal_vendors": ["Anthropic", "OpenAI", "Google DeepMind", "Cohere", "Mistral"],
+  "pricing_unit": {
+    "model": "API token commitments and enterprise workspace seats",
+    "units": ["Input and output tokens", "Enterprise workspace seats", "Provisioned throughput"],
+    "summary": "Revenue combines a committed token budget with seats for the people who use the model day to day."
+  },
+  "core_competitive_threats": ["Open-weight models commoditizing the workload", "Multi-model routing that makes switching cheap"],
+  "cluster_objections": [
+    "Open-weight models are nearly as good for our workload. Why should we pay your rate card?",
+    "Which model version will we be on in twelve months, and who pays for the migration when you retire it?"
+  ],
+  "marquee_lineage": [
+    { "label": "Snowflake MEDDPICC playbook", "url": "https://www.coffee.ai/articles/meddpicc-vs-b2b-sales-frameworks/" },
+    { "label": "Challenger sales methodology", "url": "https://challengerinc.com/what-is-challenger-sales-methodology/" }
+  ]
+}

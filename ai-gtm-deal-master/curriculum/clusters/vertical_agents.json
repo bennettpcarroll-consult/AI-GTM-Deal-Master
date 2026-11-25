@@ -1,0 +1,20 @@
+{
+  "id": "vertical_agents",
+  "display_name": "Vertical Agents",
+  "value_chain_layer": "Vertical & Autonomous Agents",
+  "archetypal_vendors": ["Cognition (Devin)", "Sierra", "Harvey", "Salesforce Agentforce"],
+  "pricing_unit": {
+    "model": "Outcome-based pricing per resolution, with action credits or flex credits",
+    "units": ["Resolutions", "Agent credit units", "Flex credits"],
+    "summary": "The buyer pays for completed work, so variable spend follows volume and the seller must cap it with a commitment."
+  },
+  "core_competitive_threats": ["BPO incumbents who already run the work", "Pilot fatigue after repeated automation failures"],
+  "cluster_objections": [
+    "What happens to our per-resolution bill during peak traffic, and how do you guarantee the agent won't hallucinate a discount?",
+    "We have been burned by three automation pilots. Why is this one different?"
+  ],
+  "marquee_lineage": [
+    { "label": "Palantir AIP bootcamps", "url": "https://www.infra-ben.com/insights/palantir-aip-bootcamp-effect" },
+    { "label": "MBB value-case discipline (Minto pyramid)", "url": "https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/" }
+  ]
+}

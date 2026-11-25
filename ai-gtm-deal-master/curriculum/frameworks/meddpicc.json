@@ -1,0 +1,96 @@
+{
+  "id": "meddpicc",
+  "display_name": "MEDDPICC",
+  "summary": "A qualification framework that scores a deal on eight signals. A signal only counts as proven when the buyer confirms it in their own words.",
+  "evidence_standard": "A signal reaches verbatim proof only when the buyer states it. A coach claim or a rep assumption never does.",
+  "core_moves": [
+    "Quantify the metric in the buyer's own numbers before you propose anything",
+    "Find the economic buyer and the paper process in the first two conversations",
+    "Score decision criteria with the buyer, not for them",
+    "Name a champion only when that person has access and a personal stake",
+    "Ask directly about competition and the build-versus-buy option"
+  ],
+  "used_in_tiers": [1, 2, 3, 4],
+  "signals": [
+    {
+      "id": "metrics",
+      "label": "Metrics",
+      "definition": "The quantified outcome the buyer must hit, stated in their own numbers.",
+      "coach_hint": "Ask what success looks like in the buyer's own numbers, not yours.",
+      "probes": {
+        "partial": ["\\bmetric", "\\bkpi", "\\bsuccess", "\\bmeasur", "\\boutcome", "\\bbenchmark"],
+        "verbatim": ["what does (success|good) look like", "(what|which) (number|metric|target).*(need|hit|must|success)", "how (much|many).*(need to|have to|must|want to).*(cut|reduce|lift|improve|save|grow)"]
+      }
+    },
+    {
+      "id": "economic_buyer",
+      "label": "Economic buyer",
+      "definition": "The person who can approve the spend and say no to it.",
+      "coach_hint": "Ask who signs the PO and who has the power to say no.",
+      "probes": {
+        "partial": ["\\bbudget", "\\bapprov", "\\bstakeholder", "\\bsponsor"],
+        "verbatim": ["who (signs|approves|owns the budget|has the budget|controls the budget|can sign)", "who has the final (say|sign-?off)", "who is the economic buyer", "who (would|will) (sign|approve)"]
+      }
+    },
+    {
+      "id": "decision_criteria",
+      "label": "Decision criteria",
+      "definition": "How the buyer will score vendors, and which rules rule a vendor out.",
+      "coach_hint": "Ask how they will score vendors before you pitch a single feature.",
+      "probes": {
+        "partial": ["\\bcriteria", "\\brequirement", "\\bwhat matters", "\\bevaluat"],
+        "verbatim": ["how (do|will|would) you (score|evaluate|compare|weigh)", "what (are|would) (your|the) (must-haves|criteria|requirements|deal-breakers)", "what would (get|rule) (you|us) out"]
+      }
+    },
+    {
+      "id": "decision_process",
+      "label": "Decision process",
+      "definition": "The steps, owners, and timing from evaluation to signature.",
+      "coach_hint": "Ask the buyer to walk you through the approval path step by step.",
+      "probes": {
+        "partial": ["\\bprocess", "\\btimeline", "\\bnext steps", "\\bsteps"],
+        "verbatim": ["walk me through (your|the) (approval|review|buying|decision) (process|path)", "what does (your|the) (approval|buying|review|decision) process look like", "who else (reviews|signs off|needs to approve|needs to weigh in)"]
+      }
+    },
+    {
+      "id": "paper_process",
+      "label": "Paper process",
+      "definition": "The legal, procurement, and security steps that gate the signature, with real lead times.",
+      "coach_hint": "Ask how long legal, procurement, and security take, in their words.",
+      "probes": {
+        "partial": ["\\blegal", "\\bprocurement", "\\bcontract", "\\bsecurity review", "\\binfosec", "\\bredline"],
+        "verbatim": ["how long (does|will|do|would) .*(legal|procurement|security|infosec|review|redline|paper)", "what does the paper process look like", "what (does|do) (legal|procurement|infosec|security) need"]
+      }
+    },
+    {
+      "id": "identify_pain",
+      "label": "Identify pain",
+      "definition": "The business problem the buyer is paying to fix, and what it costs them today.",
+      "coach_hint": "Ask what it is costing them today if nothing changes.",
+      "probes": {
+        "partial": ["\\bchallenge", "\\bproblem", "\\bpain", "\\bissue", "\\bfrustrat"],
+        "verbatim": ["what('s| is) (costing|keeping|hurting|driving)", "what happens if you (do nothing|don't change|do not change|don't fix|do not fix)", "what would it cost you"]
+      }
+    },
+    {
+      "id": "champion",
+      "label": "Champion",
+      "definition": "A person with access and a personal stake who will sell the deal internally.",
+      "coach_hint": "Ask what your champion would need to take this to their leadership team.",
+      "probes": {
+        "partial": ["\\binternal", "\\bsupport", "\\bexcited", "\\bon board", "\\bbuy-?in"],
+        "verbatim": ["what would you need to (take|bring|sell|pitch) (this|it) (to|in front of)", "how would you (sell|pitch|take) (this|it) (internally|to)", "will you (champion|sponsor|back|carry) (this|it|us)"]
+      }
+    },
+    {
+      "id": "competition",
+      "label": "Competition",
+      "definition": "Who else the buyer is evaluating, including building the solution in house.",
+      "coach_hint": "Ask who else they are talking to and what they are comparing you against.",
+      "probes": {
+        "partial": ["\\balternative", "\\bother vendor", "\\bcompetit", "\\bbuild (it|this) (ourselves|in-house)", "\\bshortlist"],
+        "verbatim": ["who else are you (talking|speaking|looking) to", "what are you (comparing|evaluating) (us|this) (against|to)", "what (else|other vendors) (are|is) on your (shortlist|list)"]
+      }
+    }
+  ]
+}

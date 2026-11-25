@@ -1,0 +1,88 @@
+{
+  "id": "consumer_brands",
+  "display_name": "Consumer Brands & Retail",
+  "short_name": "Consumer Brands",
+  "regulatory_and_risk_profile": [
+    "Brand safety and public hallucination liability",
+    "PCI-DSS scope for payment-adjacent conversations",
+    "Consumer privacy obligations (CCPA, GDPR) for customer data",
+    "Extreme peak seasonality (BFCM and holiday traffic spikes)"
+  ],
+  "paper_process_blockers": [
+    "Brand-safety review of customer-facing copy",
+    "PCI-DSS scope review before any payment-adjacent flow goes live",
+    "Privacy review of customer data flows",
+    "Annual budget cycle that locks seasonal support capacity"
+  ],
+  "dominant_friction": "A brand failure can go viral in an afternoon, and seasonal spikes make variable costs swing sharply.",
+  "value_frame": "Anchor on conversion lift, brand-safe guardrails, elastic outcome-based pricing during seasonal spikes, and a 14-day time to value.",
+  "buying_committee": [
+    {
+      "role": "CMO",
+      "kpis": ["Conversion rate", "Customer lifetime value", "Brand equity"],
+      "primary_fear": "An AI agent hallucinates unauthorized discounts or off-brand messaging in public."
+    },
+    {
+      "role": "VP Digital / E-Commerce",
+      "kpis": ["Digital conversion", "Site search success"],
+      "primary_fear": "The launch misses the holiday window."
+    },
+    {
+      "role": "CFO",
+      "kpis": ["Gross margin", "Payback period under 9 months"],
+      "primary_fear": "We pay for shelfware seats or unmeasured pilot sprawl."
+    },
+    {
+      "role": "Head of CX / Contact Center",
+      "kpis": ["Cost per resolution", "CSAT", "Seasonal BPO deflection"],
+      "primary_fear": "Runaway variable usage bills during Q4 holiday surges."
+    }
+  ],
+  "signature_objections": [
+    "Our seasonal volume jumps 6x in November. How do we cap runaway token or action spend?",
+    "If your agent promises a customer a refund outside policy, who eats the brand and financial hit?",
+    "We already have 12 legacy POS and loyalty systems. Why won't this take 18 months to integrate?"
+  ],
+  "buyer_reveals": {
+    "metrics": {
+      "speaker": "VP Digital / E-Commerce",
+      "partial": "We watch conversion every week, but the agent's impact is not separated out yet.",
+      "verbatim": "We need the agent to lift conversion by at least 1.5 points on assisted sessions and cut cost per resolution by a third before the holiday peak."
+    },
+    "economic_buyer": {
+      "speaker": "CMO",
+      "partial": "The digital budget is mine, but finance has a say on anything variable.",
+      "verbatim": "I own the digital budget and can sign a pilot up to the cap. The CFO must approve any seasonal commitment above it."
+    },
+    "decision_criteria": {
+      "speaker": "CMO",
+      "partial": "Brand safety matters more to me than anything else on this list.",
+      "verbatim": "Any agent that can offer a discount must follow a published policy with hard limits, and it has to pass our brand-safety test suite."
+    },
+    "decision_process": {
+      "speaker": "CMO",
+      "partial": "Brand review comes first, then the budget cycle, and the timing is tight before November.",
+      "verbatim": "Brand review, then privacy review, then the CFO on seasonal spend. We need the budget locked by the end of September for the holiday season."
+    },
+    "paper_process": {
+      "speaker": "CFO",
+      "partial": "Payment-adjacent flows get a PCI scope review, and we are sensitive about that.",
+      "verbatim": "Anything touching the payment flow goes through PCI scope review first, and that review alone takes about six weeks."
+    },
+    "identify_pain": {
+      "speaker": "VP Digital / E-Commerce",
+      "partial": "Holiday volume overwhelms the contact center every year, and we pay for it.",
+      "verbatim": "Last holiday we paid for an emergency BPO surge at double rate and still missed our CSAT target by eight points."
+    },
+    "champion": {
+      "speaker": "VP Digital / E-Commerce",
+      "partial": "I like the conversion angle, and I will back it internally.",
+      "verbatim": "I will champion this in the Monday growth review myself, and I need a pilot scoped to the holiday peak with clear exit gates."
+    },
+    "competition": {
+      "speaker": "CFO",
+      "partial": "Our commerce platform has its own assistant that we already pay for.",
+      "verbatim": "The commerce platform's bundled assistant comes with our renewal, so you must prove incremental lift over what we already have."
+    }
+  }
+}

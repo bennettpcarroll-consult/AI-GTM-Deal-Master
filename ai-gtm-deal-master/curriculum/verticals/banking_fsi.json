@@ -1,0 +1,89 @@
+{
+  "id": "banking_fsi",
+  "display_name": "Tier-1 Banking & FSI",
+  "short_name": "Banking & FSI",
+  "regulatory_and_risk_profile": [
+    "Zero data retention (ZDR) and bring-your-own keys",
+    "Sub-processor disclosure requirements",
+    "90+ day data processing agreement redlines",
+    "Hallucination and model-risk liability",
+    "Model Risk Management validation before any production use"
+  ],
+  "paper_process_blockers": [
+    "InfoSec review must run in parallel with the proof of value, not after it",
+    "Legal redlines on the data processing agreement take 90 days or more",
+    "Procurement needs a named budget owner before it issues a PO",
+    "Model Risk Management must sign off on any model used in credit or fraud decisions"
+  ],
+  "dominant_friction": "Risk committees block anything they cannot audit, even when the business case is strong.",
+  "value_frame": "Lead with deterministic auditability, private VPC or ZDR architecture, and parallel InfoSec timelines before the proof of value completes.",
+  "buying_committee": [
+    {
+      "role": "Head of Model Risk (MRM)",
+      "kpis": ["Model validation cycle time", "Documentation completeness"],
+      "primary_fear": "We approve a model we cannot validate, reproduce, or defend to examiners."
+    },
+    {
+      "role": "CIO",
+      "kpis": ["Platform consolidation", "Run cost per workload"],
+      "primary_fear": "Another pilot becomes shelfware that we must support forever."
+    },
+    {
+      "role": "CISO",
+      "kpis": ["Data exfiltration risk", "Audit findings closed", "Vendor risk score"],
+      "primary_fear": "A model leaks customer data through a sub-processor nobody reviewed."
+    },
+    {
+      "role": "Chief Risk Officer",
+      "kpis": ["Model risk tiering", "Loss events", "Regulatory exam findings"],
+      "primary_fear": "An unexplained AI decision in a credit or fraud case becomes a regulatory finding."
+    }
+  ],
+  "signature_objections": [
+    "Our CISO will not sign until zero data retention is written into the data processing agreement. Can you commit to that on paper this quarter?",
+    "If the model hallucinates a credit decision, who carries the liability, you or us?",
+    "We have a 90-day agreement review cycle. Can your proof of value finish before our lawyers finish reading?"
+  ],
+  "buyer_reveals": {
+    "metrics": {
+      "speaker": "Head of Model Risk (MRM)",
+      "partial": "We track false positives on fraud review queues, but nobody has agreed on a target yet.",
+      "verbatim": "We will only move forward if the agent cuts false-positive fraud alerts below 2 percent without raising missed fraud."
+    },
+    "economic_buyer": {
+      "speaker": "CIO",
+      "partial": "The budget sits with my platform group, but the business owner wants to co-sign anything above our threshold.",
+      "verbatim": "I hold the platform budget and I sign the PO myself up to the cap. Anything above that goes to the Chief Risk Officer."
+    },
+    "decision_criteria": {
+      "speaker": "CISO",
+      "partial": "Security and model risk have their own checklists, and they weight them differently.",
+      "verbatim": "We score every vendor on zero data retention, sub-processor disclosure, bring-your-own keys, and audit logs. A vendor that fails zero retention is out, regardless of price."
+    },
+    "decision_process": {
+      "speaker": "CIO",
+      "partial": "There is a committee review, then legal, then a sign-off, and the order sometimes changes.",
+      "verbatim": "The order is committee review, then InfoSec, then Model Risk, then legal redlines, then procurement signs. Legal alone takes about 90 days."
+    },
+    "paper_process": {
+      "speaker": "CISO",
+      "partial": "Legal will want changes to the data processing agreement, and that takes a while.",
+      "verbatim": "Our agreement redlines run 90 days minimum. If you want to be live this quarter, InfoSec has to start in parallel with your proof of value."
+    },
+    "identify_pain": {
+      "speaker": "Head of Model Risk (MRM)",
+      "partial": "Our analysts spend too long clearing alerts that turn out to be nothing.",
+      "verbatim": "Our last audit had forty-one open findings on manual alert review, and I cannot keep adding analysts to close them."
+    },
+    "champion": {
+      "speaker": "Head of Model Risk (MRM)",
+      "partial": "I think this could help my team, and I am willing to push it internally.",
+      "verbatim": "I will carry this to the risk committee myself, and I need a validation pack I can defend in front of the examiners."
+    },
+    "competition": {
+      "speaker": "CIO",
+      "partial": "We have looked at the big cloud providers' built-in options too.",
+      "verbatim": "We are also evaluating a cloud-native option our platform group already licenses, so you have to beat its price and its auditability."
+    }
+  }
+}

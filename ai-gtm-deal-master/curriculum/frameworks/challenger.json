@@ -1,0 +1,12 @@
+{
+  "id": "challenger",
+  "display_name": "Challenger Sale",
+  "summary": "A reframing method. The seller teaches the buyer something new about their business, tailors it to the committee, and takes control of the pace.",
+  "core_moves": [
+    "Teach the buyer an insight about their business they have not considered",
+    "Tailor the insight to the economics of each committee member",
+    "Take control of the process and the pace",
+    "Frame a commercial reframe that shows a clear cost of inaction"
+  ],
+  "used_in_tiers": [2]
+}

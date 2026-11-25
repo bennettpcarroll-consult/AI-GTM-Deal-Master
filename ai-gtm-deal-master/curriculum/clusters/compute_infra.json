@@ -1,0 +1,19 @@
+{
+  "id": "compute_infra",
+  "display_name": "Compute & Cloud Infra",
+  "value_chain_layer": "Compute & Cloud Infra",
+  "archetypal_vendors": ["AWS Bedrock and Trainium", "Google Vertex AI", "CoreWeave", "NVIDIA"],
+  "pricing_unit": {
+    "model": "Multi-year capacity commitments",
+    "units": ["EDP and committed-use dollars", "GPU hours", "Tokens served"],
+    "summary": "The buyer commits to a multi-year spend floor, then burns it down on GPU hours and managed inference."
+  },
+  "core_competitive_threats": ["Hyperscaler lock-in", "Raw price-per-FLOP comparisons", "Competitors hoarding reserved capacity"],
+  "cluster_objections": [
+    "If we commit to a three-year spend floor and our GPU utilization drops below plan, what happens to that commitment?",
+    "Your price per token looks fine, but how do we compare it with the committed-use discount we already have elsewhere?"
+  ],
+  "marquee_lineage": [
+    { "label": "AWS Cloud Economics and Marketplace Co-Sell", "url": "https://aws.amazon.com/blogs/aws-cloud-financial-management/managing-costs-during-large-scale-migrations/" }
+  ]
+}

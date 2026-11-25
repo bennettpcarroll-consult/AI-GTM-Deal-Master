@@ -1,0 +1,20 @@
+{
+  "id": "data_context",
+  "display_name": "Data & Context",
+  "value_chain_layer": "Data, Context & Memory",
+  "archetypal_vendors": ["Snowflake Cortex", "Databricks", "Palantir Ontology", "Pinecone"],
+  "pricing_unit": {
+    "model": "Pure consumption",
+    "units": ["Credits", "DBUs", "Storage and query volume"],
+    "summary": "Revenue scales with the data the customer touches, so usage forecasts decide whether the deal looks healthy."
+  },
+  "core_competitive_threats": ["Legacy data silos that nobody wants to migrate", "Good-enough native cloud databases"],
+  "cluster_objections": [
+    "Our warehouse already has vector search. Why add another meter to our bill?",
+    "Consumption is hard to forecast. How do we keep credits from spiking at quarter close?"
+  ],
+  "marquee_lineage": [
+    { "label": "Databricks Field Engineering playbook", "url": "https://www.databricks.com/company/careers/field-engineering---fe-direct-regulated/manager-field-engineering-specialist---hcls-8614656002" },
+    { "label": "Snowflake two-cycle close", "url": "https://www.forcemanagement.com/driving-growth-on-a-consumption-pricing-model" }
+  ]
+}

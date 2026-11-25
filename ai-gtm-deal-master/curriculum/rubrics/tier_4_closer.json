@@ -1,0 +1,66 @@
+{
+  "id": "tier_4_closer",
+  "tier": 4,
+  "pillar": "04",
+  "role_title": "Enterprise AI Closer",
+  "pillar_theme": "Executive Close",
+  "color": "#0D9488",
+  "text_color": "#0F766E",
+  "icon": "layers",
+  "acv_band": "$1M+ multi-year",
+  "frameworks": ["minto_pyramid"],
+  "supporting_frameworks": ["AWS PRFAQ", "MuleSoft Catalyst and C4E"],
+  "core_gate_pass_min": 95,
+  "boss_pass_min": 90,
+  "auto_fail_flags": [
+    {
+      "id": "buries_financial_thesis",
+      "label": "Financial thesis buried",
+      "description": "The seller never raised payback, ROI, margin, or the P&L case.",
+      "detector": {
+        "type": "pattern_never_seen",
+        "patterns": ["payback", "\\broi\\b", "\\bnpv\\b", "\\bmargin\\b", "p&l"]
+      }
+    },
+    {
+      "id": "ignores_change_management",
+      "label": "Change-management adoption ignored",
+      "description": "The seller never addressed how the organization adopts the change.",
+      "detector": {
+        "type": "pattern_never_seen",
+        "patterns": ["change management", "adoption", "training", "enablement"]
+      }
+    }
+  ],
+  "artifact": "One-page AWS-style PRFAQ and CFO P&L business case",
+  "transition_banner": {
+    "kicker": "04 · ENTERPRISE AI CLOSER",
+    "title": "Lead with the answer. Close with the P&L.",
+    "body": "Executives decide on the financial thesis in the first minute."
+  },
+  "drills": [
+    {
+      "id": "d1",
+      "title": "Executive answer first",
+      "target_signals": ["economic_buyer", "metrics"],
+      "prompt": "Open with the decision you need, then name the economic buyer and the number they will sign against."
+    },
+    {
+      "id": "d2",
+      "title": "Multi-year business case",
+      "target_signals": ["metrics", "decision_criteria"],
+      "prompt": "Show the multi-year case against the buyer's criteria, grouped into the branches that carry the decision."
+    },
+    {
+      "id": "d3",
+      "title": "Adoption and change management",
+      "target_signals": ["champion", "identify_pain"],
+      "prompt": "Confirm the champion will drive adoption, then tie the pain to the rollout plan and its training."
+    }
+  ],
+  "boss_fight": {
+    "title": "Boss fight · Executive close",
+    "persona_count": 3,
+    "learner_brief": "Close a multi-year enterprise deal with the executive committee. Lead with the answer and hold the P&L on one page."
+  }
+}

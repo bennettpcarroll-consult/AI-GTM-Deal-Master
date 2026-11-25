@@ -1,0 +1,89 @@
+{
+  "id": "law_firms",
+  "display_name": "Law Firms & Corporate Legal",
+  "short_name": "Law Firms",
+  "regulatory_and_risk_profile": [
+    "Matter-level privilege and ethical walls",
+    "Client outside-counsel guidelines on AI use",
+    "Non-training and zero-retention guarantees",
+    "Bar-level confidentiality and competence duties",
+    "Conflict checks across matters"
+  ],
+  "paper_process_blockers": [
+    "Client consent before any third-party AI processes a client matter",
+    "Outside-counsel guideline review at each client",
+    "Conflicts clearance before a matter is loaded",
+    "Partnership vote on firm-wide technology spend"
+  ],
+  "dominant_friction": "Billable hours fund the partnership, so tools that speed up work can look like a threat to revenue, and no single leader decides alone.",
+  "value_frame": "Frame around realization rates, fixed-fee margin expansion, zero-retention ethical walls, and peer-firm competitive pressure.",
+  "buying_committee": [
+    {
+      "role": "Managing Partner",
+      "kpis": ["Revenue per lawyer", "Realization rate", "Profit per equity partner"],
+      "primary_fear": "Associates bill less, partners earn less, and we fund the tool anyway."
+    },
+    {
+      "role": "Innovation Partner",
+      "kpis": ["Pilot adoption rate", "Time saved per matter"],
+      "primary_fear": "We pilot again and nothing reaches the practice groups."
+    },
+    {
+      "role": "General Counsel",
+      "kpis": ["Ethical wall integrity", "Outside-counsel guideline compliance"],
+      "primary_fear": "A privileged document leaks into a model's training data."
+    },
+    {
+      "role": "Knowledge Management Director",
+      "kpis": ["Precedent reuse", "Document search time"],
+      "primary_fear": "Our knowledge base fragments across tools that nobody maintains."
+    }
+  ],
+  "signature_objections": [
+    "If our associates finish in half the time, how do we keep our realization rate intact?",
+    "Several of our clients' outside-counsel guidelines ban AI on their matters. How do we stay compliant?",
+    "A peer firm just announced an AI rollout. Why should we move slower?"
+  ],
+  "buyer_reveals": {
+    "metrics": {
+      "speaker": "Innovation Partner",
+      "partial": "We have time-saved numbers from the last pilot, but no one agreed which ones count.",
+      "verbatim": "We will judge this on fixed-fee margin for the first three matter types, and on realization holding at or above our current rate."
+    },
+    "economic_buyer": {
+      "speaker": "Managing Partner",
+      "partial": "Technology spend goes through the executive committee, but I shape its agenda.",
+      "verbatim": "I can approve a firm-wide pilot up to the technology budget line myself. The production tier needs a partnership vote."
+    },
+    "decision_criteria": {
+      "speaker": "General Counsel",
+      "partial": "Confidentiality and ethical walls are non-negotiable for my office.",
+      "verbatim": "A vendor must guarantee zero retention and no training on our data, with matter-level ethical walls, or it is disqualified."
+    },
+    "decision_process": {
+      "speaker": "Managing Partner",
+      "partial": "There is a technology committee, and then a partnership vote for anything firm-wide.",
+      "verbatim": "The technology committee reviews first, then General Counsel signs off on the walls, then I take it to the partnership vote."
+    },
+    "paper_process": {
+      "speaker": "General Counsel",
+      "partial": "Some of our largest clients review AI usage in their outside-counsel guidelines.",
+      "verbatim": "Before we load any client matter, we need written client consent under its guidelines and a conflicts clearance. That adds two weeks minimum."
+    },
+    "identify_pain": {
+      "speaker": "Managing Partner",
+      "partial": "Our associates spend too many hours on document review that clients will not pay for.",
+      "verbatim": "Write-offs on document review ran eleven percent last year, and we are losing fixed-fee matters because the margin is gone."
+    },
+    "champion": {
+      "speaker": "Innovation Partner",
+      "partial": "I want this to work, and I am happy to sponsor a practice-group trial.",
+      "verbatim": "I will sponsor the trial with the litigation group myself, and I need the first matter's results before the partnership meets in March."
+    },
+    "competition": {
+      "speaker": "Managing Partner",
+      "partial": "Two peer firms have announced tools, and our partners keep asking about it.",
+      "verbatim": "A peer firm just won our largest client's transactional work with an AI-assisted fixed fee, so we cannot wait for a perfect pilot."
+    }
+  }
+}
