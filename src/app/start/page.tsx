@@ -2,10 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, Flag, ScanSearch } from 'lucide-react';
+import { Glyph, IconTile } from '@/components/glyph';
+import { MarketLessonCard } from '@/components/market-lesson';
 import { QuestionFlow } from '@/components/question-flow';
-import { Bars, FocusScreen, Loading, StepBar } from '@/components/ui';
-import { FAMILY_COLOR } from '@/lib/brand';
+import { FocusScreen, Loading, StepBar } from '@/components/ui';
+import { FAMILY_COLOR, FAMILY_TINT, LAYER_STYLE } from '@/lib/brand';
 import { loadCurriculum } from '@/lib/curriculum/load';
 import { CLUSTER_IDS, VERTICAL_IDS, type ClusterId, type VerticalId } from '@/lib/curriculum/schema';
 import { recordActivity } from '@/lib/engagement';
@@ -56,8 +58,15 @@ export default function StartPage() {
   if (step === 'cluster' || step === 'vertical') {
     const isCluster = step === 'cluster';
     const options = isCluster
-      ? CLUSTER_IDS.map((id) => ({ id, title: curriculum.clusters[id].display_name, sub: curriculum.clusters[id].pricing_unit.model }))
-      : VERTICAL_IDS.map((id) => ({ id, title: curriculum.verticals[id].short_name, sub: curriculum.verticals[id].display_name }));
+      ? CLUSTER_IDS.map((id) => {
+          const item = curriculum.clusters[id];
+          const style = LAYER_STYLE[item.stack_order] ?? LAYER_STYLE[1]!;
+          return { id, title: item.display_name, sub: item.pricing_unit.units.slice(0, 2).join(' · '), glyph: item.glyph, ...style };
+        })
+      : VERTICAL_IDS.map((id) => {
+          const item = curriculum.verticals[id];
+          return { id, title: item.short_name, sub: item.display_name, glyph: item.glyph, tint: '#f6ebff', ink: '#8a3cc7' };
+        });
     const selected = isCluster ? clusterId : verticalId;
     return (
       <FocusScreen
@@ -103,6 +112,9 @@ export default function StartPage() {
                 aria-pressed={pressed}
                 onClick={() => (isCluster ? setClusterId(option.id as ClusterId) : setVerticalId(option.id as VerticalId))}
               >
+                <IconTile tint={option.tint} color={option.ink}>
+                  <Glyph name={option.glyph} className="h-6 w-6" />
+                </IconTile>
                 <span className="flex flex-1 flex-col gap-0.5">
                   <span className="t-item">{option.title}</span>
                   <span className="t-small">{option.sub}</span>
@@ -129,7 +141,6 @@ export default function StartPage() {
 
   if (step === 'lesson' && cluster) {
     const cards = cluster.lesson.cards;
-    const current = cards[card];
     const last = card === cards.length - 1;
     return (
       <FocusScreen
@@ -140,29 +151,9 @@ export default function StartPage() {
           </button>
         }
       >
-        <div key={card} className="flex animate-rise flex-col gap-3 pt-7">
-          <p className="t-label">Market fundamentals · {cluster.display_name}</p>
-          <p className="font-display text-[15px] font-bold text-people-ink">
-            {card + 1} of {cards.length}
-          </p>
-          <h1 className="t-title">{current?.title}</h1>
-          <p className="t-body text-[18px] leading-[1.55] text-charcoal">{current?.body}</p>
+        <div key={card} className="animate-rise pt-6">
+          <MarketLessonCard curriculum={curriculum} cluster={cluster} index={card} />
         </div>
-        {last && (
-          <div className="card mt-8 flex flex-col gap-3 p-5">
-            <p className="t-label">Skills that win in {cluster.display_name}</p>
-            <ul className="flex flex-wrap gap-2">
-              {cluster.priority_skills.map((id) => {
-                const skill = curriculum.skills.find((candidate) => candidate.id === id);
-                return (
-                  <li key={id} className="rounded-full bg-deep px-3 py-1.5 text-[13px] font-semibold">
-                    {skill?.code} {skill?.label}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
       </FocusScreen>
     );
   }
@@ -193,14 +184,19 @@ export default function StartPage() {
         }
       >
         <div className="flex animate-rise flex-col gap-3 pt-7">
-          <p className="t-label">Step 5 of 6</p>
+          <IconTile tint="#f6ebff" color="#8a3cc7" size="lg">
+            <ScanSearch className="h-8 w-8" strokeWidth={1.75} />
+          </IconTile>
+          <p className="t-label mt-2">Step 5 of 6</p>
           <h1 className="t-title">Find your starting point.</h1>
           <p className="t-lede">{curriculum.diagnostic.intro}</p>
         </div>
         <div className="mt-8 flex flex-col gap-2.5">
           {curriculum.families.map((family) => (
             <div key={family.id} className="flex items-center gap-4 rounded-panel border border-hairline p-4">
-              <span className="h-10 w-1.5 rounded-full" style={{ background: FAMILY_COLOR[family.id] }} aria-hidden="true" />
+              <IconTile tint={FAMILY_TINT[family.id] ?? '#f4f5f7'} color={FAMILY_COLOR[family.id] ?? '#5e6672'}>
+                <Glyph name={family.glyph} className="h-6 w-6" />
+              </IconTile>
               <div className="flex flex-1 flex-col gap-0.5">
                 <span className="t-item">{family.display_name}</span>
                 <span className="t-small">{family.skills.length} skills · 3 situations</span>
@@ -249,32 +245,44 @@ export default function StartPage() {
             Your biggest gap is {weakest?.label.toLowerCase()}. You start at Pillar 01, and every pillar builds on the one before.
           </p>
         </div>
-        <div className="mt-7 flex flex-col gap-3">
+        <ul className="mt-7 flex flex-col gap-2.5">
           {byFamily.map((family) => {
-            const familySkills = curriculum.families.find((candidate) => candidate.id === family.familyId)?.skills ?? [];
+            const meta = curriculum.families.find((candidate) => candidate.id === family.familyId);
+            const color = FAMILY_COLOR[family.familyId] ?? '#5e6672';
+            const isGap = family.familyId === weakest?.familyId;
             return (
-              <section key={family.familyId} className="card flex flex-col gap-3 p-5">
-                <div className="flex items-center justify-between gap-3">
-                  <h2 className="t-heading">{family.label}</h2>
-                  <span className="t-small font-semibold tabular-nums">
-                    {family.correct} of {family.total}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {familySkills.map((skill) => (
-                    <span
-                      key={skill.id}
-                      className="flex items-center gap-2 rounded-full border border-hairline py-1 pl-2.5 pr-2 text-[12px] font-semibold"
-                    >
-                      {skill.code} {skill.label}
-                      <Bars level={answers[skill.id] ? 2 : 1} color={FAMILY_COLOR[family.familyId] ?? '#5e6672'} label={skill.label} />
+              <li
+                key={family.familyId}
+                className={`flex items-center gap-4 rounded-panel border-2 bg-paper p-4 ${isGap ? '' : 'border-transparent shadow-card'}`}
+                style={isGap ? { borderColor: color } : undefined}
+              >
+                {meta && (
+                  <IconTile tint={FAMILY_TINT[family.familyId] ?? '#f4f5f7'} color={color}>
+                    <Glyph name={meta.glyph} className="h-6 w-6" />
+                  </IconTile>
+                )}
+                <div className="flex flex-1 flex-col gap-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="t-item">{family.label}</span>
+                    {isGap && (
+                      <span className="flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-bold text-white" style={{ background: color }}>
+                        <Flag className="h-3 w-3" aria-hidden="true" /> Focus
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="h-2 flex-1 overflow-hidden rounded-full bg-deep" aria-hidden="true">
+                      <span className="block h-full rounded-full" style={{ width: `${(family.correct / Math.max(family.total, 1)) * 100}%`, background: color }} />
                     </span>
-                  ))}
+                    <span className="t-small w-14 text-right font-semibold tabular-nums">
+                      {family.correct} of {family.total}
+                    </span>
+                  </div>
                 </div>
-              </section>
+              </li>
             );
           })}
-        </div>
+        </ul>
         <p className="t-small mt-4">
           The diagnostic can mark a skill as practiced. Proven and certified are earned only in live drills, with buyer proof.
         </p>

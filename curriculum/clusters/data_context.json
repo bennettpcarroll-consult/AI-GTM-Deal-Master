@@ -1,7 +1,9 @@
 {
   "id": "data_context",
   "display_name": "Data & Context",
+  "glyph": "database",
   "value_chain_layer": "Data, Context & Memory",
+  "stack_order": 3,
   "archetypal_vendors": [
     "Snowflake Cortex",
     "Databricks",

@@ -18,6 +18,7 @@ This repo follows the spec in the PRD. Read the PRD section that matches your ch
    - The spectrum gradient (`.btn-lit`) appears once per view, on the primary action only.
    - One decision per screen: `FocusScreen` with a sticky footer for flows, `AppShell` with the bottom nav for hubs. Feedback arrives as a profit or leak sheet with a short "why".
    - Say each thing once. A buyer quote appears once, in the conversation. Coaching ("why it worked") shows only the first time a learner earns that proof. Feedback panels never stack accordions of repeated content.
+   - Symbols over codes. Markets, verticals and skill families carry a `glyph` in their JSON, rendered by `src/components/glyph.tsx` inside an `IconTile`. Never show internal codes (F1, M2) to learners. Show mastery as a `MasteryBadge` (word plus symbol), not a bar meter.
    - Thin-stroke lucide icons, four-bar mastery and signal indicators, dashed borders for unverified or locked states.
    - Gamification stays performance based: streak, daily goal of 5 reps and proof points. Keep it enterprise in tone: no confetti, mascots or cartoon copy.
 5. The grader is deterministic in v1. If you add an LLM judge, it must output the same binding shape and pass through `assertEvidenceInvariant`.

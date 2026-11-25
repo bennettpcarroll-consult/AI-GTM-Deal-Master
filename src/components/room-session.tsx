@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
-import { ArrowUp, Check, ChevronDown, Lightbulb, ShieldAlert, X } from 'lucide-react';
+import { ArrowUp, Building2, Check, ChevronDown, Crown, Lightbulb, ShieldAlert, Target, Users, X } from 'lucide-react';
+import { IconTile, SignalIcon } from './glyph';
 import { BRAND, PILLAR_TINT } from '@/lib/brand';
 import { composeScenario } from '@/lib/composer';
 import { loadCurriculum, scenarioFor, signalDefinitions } from '@/lib/curriculum/load';
@@ -10,10 +11,10 @@ import type { SignalId, Skill, Tier } from '@/lib/curriculum/schema';
 import { recordActivity } from '@/lib/engagement';
 import { gradeSession, type GradeResult } from '@/lib/grader';
 import { requestHint, sendLearnerMessage, startSimulation, verifiedCount, type SimContext, type SimState, type Turn } from '@/lib/simulator';
-import { buildSkillProbes, drillSkillIds, MASTERY_LABELS, proofCount, skillMastery, tierSkillIds } from '@/lib/skills';
+import { buildSkillProbes, drillSkillIds, proofCount, skillMastery, tierSkillIds } from '@/lib/skills';
 import { recordSession, type SessionRecord, type Trajectory } from '@/lib/store';
 import { useAppState, type UpdateAppState } from '@/lib/use-app-state';
-import { Bars, FocusScreen, ProgressBar } from './ui';
+import { FocusScreen, MasteryBadge, ProgressBar, SignalState } from './ui';
 
 interface RoomSessionProps {
   trajectory: Trajectory;
@@ -190,55 +191,45 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
         }
       >
         <div className="flex animate-rise flex-col gap-3 pt-5">
-          <h1 className="t-title">{title}</h1>
+          <IconTile tint={tint} color={color} size="lg">
+            {isBoss ? <Crown className="h-8 w-8" strokeWidth={1.75} /> : <Target className="h-8 w-8" strokeWidth={1.75} />}
+          </IconTile>
+          <h1 className="t-title mt-1">{title}</h1>
           <p className="t-lede">{isBoss ? rubric.boss_fight.learner_brief : drill?.prompt}</p>
         </div>
 
-        <div className="panel mt-5 flex flex-col gap-1.5 p-4">
-          <p className="t-label">The situation</p>
-          <p className="t-body">{scenario.situation}</p>
-        </div>
-
-        <section className="card mt-4 flex flex-col gap-3 p-5" aria-label="Signals to prove">
-          <p className="t-label">Prove {targetTotal} signals with buyer words</p>
-          <ul className="flex flex-col divide-y divide-rule">
-            {sim.targetSignals.map((signal) => {
-              const skill = signalSkill(signal);
-              return (
-                <li key={signal} className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl font-display text-[14px] font-extrabold" style={{ background: tint, color }}>
-                    {skill?.code ?? signalLabel(signal).charAt(0)}
-                  </span>
-                  <span className="flex flex-1 flex-col">
-                    <span className="t-item">{signalLabel(signal)}</span>
-                    <span className="t-small">{skill?.talk_track.proof}</span>
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-
-        <section className="mt-4 flex flex-col gap-2" aria-label="Skills this builds">
-          <p className="t-label">Skills you build here</p>
-          <ul className="flex flex-wrap gap-1.5">
-            {skills.map((skill) => (
-              <li key={skill.id} className="rounded-full border border-hairline px-3 py-1.5 text-[13px] font-semibold">
-                {skill.code} {skill.label}
+        <section className="card mt-6 flex flex-col gap-4 p-5" aria-label="Your mission">
+          <p className="t-label" style={{ color }}>
+            Your mission: get the buyer to say
+          </p>
+          <ul className="flex flex-col gap-4">
+            {sim.targetSignals.map((signal) => (
+              <li key={signal} className="flex items-start gap-3">
+                <IconTile tint={tint} color={color} size="sm">
+                  <SignalIcon signal={signal} className="h-[18px] w-[18px]" />
+                </IconTile>
+                <span className="flex flex-1 flex-col gap-0.5">
+                  <span className="t-item">{signalLabel(signal)}</span>
+                  <span className="t-small">{signalSkill(signal)?.talk_track.proof}</span>
+                </span>
               </li>
             ))}
           </ul>
         </section>
 
-        <section className="mt-4 flex flex-col gap-2 pb-2" aria-label="Buyers in the room">
-          <p className="t-label">In the room</p>
-          <ul className="flex flex-wrap gap-1.5">
-            {payload.personas.map((persona) => (
-              <li key={persona.role} className="rounded-full bg-deep px-3 py-1.5 text-[13px] font-semibold">
-                {persona.role}
-              </li>
-            ))}
-          </ul>
+        <section className="mt-5 flex flex-col gap-4 pb-2">
+          <div className="flex items-start gap-3">
+            <IconTile tint="#f4f5f7" color="#5e6672" size="sm">
+              <Building2 className="h-[18px] w-[18px]" strokeWidth={1.75} />
+            </IconTile>
+            <p className="t-body flex-1 text-charcoal">{scenario.situation}</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <IconTile tint="#f4f5f7" color="#5e6672" size="sm">
+              <Users className="h-[18px] w-[18px]" strokeWidth={1.75} />
+            </IconTile>
+            <p className="t-body flex-1 text-charcoal">{meetLine(payload.personas.map((persona) => persona.role))}</p>
+          </div>
         </section>
       </FocusScreen>
     );
@@ -292,20 +283,12 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
               </button>
             )}
           </div>
-          <ul className="flex flex-wrap gap-1.5" aria-label="Target signals">
-            {sim.targetSignals.map((signal) => {
-              const bars = sim.bindings[signal].bars;
-              const done = bars === 4;
-              return (
-                <li
-                  key={signal}
-                  className={`flex items-center gap-2 rounded-full border py-1 pl-3 pr-2 text-[12px] font-semibold ${done ? 'border-profit bg-profit-soft text-profit-ink' : 'border-dashed border-rule-strong'}`}
-                >
-                  {signalLabel(signal)}
-                  <Bars level={bars} color={done ? BRAND.profit : color} label={signalLabel(signal)} />
-                </li>
-              );
-            })}
+          <ul className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Target signals">
+            {sim.targetSignals.map((signal) => (
+              <li key={signal}>
+                <SignalState bars={sim.bindings[signal].bars} label={signalLabel(signal)} />
+              </li>
+            ))}
           </ul>
         </div>
       }
@@ -405,6 +388,15 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
       </div>
     </FocusScreen>
   );
+}
+
+/** "You'll meet the CMO, the CFO and 2 others." Names at most two roles so the line stays short. */
+function meetLine(roles: string[]): string {
+  if (roles.length === 0) return 'You will meet the buying committee.';
+  if (roles.length === 1) return `You will meet the ${roles[0]}.`;
+  if (roles.length === 2) return `You will meet the ${roles[0]} and the ${roles[1]}.`;
+  const rest = roles.length - 2;
+  return `You will meet the ${roles[0]}, the ${roles[1]} and ${rest} other${rest === 1 ? '' : 's'} from the buying committee.`;
 }
 
 function BuyerTurn({ turn, proofs }: { turn: Turn; proofs: Proof[] }) {
@@ -596,10 +588,8 @@ function SkillsBuilt({ skills, trajectoryId }: { skills: Skill[]; trajectoryId: 
           const level = (levels[skill.id] ?? 1) as 1 | 2 | 3 | 4;
           return (
             <li key={skill.id} className="flex items-center gap-3 px-4 py-3">
-              <span className="w-8 font-display text-[14px] font-extrabold text-slate">{skill.code}</span>
               <span className="flex-1 text-[15px] font-semibold">{skill.label}</span>
-              <span className="t-small">{MASTERY_LABELS[level]}</span>
-              <Bars level={level} color={BRAND.peopleInk} label={skill.label} />
+              <MasteryBadge level={level} />
             </li>
           );
         })}

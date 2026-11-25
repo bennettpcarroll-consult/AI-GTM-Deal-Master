@@ -29,3 +29,19 @@ export const FAMILY_COLOR: Record<string, string> = {
   consumption: '#8a3cc7',
   executive: '#12806b'
 };
+
+export const FAMILY_TINT: Record<string, string> = {
+  fundamentals: '#e8f2ff',
+  meddpicc: '#fff0e8',
+  consumption: '#f6ebff',
+  executive: '#e2f8f3'
+};
+
+/** One colour pair per value-chain layer, by stack_order, so each market has its own symbol colour. */
+export const LAYER_STYLE: Record<number, { tint: string; ink: string }> = {
+  1: { tint: '#e8f2ff', ink: '#1f6fd1' },
+  2: { tint: '#f6ebff', ink: '#8a3cc7' },
+  3: { tint: '#e2f8f3', ink: '#12806b' },
+  4: { tint: '#fff0e8', ink: '#b85a24' },
+  5: { tint: '#ddf5ec', ink: '#08734f' }
+};

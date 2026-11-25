@@ -1,7 +1,9 @@
 {
   "id": "foundation_models",
   "display_name": "Foundation Models",
+  "glyph": "sparkles",
   "value_chain_layer": "Foundation Model Labs",
+  "stack_order": 2,
   "archetypal_vendors": [
     "Anthropic",
     "OpenAI",

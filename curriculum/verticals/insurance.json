@@ -2,6 +2,7 @@
   "id": "insurance",
   "display_name": "Insurance (Underwriting & Claims)",
   "short_name": "Insurance",
+  "glyph": "umbrella",
   "regulatory_and_risk_profile": [
     "Explainability required for claim and pricing denials",
     "State rate-filing and fair-claims rules",
@@ -20,22 +21,36 @@
   "buying_committee": [
     {
       "role": "Chief Underwriting Officer",
-      "kpis": ["Loss ratio", "Combined ratio", "Quote-to-bind time"],
+      "kpis": [
+        "Loss ratio",
+        "Combined ratio",
+        "Quote-to-bind time"
+      ],
       "primary_fear": "Automated pricing drifts, and we find out only after a bad loss year."
     },
     {
       "role": "Head of Claims",
-      "kpis": ["Claims cycle time", "Severity leakage", "Policyholder satisfaction"],
+      "kpis": [
+        "Claims cycle time",
+        "Severity leakage",
+        "Policyholder satisfaction"
+      ],
       "primary_fear": "Automation denies a valid claim and triggers a regulatory complaint."
     },
     {
       "role": "General Counsel",
-      "kpis": ["Regulatory exam outcomes", "Litigation exposure"],
+      "kpis": [
+        "Regulatory exam outcomes",
+        "Litigation exposure"
+      ],
       "primary_fear": "We cannot explain a denial to a regulator in plain language."
     },
     {
       "role": "Chief Actuary",
-      "kpis": ["Reserve adequacy", "Model documentation"],
+      "kpis": [
+        "Reserve adequacy",
+        "Model documentation"
+      ],
       "primary_fear": "A model change goes live without actuarial sign-off."
     }
   ],

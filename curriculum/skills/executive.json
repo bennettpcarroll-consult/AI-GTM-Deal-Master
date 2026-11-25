@@ -1,6 +1,7 @@
 {
   "id": "executive",
   "display_name": "Executive selling",
+  "glyph": "briefcase",
   "summary": "Teach, tailor and take control with the C-suite: insight, value, answer first, business case.",
   "skills": [
     {

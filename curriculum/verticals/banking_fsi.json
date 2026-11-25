@@ -2,6 +2,7 @@
   "id": "banking_fsi",
   "display_name": "Tier-1 Banking & FSI",
   "short_name": "Banking & FSI",
+  "glyph": "landmark",
   "regulatory_and_risk_profile": [
     "Zero data retention (ZDR) and bring-your-own keys",
     "Sub-processor disclosure requirements",
@@ -20,22 +21,36 @@
   "buying_committee": [
     {
       "role": "Head of Model Risk (MRM)",
-      "kpis": ["Model validation cycle time", "Documentation completeness"],
+      "kpis": [
+        "Model validation cycle time",
+        "Documentation completeness"
+      ],
       "primary_fear": "We approve a model we cannot validate, reproduce, or defend to examiners."
     },
     {
       "role": "CIO",
-      "kpis": ["Platform consolidation", "Run cost per workload"],
+      "kpis": [
+        "Platform consolidation",
+        "Run cost per workload"
+      ],
       "primary_fear": "Another pilot becomes shelfware that we must support forever."
     },
     {
       "role": "CISO",
-      "kpis": ["Data exfiltration risk", "Audit findings closed", "Vendor risk score"],
+      "kpis": [
+        "Data exfiltration risk",
+        "Audit findings closed",
+        "Vendor risk score"
+      ],
       "primary_fear": "A model leaks customer data through a sub-processor nobody reviewed."
     },
     {
       "role": "Chief Risk Officer",
-      "kpis": ["Model risk tiering", "Loss events", "Regulatory exam findings"],
+      "kpis": [
+        "Model risk tiering",
+        "Loss events",
+        "Regulatory exam findings"
+      ],
       "primary_fear": "An unexplained AI decision in a credit or fraud case becomes a regulatory finding."
     }
   ],

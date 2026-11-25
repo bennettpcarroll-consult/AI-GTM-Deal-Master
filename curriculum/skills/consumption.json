@@ -1,6 +1,7 @@
 {
   "id": "consumption",
   "display_name": "Consumption selling",
+  "glyph": "gauge",
   "summary": "Close the deal, then close the consumption. Revenue only lands when usage ramps.",
   "skills": [
     {
