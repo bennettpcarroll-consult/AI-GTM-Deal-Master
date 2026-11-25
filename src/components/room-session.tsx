@@ -18,14 +18,13 @@ interface RoomSessionProps {
   tier: Tier;
   mode: 'drill' | 'boss';
   drillIndex: number;
-  globalMeddpicc: number;
   update: UpdateAppState;
   onRetake: () => void;
 }
 
 const NOT_SURE_MESSAGE = "I'm not sure yet, so I won't guess. Can you walk me through it?";
 
-export function RoomSession({ trajectory, tier, mode, drillIndex, globalMeddpicc, update, onRetake }: RoomSessionProps) {
+export function RoomSession({ trajectory, tier, mode, drillIndex, update, onRetake }: RoomSessionProps) {
   const curriculum = loadCurriculum();
   const cluster = curriculum.clusters[trajectory.clusterId];
   const vertical = curriculum.verticals[trajectory.verticalId];
@@ -34,8 +33,8 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, globalMeddpicc
   const isBoss = mode === 'boss';
 
   const payload = useMemo(
-    () => composeScenario({ cluster, vertical, rubric, mode, drillIndex, meddpiccScore: globalMeddpicc }),
-    [cluster, vertical, rubric, mode, drillIndex, globalMeddpicc]
+    () => composeScenario({ cluster, vertical, rubric, mode, drillIndex }),
+    [cluster, vertical, rubric, mode, drillIndex]
   );
   const ctx = useMemo<SimContext>(
     () => ({ vertical, signals, objections: payload.objection_queue, personaRoles: payload.personas.map((persona) => persona.role) }),

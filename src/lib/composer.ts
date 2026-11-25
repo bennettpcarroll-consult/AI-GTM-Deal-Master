@@ -1,4 +1,3 @@
-import { CREDIT_THRESHOLD } from './constants';
 import {
   SIGNAL_IDS,
   type Cluster,
@@ -34,7 +33,6 @@ export interface ScenarioPayload {
     auto_fail_flags: string[];
     evidence_rule: string;
   };
-  placement_credit: boolean;
 }
 
 export interface ComposeInput {
@@ -43,7 +41,6 @@ export interface ComposeInput {
   rubric: Rubric;
   mode: SessionMode;
   drillIndex?: number;
-  meddpiccScore?: number;
 }
 
 export function trajectoryId(clusterId: ClusterId, verticalId: VerticalId): string {
@@ -68,7 +65,7 @@ export function interleave(primary: readonly string[], secondary: readonly strin
 }
 
 export function composeScenario(input: ComposeInput): ScenarioPayload {
-  const { cluster, vertical, rubric, mode, meddpiccScore = 0 } = input;
+  const { cluster, vertical, rubric, mode } = input;
 
   let targetSignals: SignalId[];
   if (mode === 'boss') {
@@ -120,7 +117,6 @@ export function composeScenario(input: ComposeInput): ScenarioPayload {
       pass_threshold: mode === 'boss' ? rubric.boss_pass_min : rubric.core_gate_pass_min,
       auto_fail_flags: mode === 'boss' ? rubric.auto_fail_flags.map((flag) => flag.id) : [],
       evidence_rule: 'A signal reaches verbatim proof (4 bars) only with a non-null buyer transcript_turn_id.'
-    },
-    placement_credit: meddpiccScore >= CREDIT_THRESHOLD
+    }
   };
 }
