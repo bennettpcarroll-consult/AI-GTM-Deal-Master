@@ -2,19 +2,96 @@
   "id": "foundation_models",
   "display_name": "Foundation Models",
   "value_chain_layer": "Foundation Model Labs",
-  "archetypal_vendors": ["Anthropic", "OpenAI", "Google DeepMind", "Cohere", "Mistral"],
+  "archetypal_vendors": [
+    "Anthropic",
+    "OpenAI",
+    "Google DeepMind",
+    "Cohere",
+    "Mistral"
+  ],
   "pricing_unit": {
     "model": "API token commitments and enterprise workspace seats",
-    "units": ["Input and output tokens", "Enterprise workspace seats", "Provisioned throughput"],
+    "units": [
+      "Input and output tokens",
+      "Enterprise workspace seats",
+      "Provisioned throughput"
+    ],
     "summary": "Revenue combines a committed token budget with seats for the people who use the model day to day."
   },
-  "core_competitive_threats": ["Open-weight models commoditizing the workload", "Multi-model routing that makes switching cheap"],
+  "core_competitive_threats": [
+    "Open-weight models commoditizing the workload",
+    "Multi-model routing that makes switching cheap"
+  ],
   "cluster_objections": [
     "Open-weight models are nearly as good for our workload. Why should we pay your rate card?",
     "Which model version will we be on in twelve months, and who pays for the migration when you retire it?"
   ],
   "marquee_lineage": [
-    { "label": "Snowflake MEDDPICC playbook", "url": "https://www.coffee.ai/articles/meddpicc-vs-b2b-sales-frameworks/" },
-    { "label": "Challenger sales methodology", "url": "https://challengerinc.com/what-is-challenger-sales-methodology/" }
-  ]
+    {
+      "label": "Snowflake MEDDPICC playbook",
+      "url": "https://www.coffee.ai/articles/meddpicc-vs-b2b-sales-frameworks/"
+    },
+    {
+      "label": "Challenger sales methodology",
+      "url": "https://challengerinc.com/what-is-challenger-sales-methodology/"
+    }
+  ],
+  "priority_skills": [
+    "pricing_unit_fluency",
+    "usage_forecast",
+    "competition",
+    "commercial_insight"
+  ],
+  "lesson": {
+    "cards": [
+      {
+        "title": "Where it sits",
+        "body": "Foundation model labs sell the models that apps and agents are built on."
+      },
+      {
+        "title": "What the customer pays for",
+        "body": "Committed token budgets for the API, plus enterprise workspace seats for people who use the model daily."
+      },
+      {
+        "title": "How the money works",
+        "body": "Every token has a compute cost, so gross margins run near 50 to 60 percent, not the 80 to 90 percent of seat-based SaaS."
+      },
+      {
+        "title": "What threatens the deal",
+        "body": "Open-weight models commoditizing the workload, and multi-model routing that makes switching cheap."
+      }
+    ],
+    "quiz": [
+      {
+        "prompt": "What makes up a foundation model deal?",
+        "options": [
+          "Token commitments plus workspace seats",
+          "Reserved GPU hours only",
+          "A fee per resolved ticket"
+        ],
+        "answer": 0,
+        "why": "Revenue combines a committed token budget with seats for daily users."
+      },
+      {
+        "prompt": "Why do margins run lower than classic SaaS?",
+        "options": [
+          "Sales cycles are longer",
+          "Every token carries a compute cost",
+          "Seats are discounted"
+        ],
+        "answer": 1,
+        "why": "Inference is a variable cost, so each extra token has a price."
+      },
+      {
+        "prompt": "Which threat makes switching cheap?",
+        "options": [
+          "Paper process lag",
+          "Multi-model routing",
+          "Hyperscaler lock-in"
+        ],
+        "answer": 1,
+        "why": "Routing layers let buyers move workloads between models easily."
+      }
+    ]
+  }
 }

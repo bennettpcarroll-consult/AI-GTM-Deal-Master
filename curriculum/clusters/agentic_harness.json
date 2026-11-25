@@ -2,19 +2,95 @@
   "id": "agentic_harness",
   "display_name": "Agentic Harness",
   "value_chain_layer": "Agentic Harness & Observability",
-  "archetypal_vendors": ["LangChain and LangSmith", "Arize", "Braintrust", "MuleSoft Agent Fabric"],
+  "archetypal_vendors": [
+    "LangChain and LangSmith",
+    "Arize",
+    "Braintrust",
+    "MuleSoft Agent Fabric"
+  ],
   "pricing_unit": {
     "model": "Product-led seats that grow into hybrid VPC deployments, plus compute and trace units",
-    "units": ["Seats", "Trace units", "Compute units (LCUs and LSUs)"],
+    "units": [
+      "Seats",
+      "Trace units",
+      "Compute units (LCUs and LSUs)"
+    ],
     "summary": "Land with developer seats, then expand into hybrid deployments as trace volume and governance needs grow."
   },
-  "core_competitive_threats": ["Internal frameworks the platform team built itself", "Shadow-AI sprawl across business units"],
+  "core_competitive_threats": [
+    "Internal frameworks the platform team built itself",
+    "Shadow-AI sprawl across business units"
+  ],
   "cluster_objections": [
     "Our platform team already built an agent framework. Why would we pay you to replace it?",
     "How do we stop every business unit from spinning up its own agents with no trace data to audit?"
   ],
   "marquee_lineage": [
-    { "label": "SPICED and Bowtie standard", "url": "https://winningbydesign.com/resources/research/bowtie-standard/" },
-    { "label": "MuleSoft Catalyst and C4E operating model", "url": "https://www.salesforce.com/news/press-releases/2019/04/22/mulesoft-catalyst-redefines-the-it-operating-model/" }
-  ]
+    {
+      "label": "SPICED and Bowtie standard",
+      "url": "https://winningbydesign.com/resources/research/bowtie-standard/"
+    },
+    {
+      "label": "MuleSoft Catalyst and C4E operating model",
+      "url": "https://www.salesforce.com/news/press-releases/2019/04/22/mulesoft-catalyst-redefines-the-it-operating-model/"
+    }
+  ],
+  "priority_skills": [
+    "adoption_plan",
+    "champion",
+    "competition",
+    "bounded_pov"
+  ],
+  "lesson": {
+    "cards": [
+      {
+        "title": "Where it sits",
+        "body": "Agentic harness and observability tools let teams build, run and monitor AI agents."
+      },
+      {
+        "title": "What the customer pays for",
+        "body": "Product-led seats that grow into VPC deployments, plus compute and trace units."
+      },
+      {
+        "title": "How the money works",
+        "body": "Land small with developer seats, then expand into infrastructure spend as agents reach production."
+      },
+      {
+        "title": "What threatens the deal",
+        "body": "Internal frameworks the platform team built itself, and shadow-AI sprawl across business units."
+      }
+    ],
+    "quiz": [
+      {
+        "prompt": "How does an agentic harness deal usually grow?",
+        "options": [
+          "Seats first, then VPC and usage",
+          "One large upfront license",
+          "Per resolution fees"
+        ],
+        "answer": 0,
+        "why": "It lands with seats and expands into deployment and trace usage."
+      },
+      {
+        "prompt": "Who is often the real competitor?",
+        "options": [
+          "The platform team building it themselves",
+          "A hyperscaler",
+          "A BPO"
+        ],
+        "answer": 0,
+        "why": "In-house frameworks are the most common alternative."
+      },
+      {
+        "prompt": "What is shadow-AI sprawl?",
+        "options": [
+          "Unsanctioned AI tools across business units",
+          "A pricing model",
+          "A security certification"
+        ],
+        "answer": 0,
+        "why": "Teams adopt tools on their own, which fragments the buying decision."
+      }
+    ]
+  }
 }

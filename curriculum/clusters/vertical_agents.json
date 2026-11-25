@@ -2,19 +2,95 @@
   "id": "vertical_agents",
   "display_name": "Vertical Agents",
   "value_chain_layer": "Vertical & Autonomous Agents",
-  "archetypal_vendors": ["Cognition (Devin)", "Sierra", "Harvey", "Salesforce Agentforce"],
+  "archetypal_vendors": [
+    "Cognition (Devin)",
+    "Sierra",
+    "Harvey",
+    "Salesforce Agentforce"
+  ],
   "pricing_unit": {
     "model": "Outcome-based pricing per resolution, with action credits or flex credits",
-    "units": ["Resolutions", "Agent credit units", "Flex credits"],
+    "units": [
+      "Resolutions",
+      "Agent credit units",
+      "Flex credits"
+    ],
     "summary": "The buyer pays for completed work, so variable spend follows volume and the seller must cap it with a commitment."
   },
-  "core_competitive_threats": ["BPO incumbents who already run the work", "Pilot fatigue after repeated automation failures"],
+  "core_competitive_threats": [
+    "BPO incumbents who already run the work",
+    "Pilot fatigue after repeated automation failures"
+  ],
   "cluster_objections": [
     "What happens to our per-resolution bill during peak traffic, and how do you guarantee the agent won't hallucinate a discount?",
     "We have been burned by three automation pilots. Why is this one different?"
   ],
   "marquee_lineage": [
-    { "label": "Palantir AIP bootcamps", "url": "https://www.infra-ben.com/insights/palantir-aip-bootcamp-effect" },
-    { "label": "MBB value-case discipline (Minto pyramid)", "url": "https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/" }
-  ]
+    {
+      "label": "Palantir AIP bootcamps",
+      "url": "https://www.infra-ben.com/insights/palantir-aip-bootcamp-effect"
+    },
+    {
+      "label": "MBB value-case discipline (Minto pyramid)",
+      "url": "https://www.myconsultingoffer.org/case-study-interview-prep/pyramid-principle/"
+    }
+  ],
+  "priority_skills": [
+    "metrics",
+    "bounded_pov",
+    "business_case",
+    "value_messaging"
+  ],
+  "lesson": {
+    "cards": [
+      {
+        "title": "Where it sits",
+        "body": "Vertical and autonomous agents do a specific job end to end, such as claims or support."
+      },
+      {
+        "title": "What the customer pays for",
+        "body": "Outcome-based pricing per resolution, with action credits or flex credits."
+      },
+      {
+        "title": "How the money works",
+        "body": "Pricing per outcome means the vendor carries the accuracy risk, so the metric must be agreed up front."
+      },
+      {
+        "title": "What threatens the deal",
+        "body": "BPO incumbents who already run the work, and pilot fatigue after failed automation."
+      }
+    ],
+    "quiz": [
+      {
+        "prompt": "What does a vertical agent buyer pay for?",
+        "options": [
+          "Outcomes per resolution",
+          "Reserved capacity",
+          "Developer seats"
+        ],
+        "answer": 0,
+        "why": "The price follows each resolved outcome."
+      },
+      {
+        "prompt": "Who carries accuracy risk in outcome pricing?",
+        "options": [
+          "The vendor",
+          "The buyer",
+          "Nobody"
+        ],
+        "answer": 0,
+        "why": "If the agent fails, the vendor does not get paid for that outcome."
+      },
+      {
+        "prompt": "Which threat comes from past failures?",
+        "options": [
+          "Pilot fatigue",
+          "Multi-model routing",
+          "Native databases"
+        ],
+        "answer": 0,
+        "why": "Buyers burned by earlier automation demand bounded proof."
+      }
+    ]
+  }
 }

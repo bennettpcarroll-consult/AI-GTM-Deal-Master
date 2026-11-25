@@ -1,0 +1,43 @@
+{
+  "id": "starting_diagnostic",
+  "title": "Starting diagnostic",
+  "intro": "Twelve quick situations. Pick the strongest reply. It takes about four minutes.",
+  "items": [
+    {
+      "skill_id": "upfront_contract"
+    },
+    {
+      "skill_id": "discovery_questioning"
+    },
+    {
+      "skill_id": "objection_handling"
+    },
+    {
+      "skill_id": "metrics"
+    },
+    {
+      "skill_id": "economic_buyer"
+    },
+    {
+      "skill_id": "champion"
+    },
+    {
+      "skill_id": "usage_forecast"
+    },
+    {
+      "skill_id": "bounded_pov"
+    },
+    {
+      "skill_id": "ramp_commit"
+    },
+    {
+      "skill_id": "commercial_insight"
+    },
+    {
+      "skill_id": "answer_first"
+    },
+    {
+      "skill_id": "business_case"
+    }
+  ]
+}

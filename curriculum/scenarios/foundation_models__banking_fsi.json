@@ -1,0 +1,25 @@
+{
+  "id": "foundation_models__banking_fsi",
+  "cluster_id": "foundation_models",
+  "vertical_id": "banking_fsi",
+  "situation": "A Tier-1 Banking & FSI account is evaluating Foundation Models for fraud alert reviews. It would pay through a committed token budget. Risk committees block anything they cannot audit, even when the business case is strong.",
+  "workload": "fraud alert reviews",
+  "consumption_profile": {
+    "unit": "tokens",
+    "current_volume": "1.2 million alerts a month",
+    "growth": "about 15 percent a year",
+    "seasonality": "volume spikes in November and December",
+    "reveals": {
+      "forecast": {
+        "speaker": "CIO",
+        "partial": "There is a lot of volume in fraud alert reviews and it keeps growing, but I would need to pull the exact numbers.",
+        "verbatim": "We handle 1.2 million alerts a month today, growing about 15 percent a year, and volume spikes in November and December."
+      },
+      "ramp": {
+        "speaker": "CIO",
+        "partial": "We will not sign a large commit on tokens before we see real usage.",
+        "verbatim": "We can commit to 60 percent of that forecast in year one and run the rest on demand until usage proves out."
+      }
+    }
+  }
+}

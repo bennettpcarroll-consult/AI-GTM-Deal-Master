@@ -1,0 +1,25 @@
+{
+  "id": "vertical_agents__law_firms",
+  "cluster_id": "vertical_agents",
+  "vertical_id": "law_firms",
+  "situation": "A Law Firms & Corporate Legal account is evaluating Vertical Agents for contract review. It would pay through a price per resolution. Billable hours fund the partnership, so tools that speed up work can look like a threat to revenue, and no single leader decides alone.",
+  "workload": "contract review",
+  "consumption_profile": {
+    "unit": "resolutions",
+    "current_volume": "18,000 contracts a month",
+    "growth": "about 20 percent a year",
+    "seasonality": "it peaks at quarter-end deal closings",
+    "reveals": {
+      "forecast": {
+        "speaker": "Innovation Partner",
+        "partial": "There is a lot of volume in contract review and it keeps growing, but I would need to pull the exact numbers.",
+        "verbatim": "We handle 18,000 contracts a month today, growing about 20 percent a year, and it peaks at quarter-end deal closings."
+      },
+      "ramp": {
+        "speaker": "Innovation Partner",
+        "partial": "We will not sign a large commit on resolutions before we see real usage.",
+        "verbatim": "We can commit to 50 percent of that forecast in year one and run the rest on demand until usage proves out."
+      }
+    }
+  }
+}

@@ -2,18 +2,92 @@
   "id": "compute_infra",
   "display_name": "Compute & Cloud Infra",
   "value_chain_layer": "Compute & Cloud Infra",
-  "archetypal_vendors": ["AWS Bedrock and Trainium", "Google Vertex AI", "CoreWeave", "NVIDIA"],
+  "archetypal_vendors": [
+    "AWS Bedrock and Trainium",
+    "Google Vertex AI",
+    "CoreWeave",
+    "NVIDIA"
+  ],
   "pricing_unit": {
     "model": "Multi-year capacity commitments",
-    "units": ["EDP and committed-use dollars", "GPU hours", "Tokens served"],
+    "units": [
+      "EDP and committed-use dollars",
+      "GPU hours",
+      "Tokens served"
+    ],
     "summary": "The buyer commits to a multi-year spend floor, then burns it down on GPU hours and managed inference."
   },
-  "core_competitive_threats": ["Hyperscaler lock-in", "Raw price-per-FLOP comparisons", "Competitors hoarding reserved capacity"],
+  "core_competitive_threats": [
+    "Hyperscaler lock-in",
+    "Raw price-per-FLOP comparisons",
+    "Competitors hoarding reserved capacity"
+  ],
   "cluster_objections": [
     "If we commit to a three-year spend floor and our GPU utilization drops below plan, what happens to that commitment?",
     "Your price per token looks fine, but how do we compare it with the committed-use discount we already have elsewhere?"
   ],
   "marquee_lineage": [
-    { "label": "AWS Cloud Economics and Marketplace Co-Sell", "url": "https://aws.amazon.com/blogs/aws-cloud-financial-management/managing-costs-during-large-scale-migrations/" }
-  ]
+    {
+      "label": "AWS Cloud Economics and Marketplace Co-Sell",
+      "url": "https://aws.amazon.com/blogs/aws-cloud-financial-management/managing-costs-during-large-scale-migrations/"
+    }
+  ],
+  "priority_skills": [
+    "ramp_commit",
+    "usage_forecast",
+    "cost_to_serve",
+    "competition"
+  ],
+  "lesson": {
+    "cards": [
+      {
+        "title": "Where it sits",
+        "body": "Compute is the bottom of the AI stack: the GPUs and cloud capacity every model and agent runs on."
+      },
+      {
+        "title": "What the customer pays for",
+        "body": "Multi-year capacity commitments. The buyer reserves capacity before they use it."
+      },
+      {
+        "title": "How the money works",
+        "body": "Capacity sold ahead of use. If the customer under-uses a commit, renewal becomes a churn risk."
+      },
+      {
+        "title": "What threatens the deal",
+        "body": "Hyperscaler lock-in, raw price-per-FLOP comparisons, and competitors hoarding reserved capacity."
+      }
+    ],
+    "quiz": [
+      {
+        "prompt": "What does a compute buyer mainly pay for?",
+        "options": [
+          "Multi-year capacity commitments",
+          "Seats per user",
+          "Outcomes per resolution"
+        ],
+        "answer": 0,
+        "why": "Compute is sold as reserved capacity, committed ahead of use."
+      },
+      {
+        "prompt": "Why is an oversized commit risky for the seller?",
+        "options": [
+          "It lowers the list price",
+          "Unused capacity becomes a churn risk at renewal",
+          "It needs more legal review"
+        ],
+        "answer": 1,
+        "why": "A customer paying for idle capacity is unlikely to renew at the same size."
+      },
+      {
+        "prompt": "Which threat turns the deal into a price fight?",
+        "options": [
+          "Shadow AI",
+          "Raw price-per-FLOP comparisons",
+          "Model retirement"
+        ],
+        "answer": 1,
+        "why": "Comparing raw price per FLOP ignores the value you deliver on top."
+      }
+    ]
+  }
 }

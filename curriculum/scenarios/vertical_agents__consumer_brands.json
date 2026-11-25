@@ -1,0 +1,25 @@
+{
+  "id": "vertical_agents__consumer_brands",
+  "cluster_id": "vertical_agents",
+  "vertical_id": "consumer_brands",
+  "situation": "A Consumer Brands & Retail account is evaluating Vertical Agents for customer service conversations. It would pay through a price per resolution. A brand failure can go viral in an afternoon, and seasonal spikes make variable costs swing sharply.",
+  "workload": "customer service conversations",
+  "consumption_profile": {
+    "unit": "resolutions",
+    "current_volume": "2.5 million conversations a month",
+    "growth": "about 25 percent a year",
+    "seasonality": "it triples over the holiday peak",
+    "reveals": {
+      "forecast": {
+        "speaker": "VP Digital / E-Commerce",
+        "partial": "There is a lot of volume in customer service conversations and it keeps growing, but I would need to pull the exact numbers.",
+        "verbatim": "We handle 2.5 million conversations a month today, growing about 25 percent a year, and it triples over the holiday peak."
+      },
+      "ramp": {
+        "speaker": "VP Digital / E-Commerce",
+        "partial": "We will not sign a large commit on resolutions before we see real usage.",
+        "verbatim": "We can commit to 40 percent of that forecast in year one and run the rest on demand until usage proves out."
+      }
+    }
+  }
+}

@@ -11,7 +11,22 @@ export interface Turn {
   content: string;
   reveal?: 'partial' | 'verbatim';
   signal?: SignalId;
+  /** Set when the buyer turn is evidence for a non-MEDDPICC skill, such as a usage forecast. */
+  skill?: string;
   objection?: boolean;
+}
+
+/** Buyer evidence for a skill outside MEDDPICC. Like signals, it always cites a buyer turn. */
+export interface SkillEvidence {
+  skill: string;
+  level: 'partial' | 'verbatim';
+  transcript_turn_id: string;
+}
+
+export interface SkillProbe {
+  skill: string;
+  probes: { partial: string[]; verbatim: string[] };
+  reveal: { speaker: string; partial: string; verbatim: string };
 }
 
 export interface Binding {
@@ -26,6 +41,8 @@ export interface SimContext {
   signals: SignalDefinition[];
   objections: string[];
   personaRoles: string[];
+  /** Optional consumption probes from the scenario. Absent in older callers. */
+  skillProbes?: SkillProbe[];
 }
 
 export interface SimState {
@@ -40,6 +57,7 @@ export interface SimState {
   objectionIndex: number;
   neutralIndex: number;
   hintsUsed: number;
+  skillEvidence: Record<string, SkillEvidence>;
 }
 
 export const MAX_REVEALS_PER_TURN = 2;
@@ -75,7 +93,8 @@ export function startSimulation(ctx: SimContext, options: { mode: SessionMode; t
     learnerMessages: [],
     objectionIndex: 0,
     neutralIndex: 0,
-    hintsUsed: 0
+    hintsUsed: 0,
+    skillEvidence: {}
   };
 }
 
@@ -141,6 +160,27 @@ export function sendLearnerMessage(ctx: SimContext, state: SimState, text: strin
     if (bindings[signal].bars === 1) reveal(signal, 'partial');
   }
 
+  const skillEvidence: Record<string, SkillEvidence> = { ...state.skillEvidence };
+  for (const probe of ctx.skillProbes ?? []) {
+    if (reveals >= MAX_REVEALS_PER_TURN) break;
+    const current = skillEvidence[probe.skill];
+    if (current?.level === 'verbatim') continue;
+    const verbatim = matchesAny(probe.probes.verbatim, message);
+    const partial = verbatim || matchesAny(probe.probes.partial, message);
+    if (!partial) continue;
+    const level: 'partial' | 'verbatim' = current && verbatim ? 'verbatim' : 'partial';
+    if (current && level === 'partial') continue;
+    const turn = addTurn({
+      speaker: 'buyer',
+      speakerRole: probe.reveal.speaker,
+      content: probe.reveal[level],
+      reveal: level,
+      skill: probe.skill
+    });
+    skillEvidence[probe.skill] = { skill: probe.skill, level, transcript_turn_id: turn.id };
+    reveals += 1;
+  }
+
   const roles = ctx.personaRoles.length > 0 ? ctx.personaRoles : ['Buyer'];
   let neutralIndex = state.neutralIndex;
   if (reveals === 0) {
@@ -164,7 +204,7 @@ export function sendLearnerMessage(ctx: SimContext, state: SimState, text: strin
     objectionIndex += 1;
   }
 
-  return { ...state, turns, bindings, probed: [...probed], proofProbes, learnerMessages, objectionIndex, neutralIndex };
+  return { ...state, turns, bindings, probed: [...probed], proofProbes, learnerMessages, objectionIndex, neutralIndex, skillEvidence };
 }
 
 export function verifiedCount(state: SimState): number {

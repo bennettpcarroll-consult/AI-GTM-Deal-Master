@@ -2,19 +2,95 @@
   "id": "data_context",
   "display_name": "Data & Context",
   "value_chain_layer": "Data, Context & Memory",
-  "archetypal_vendors": ["Snowflake Cortex", "Databricks", "Palantir Ontology", "Pinecone"],
+  "archetypal_vendors": [
+    "Snowflake Cortex",
+    "Databricks",
+    "Palantir Ontology",
+    "Pinecone"
+  ],
   "pricing_unit": {
     "model": "Pure consumption",
-    "units": ["Credits", "DBUs", "Storage and query volume"],
+    "units": [
+      "Credits",
+      "DBUs",
+      "Storage and query volume"
+    ],
     "summary": "Revenue scales with the data the customer touches, so usage forecasts decide whether the deal looks healthy."
   },
-  "core_competitive_threats": ["Legacy data silos that nobody wants to migrate", "Good-enough native cloud databases"],
+  "core_competitive_threats": [
+    "Legacy data silos that nobody wants to migrate",
+    "Good-enough native cloud databases"
+  ],
   "cluster_objections": [
     "Our warehouse already has vector search. Why add another meter to our bill?",
     "Consumption is hard to forecast. How do we keep credits from spiking at quarter close?"
   ],
   "marquee_lineage": [
-    { "label": "Databricks Field Engineering playbook", "url": "https://www.databricks.com/company/careers/field-engineering---fe-direct-regulated/manager-field-engineering-specialist---hcls-8614656002" },
-    { "label": "Snowflake two-cycle close", "url": "https://www.forcemanagement.com/driving-growth-on-a-consumption-pricing-model" }
-  ]
+    {
+      "label": "Databricks Field Engineering playbook",
+      "url": "https://www.databricks.com/company/careers/field-engineering---fe-direct-regulated/manager-field-engineering-specialist---hcls-8614656002"
+    },
+    {
+      "label": "Snowflake two-cycle close",
+      "url": "https://www.forcemanagement.com/driving-growth-on-a-consumption-pricing-model"
+    }
+  ],
+  "priority_skills": [
+    "usage_forecast",
+    "adoption_plan",
+    "bounded_pov",
+    "identify_pain"
+  ],
+  "lesson": {
+    "cards": [
+      {
+        "title": "Where it sits",
+        "body": "Data, context and memory platforms feed models the right information at the right time."
+      },
+      {
+        "title": "What the customer pays for",
+        "body": "Pure consumption. The customer pays only for what they use."
+      },
+      {
+        "title": "How the money works",
+        "body": "Revenue lands only when queries run. Signing is halftime: the second half is getting usage to ramp."
+      },
+      {
+        "title": "What threatens the deal",
+        "body": "Legacy data silos nobody wants to migrate, and good-enough native cloud databases."
+      }
+    ],
+    "quiz": [
+      {
+        "prompt": "When does a pure consumption deal make money?",
+        "options": [
+          "At signature",
+          "When usage runs",
+          "At renewal only"
+        ],
+        "answer": 1,
+        "why": "With pure consumption, revenue follows usage, not the contract."
+      },
+      {
+        "prompt": "What is the second half of a consumption sale?",
+        "options": [
+          "Closing the consumption",
+          "Negotiating the discount",
+          "Running procurement"
+        ],
+        "answer": 0,
+        "why": "Close the deal, then close the consumption."
+      },
+      {
+        "prompt": "Which threat keeps data where it is?",
+        "options": [
+          "Legacy data silos",
+          "Open-weight models",
+          "BPO incumbents"
+        ],
+        "answer": 0,
+        "why": "Migration effort is the biggest reason buyers stay put."
+      }
+    ]
+  }
 }

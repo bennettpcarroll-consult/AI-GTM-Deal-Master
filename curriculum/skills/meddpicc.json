@@ -1,0 +1,151 @@
+{
+  "id": "meddpicc",
+  "display_name": "MEDDPICC",
+  "summary": "Qualification on eight signals. A signal only counts when the buyer confirms it in their own words.",
+  "skills": [
+    {
+      "id": "metrics",
+      "code": "M1",
+      "label": "Metrics",
+      "definition": "The quantified outcome the buyer must hit, stated in their own numbers.",
+      "evidence": "The buyer states a target number in their own words.",
+      "talk_track": {
+        "move": "Ask for the number that has to move, and by when.",
+        "strong": "What number has to move for this to be worth it, and by when?",
+        "weak": "We typically cut alerts by 40 percent.",
+        "proof": "Buyer states a target, such as false positives below 2 percent"
+      },
+      "rep": {
+        "buyer_line": "We want the agent to make the review queue better.",
+        "off_move": "Great, most customers see about 40 percent improvement."
+      },
+      "signal": "metrics"
+    },
+    {
+      "id": "economic_buyer",
+      "code": "M2",
+      "label": "Economic buyer",
+      "definition": "The person who can approve the spend and sign.",
+      "evidence": "The buyer names who signs, and up to what amount.",
+      "talk_track": {
+        "move": "Ask who signs the PO and up to what limit.",
+        "strong": "Who signs the PO, and up to what amount?",
+        "weak": "Who else should I talk to?",
+        "proof": "Buyer names the signer and a spend limit"
+      },
+      "rep": {
+        "buyer_line": "I am excited about this and I can get it moving internally.",
+        "off_move": "Perfect, so you are the decision maker. Let us talk pricing."
+      },
+      "signal": "economic_buyer"
+    },
+    {
+      "id": "decision_criteria",
+      "code": "M3",
+      "label": "Decision criteria",
+      "definition": "How the buyer will score vendors.",
+      "evidence": "The buyer lists the criteria and which one breaks a tie.",
+      "talk_track": {
+        "move": "Ask how vendors will be scored and what breaks a tie.",
+        "strong": "How will you score vendors? Which criterion breaks a tie?",
+        "weak": "We match every feature on your list.",
+        "proof": "Buyer lists the criteria in order"
+      },
+      "rep": {
+        "buyer_line": "We are looking at three vendors right now.",
+        "off_move": "We are better than all three. Here is why."
+      },
+      "signal": "decision_criteria"
+    },
+    {
+      "id": "decision_process",
+      "code": "M4",
+      "label": "Decision process",
+      "definition": "The steps and approvers between a good pilot and a signed deal.",
+      "evidence": "The buyer walks through the approval steps and who owns each one.",
+      "talk_track": {
+        "move": "Walk the steps after a successful pilot, day by day.",
+        "strong": "After a successful pilot, what happens on day one, day ten and day thirty?",
+        "weak": "What is your timeline?",
+        "proof": "Buyer names the steps and the approver for each"
+      },
+      "rep": {
+        "buyer_line": "If the pilot goes well we will move forward.",
+        "off_move": "Great, so we can expect a contract next month."
+      },
+      "signal": "decision_process"
+    },
+    {
+      "id": "paper_process",
+      "code": "M5",
+      "label": "Paper process",
+      "definition": "Legal, security and procurement steps and their lead times.",
+      "evidence": "The buyer gives lead times for legal, security and procurement.",
+      "talk_track": {
+        "move": "Start the paper process in parallel with the evaluation.",
+        "strong": "Can InfoSec start reviewing in parallel with the pilot, not after it?",
+        "weak": "We will deal with legal once you have decided.",
+        "proof": "Buyer gives lead times for legal, security and procurement"
+      },
+      "rep": {
+        "buyer_line": "Legal usually gets involved once we pick a vendor.",
+        "off_move": "Sounds good, we can sort contracts out at the end."
+      },
+      "signal": "paper_process"
+    },
+    {
+      "id": "identify_pain",
+      "code": "M6",
+      "label": "Identify pain",
+      "definition": "The business problem, tied to a cost or a risk.",
+      "evidence": "The buyer ties the pain to a cost or a risk.",
+      "talk_track": {
+        "move": "Ask what the problem costs, in hours, money or risk.",
+        "strong": "What does a false positive cost you in analyst hours each month?",
+        "weak": "That sounds painful.",
+        "proof": "Buyer ties the pain to a cost or a risk"
+      },
+      "rep": {
+        "buyer_line": "The review queue is a headache for the team.",
+        "off_move": "Our tool makes queues much less of a headache."
+      },
+      "signal": "identify_pain"
+    },
+    {
+      "id": "champion",
+      "code": "M7",
+      "label": "Champion",
+      "definition": "An insider with access, influence and a personal stake in your win.",
+      "evidence": "The buyer shows access to the economic buyer and a personal stake.",
+      "talk_track": {
+        "move": "Test whether your contact can sell this when you are not in the room.",
+        "strong": "If I am not in the room, how would you make the case to your CRO?",
+        "weak": "Great, you are our champion then.",
+        "proof": "Buyer shows access, influence and a personal stake"
+      },
+      "rep": {
+        "buyer_line": "I really like what you showed us. I am on your side.",
+        "off_move": "Fantastic, then you are our champion. Can you get us the contract?"
+      },
+      "signal": "champion"
+    },
+    {
+      "id": "competition",
+      "code": "M8",
+      "label": "Competition",
+      "definition": "The real alternatives, including building it yourself or doing nothing.",
+      "evidence": "The buyer names the real alternatives.",
+      "talk_track": {
+        "move": "Ask about every alternative, including build and do nothing.",
+        "strong": "What happens if you build this in-house, or do nothing?",
+        "weak": "Our competitors cannot do what we do.",
+        "proof": "Buyer names the alternatives, including build and do nothing"
+      },
+      "rep": {
+        "buyer_line": "We are talking to a couple of other vendors.",
+        "off_move": "They are behind us on every feature, so do not worry about them."
+      },
+      "signal": "competition"
+    }
+  ]
+}

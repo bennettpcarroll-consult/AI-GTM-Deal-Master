@@ -1,0 +1,137 @@
+{
+  "id": "consumption",
+  "display_name": "Consumption selling",
+  "summary": "Close the deal, then close the consumption. Revenue only lands when usage ramps.",
+  "skills": [
+    {
+      "id": "pricing_unit_fluency",
+      "code": "C1",
+      "label": "Pricing unit fluency",
+      "definition": "Explain the pricing unit in the buyer’s workload terms, not the rate card.",
+      "evidence": "The buyer restates the cost in their own workload terms.",
+      "talk_track": {
+        "move": "Translate the unit into cost per piece of the buyer’s work.",
+        "strong": "At your volume, that is about this much per review and this much per month.",
+        "weak": "Here is our rate card per million tokens.",
+        "proof": "Buyer restates the cost in workload terms"
+      },
+      "rep": {
+        "buyer_line": "I do not understand how tokens turn into a monthly bill.",
+        "off_move": "It depends. Here is the full rate card so you can work it out."
+      }
+    },
+    {
+      "id": "bounded_pov",
+      "code": "C2",
+      "label": "Bounded proof of value",
+      "definition": "Agree scope, exit criteria and an end date before any pilot starts.",
+      "evidence": "Scope, exit criteria and end date are agreed before the pilot.",
+      "talk_track": {
+        "move": "Bound the pilot: one workload, a pass bar, and a stop date.",
+        "strong": "Four weeks, one workload, and we stop if accuracy is under 95 percent. Agreed?",
+        "weak": "Try it free for as long as you like and see.",
+        "proof": "Buyer agrees scope, exit criteria and an end date"
+      },
+      "rep": {
+        "buyer_line": "Can we just pilot it for a while and see how it goes?",
+        "off_move": "Sure, take as long as you need. It is free."
+      }
+    },
+    {
+      "id": "ramp_commit",
+      "code": "C3",
+      "label": "Ramp and commit design",
+      "definition": "Size the commit to the forecast, with on-demand headroom while usage proves out.",
+      "evidence": "The buyer accepts a ramp schedule and a commit level.",
+      "talk_track": {
+        "move": "Propose a commit below forecast and on-demand above it.",
+        "strong": "Commit to 60 percent of the forecast and run the rest on demand until usage proves out.",
+        "weak": "Let us lock in the biggest commit we can for the best discount.",
+        "proof": "Buyer accepts a ramp schedule"
+      },
+      "rep": {
+        "buyer_line": "We will not sign a big commit before we see real usage.",
+        "off_move": "Then you will pay full list price. The discount needs a big commit."
+      },
+      "probes": {
+        "partial": [
+          "\\bcommit",
+          "\\bramp",
+          "\\bon[- ]demand",
+          "\\breserv"
+        ],
+        "verbatim": [
+          "(commit|commitment).*(percent|%|portion|share).*(forecast|usage)",
+          "(ramp|phase).*(commit|usage|volume)",
+          "on[- ]demand.*(until|while|above|beyond)"
+        ]
+      },
+      "scenario_reveal": "ramp"
+    },
+    {
+      "id": "usage_forecast",
+      "code": "C4",
+      "label": "Usage forecast",
+      "definition": "Build the volume forecast from the buyer’s own workload numbers.",
+      "evidence": "The buyer supplies current volume, growth and seasonality.",
+      "talk_track": {
+        "move": "Ask for today’s volume, next year’s growth and the peaks.",
+        "strong": "How many reviews a day today, and what volume do you expect next year?",
+        "weak": "Most customers your size use about this much.",
+        "proof": "Buyer supplies the volume numbers"
+      },
+      "rep": {
+        "buyer_line": "We have a lot of volume, and it is growing.",
+        "off_move": "Great, I will assume about the same as our average customer."
+      },
+      "probes": {
+        "partial": [
+          "\\bvolume",
+          "\\busage",
+          "\\bforecast",
+          "\\bhow (much|many)"
+        ],
+        "verbatim": [
+          "how (much|many).*(per|a|each) (day|week|month|year)",
+          "(volume|usage).*(today|now|currently).*(next|grow|expect|peak)",
+          "(peak|season|spike).*(volume|usage)"
+        ]
+      },
+      "scenario_reveal": "forecast"
+    },
+    {
+      "id": "adoption_plan",
+      "code": "C5",
+      "label": "Adoption plan",
+      "definition": "Plan who uses it, for what, and the usage target in the first 90 days.",
+      "evidence": "The buyer names users, use cases and a usage target.",
+      "talk_track": {
+        "move": "Name the first users and their week-one use case.",
+        "strong": "Who are the first 50 users, and what does week one look like for them?",
+        "weak": "Once you sign, you are all set.",
+        "proof": "Buyer names users and a usage target"
+      },
+      "rep": {
+        "buyer_line": "Usage is at 30 percent of what we forecast. What now?",
+        "off_move": "That is fine, the commit is already paid for."
+      }
+    },
+    {
+      "id": "cost_to_serve",
+      "code": "C6",
+      "label": "Cost-to-serve awareness",
+      "definition": "Trade, never give: any discount narrows scope so the unit cost still works.",
+      "evidence": "A concession is traded for something of equal value.",
+      "talk_track": {
+        "move": "Trade a concession for scope, term or volume.",
+        "strong": "If we discount, we narrow the scope, so the unit cost still works for both of us.",
+        "weak": "Sure, I can do 30 percent off.",
+        "proof": "Buyer agrees a trade for any concession"
+      },
+      "rep": {
+        "buyer_line": "Your price is 20 percent higher than the other vendor.",
+        "off_move": "No problem, I will match it."
+      }
+    }
+  ]
+}
