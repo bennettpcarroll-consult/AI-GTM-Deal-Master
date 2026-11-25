@@ -16,7 +16,8 @@
     "curriculum:validate": "tsx scripts/validate-curriculum.ts",
     "test": "vitest run",
     "test:rubric": "vitest run tests/rubric",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "ci:local": "bash scripts/ci-local.sh"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
