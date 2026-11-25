@@ -38,6 +38,7 @@ This repo follows the spec in the PRD. Read the PRD section that matches your ch
   - `pnpm test:rubric`
 - Full build before merge: `pnpm build`
 - All of the above plus the BMAD learnings entry: `pnpm ci:local`
+- QA site: `.github/workflows/pages.yml` publishes `main` as a static export (`STATIC_EXPORT=1`) to GitHub Pages. Keep every route statically exportable: no server actions, API routes or server-side `redirect()`, and give dynamic routes `generateStaticParams`.
 
 ## BMAD and CI learnings
 

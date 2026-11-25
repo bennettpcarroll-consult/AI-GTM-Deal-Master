@@ -4,6 +4,12 @@ An open-source, gamified AI GTM training platform from the [Profit, Not Pilot](h
 
 Learners choose an AI value-chain cluster and a customer vertical, learn the market in a short lesson, take a 12-question diagnostic, then work a gamified path of deal drills and 2-minute skill reps. Every skill is graded on verbatim buyer evidence, not on checkboxes.
 
+## Try it in a browser
+
+Every merge to `main` publishes a QA build to GitHub Pages: https://bennettpcarroll-consult.github.io/AI-GTM-Deal-Master/
+
+Progress is saved in your browser. To start over, use Settings, then Clear data, or open a private window.
+
 ## Run it
 
 Requirements: Node.js 20.9+ (22 LTS recommended) and pnpm 10+.
