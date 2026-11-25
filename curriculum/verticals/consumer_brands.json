@@ -2,6 +2,7 @@
   "id": "consumer_brands",
   "display_name": "Consumer Brands & Retail",
   "short_name": "Consumer Brands",
+  "glyph": "shopping-bag",
   "regulatory_and_risk_profile": [
     "Brand safety and public hallucination liability",
     "PCI-DSS scope for payment-adjacent conversations",
@@ -19,22 +20,36 @@
   "buying_committee": [
     {
       "role": "CMO",
-      "kpis": ["Conversion rate", "Customer lifetime value", "Brand equity"],
+      "kpis": [
+        "Conversion rate",
+        "Customer lifetime value",
+        "Brand equity"
+      ],
       "primary_fear": "An AI agent hallucinates unauthorized discounts or off-brand messaging in public."
     },
     {
       "role": "VP Digital / E-Commerce",
-      "kpis": ["Digital conversion", "Site search success"],
+      "kpis": [
+        "Digital conversion",
+        "Site search success"
+      ],
       "primary_fear": "The launch misses the holiday window."
     },
     {
       "role": "CFO",
-      "kpis": ["Gross margin", "Payback period under 9 months"],
+      "kpis": [
+        "Gross margin",
+        "Payback period under 9 months"
+      ],
       "primary_fear": "We pay for shelfware seats or unmeasured pilot sprawl."
     },
     {
       "role": "Head of CX / Contact Center",
-      "kpis": ["Cost per resolution", "CSAT", "Seasonal BPO deflection"],
+      "kpis": [
+        "Cost per resolution",
+        "CSAT",
+        "Seasonal BPO deflection"
+      ],
       "primary_fear": "Runaway variable usage bills during Q4 holiday surges."
     }
   ],

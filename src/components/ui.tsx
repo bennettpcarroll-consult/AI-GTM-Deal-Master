@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { ChevronLeft, X } from 'lucide-react';
+import { Award, ChevronLeft, Circle, CircleCheck, CircleDot, X } from 'lucide-react';
 import type { Mastery } from '@/lib/skills';
 
 /** A rounded progress track. Progress and steps are people violet by default. */
@@ -20,29 +20,39 @@ export function ProgressBar({ value, max, label, color = '#c77dff' }: { value: n
   );
 }
 
-/** The four-bar indicator. Solid bars are earned, dashed bars are still open. */
-export function Bars({ level, color, label }: { level: Mastery | 1 | 3 | 4; color: string; label: string }) {
+const MASTERY_STYLE = {
+  1: { label: 'Not started', icon: Circle, className: 'bg-deep text-slate' },
+  2: { label: 'Practiced', icon: CircleDot, className: 'bg-people-soft text-people-ink' },
+  3: { label: 'Proven', icon: CircleCheck, className: 'bg-profit-soft text-profit-ink' },
+  4: { label: 'Certified', icon: Award, className: 'bg-value-soft text-value-ink' }
+} as const;
+
+/** Skill mastery as a word plus a symbol. Replaces bar meters, which read as an unexplained gauge. */
+export function MasteryBadge({ level }: { level: Mastery }) {
+  const style = MASTERY_STYLE[level];
+  const Icon = style.icon;
   return (
-    <span className="flex h-5 items-end gap-[3px]" role="img" aria-label={`${label}, ${level} of 4 bars`}>
-      {[6, 10, 14, 20].map((height, index) => {
-        const filled = index < level;
-        return (
-          <span
-            key={height}
-            className="w-[5px] rounded-[2px]"
-            style={
-              filled
-                ? { height, background: color }
-                : { height, border: '1px dashed rgb(14 17 22 / 0.3)', boxSizing: 'border-box' }
-            }
-          />
-        );
-      })}
+    <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-bold ${style.className}`}>
+      <Icon className="h-3.5 w-3.5" strokeWidth={2.25} aria-hidden="true" />
+      {style.label}
     </span>
   );
 }
 
-/** Top row of a focused step: leave or go back, then the step's progress. */
+/** A signal's live state in the room: open, partial (buyer hinted) or verified (buyer said it). */
+export function SignalState({ bars, label }: { bars: number; label: string }) {
+  const verified = bars === 4;
+  const partial = bars === 3;
+  const Icon = verified ? CircleCheck : partial ? CircleDot : Circle;
+  return (
+    <span className={`inline-flex items-center gap-1.5 text-[13px] font-semibold ${verified ? 'text-profit-ink' : partial ? 'text-ink' : 'text-slate'}`}>
+      <Icon className="h-4 w-4" strokeWidth={2.25} aria-hidden="true" />
+      {label}
+      <span className="sr-only">{verified ? ', verified' : partial ? ', partial' : ', open'}</span>
+    </span>
+  );
+}
+
 export function StepBar({
   exitHref,
   onBack,

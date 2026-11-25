@@ -1,6 +1,7 @@
 {
   "id": "meddpicc",
   "display_name": "MEDDPICC",
+  "glyph": "target",
   "summary": "Qualification on eight signals. A signal only counts when the buyer confirms it in their own words.",
   "skills": [
     {

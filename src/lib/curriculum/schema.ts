@@ -5,6 +5,9 @@ export const VERTICAL_IDS = ['banking_fsi', 'insurance', 'law_firms', 'consumer_
 export const SIGNAL_IDS = ['metrics', 'economic_buyer', 'decision_criteria', 'decision_process', 'paper_process', 'identify_pain', 'champion', 'competition'] as const;
 export const TIERS = [1, 2, 3, 4] as const;
 export const ICON_IDS = ['target', 'node-graph', 'users', 'layers'] as const;
+/** Presentation symbols. Rendered by src/components/glyph.tsx. */
+export const GLYPH_IDS = ['cpu', 'sparkles', 'database', 'workflow', 'bot', 'landmark', 'shopping-bag', 'umbrella', 'scale', 'compass', 'target', 'gauge', 'briefcase'] as const;
+export type GlyphId = (typeof GLYPH_IDS)[number];
 export const FAMILY_IDS = ['fundamentals', 'meddpicc', 'consumption', 'executive'] as const;
 export const SCENARIO_REVEAL_IDS = ['forecast', 'ramp'] as const;
 
@@ -50,7 +53,10 @@ export type Lesson = z.infer<typeof lessonSchema>;
 export const clusterSchema = z.object({
   id: z.enum(CLUSTER_IDS),
   display_name: nonEmpty,
+  glyph: z.enum(GLYPH_IDS),
   value_chain_layer: nonEmpty,
+  /** Position in the AI value chain, 1 = closest to silicon. */
+  stack_order: z.number().int().min(1).max(5),
   archetypal_vendors: z.array(nonEmpty).min(1),
   pricing_unit: z.object({
     model: nonEmpty,
@@ -76,6 +82,7 @@ export const verticalSchema = z.object({
   id: z.enum(VERTICAL_IDS),
   display_name: nonEmpty,
   short_name: nonEmpty,
+  glyph: z.enum(GLYPH_IDS),
   regulatory_and_risk_profile: z.array(nonEmpty).min(1),
   paper_process_blockers: z.array(nonEmpty).min(1),
   dominant_friction: nonEmpty,
@@ -203,6 +210,7 @@ export type Skill = z.infer<typeof skillSchema>;
 export const skillFamilySchema = z.object({
   id: z.enum(FAMILY_IDS),
   display_name: nonEmpty,
+  glyph: z.enum(GLYPH_IDS),
   summary: nonEmpty,
   skills: z.array(skillSchema).min(1)
 });

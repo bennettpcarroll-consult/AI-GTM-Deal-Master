@@ -2,6 +2,7 @@
   "id": "law_firms",
   "display_name": "Law Firms & Corporate Legal",
   "short_name": "Law Firms",
+  "glyph": "scale",
   "regulatory_and_risk_profile": [
     "Matter-level privilege and ethical walls",
     "Client outside-counsel guidelines on AI use",
@@ -20,22 +21,35 @@
   "buying_committee": [
     {
       "role": "Managing Partner",
-      "kpis": ["Revenue per lawyer", "Realization rate", "Profit per equity partner"],
+      "kpis": [
+        "Revenue per lawyer",
+        "Realization rate",
+        "Profit per equity partner"
+      ],
       "primary_fear": "Associates bill less, partners earn less, and we fund the tool anyway."
     },
     {
       "role": "Innovation Partner",
-      "kpis": ["Pilot adoption rate", "Time saved per matter"],
+      "kpis": [
+        "Pilot adoption rate",
+        "Time saved per matter"
+      ],
       "primary_fear": "We pilot again and nothing reaches the practice groups."
     },
     {
       "role": "General Counsel",
-      "kpis": ["Ethical wall integrity", "Outside-counsel guideline compliance"],
+      "kpis": [
+        "Ethical wall integrity",
+        "Outside-counsel guideline compliance"
+      ],
       "primary_fear": "A privileged document leaks into a model's training data."
     },
     {
       "role": "Knowledge Management Director",
-      "kpis": ["Precedent reuse", "Document search time"],
+      "kpis": [
+        "Precedent reuse",
+        "Document search time"
+      ],
       "primary_fear": "Our knowledge base fragments across tools that nobody maintains."
     }
   ],

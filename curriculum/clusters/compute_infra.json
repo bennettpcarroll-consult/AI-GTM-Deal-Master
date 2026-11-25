@@ -1,7 +1,9 @@
 {
   "id": "compute_infra",
   "display_name": "Compute & Cloud Infra",
+  "glyph": "cpu",
   "value_chain_layer": "Compute & Cloud Infra",
+  "stack_order": 1,
   "archetypal_vendors": [
     "AWS Bedrock and Trainium",
     "Google Vertex AI",

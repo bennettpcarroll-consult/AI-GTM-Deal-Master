@@ -1,7 +1,9 @@
 {
   "id": "vertical_agents",
   "display_name": "Vertical Agents",
+  "glyph": "bot",
   "value_chain_layer": "Vertical & Autonomous Agents",
+  "stack_order": 5,
   "archetypal_vendors": [
     "Cognition (Devin)",
     "Sierra",

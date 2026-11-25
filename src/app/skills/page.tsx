@@ -3,10 +3,11 @@
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { AppShell } from '@/components/app-shell';
-import { Bars, Loading } from '@/components/ui';
-import { FAMILY_COLOR } from '@/lib/brand';
+import { Glyph, IconTile } from '@/components/glyph';
+import { Loading, MasteryBadge } from '@/components/ui';
+import { FAMILY_COLOR, FAMILY_TINT } from '@/lib/brand';
 import { loadCurriculum } from '@/lib/curriculum/load';
-import { MASTERY_LABELS, masteryMap, whereTaught } from '@/lib/skills';
+import { masteryMap, whereTaught } from '@/lib/skills';
 import { tierUnlocked } from '@/lib/store';
 import { useAppState } from '@/lib/use-app-state';
 
@@ -39,9 +40,14 @@ export default function SkillsPage() {
         const color = FAMILY_COLOR[family.id] ?? '#5e6672';
         return (
           <section key={family.id} className="mt-8" aria-labelledby={`family-${family.id}`}>
-            <h2 id={`family-${family.id}`} className="t-heading">
-              {family.display_name}
-            </h2>
+            <div className="flex items-center gap-3">
+              <IconTile tint={FAMILY_TINT[family.id] ?? '#f4f5f7'} color={color}>
+                <Glyph name={family.glyph} className="h-6 w-6" />
+              </IconTile>
+              <h2 id={`family-${family.id}`} className="t-heading">
+                {family.display_name}
+              </h2>
+            </div>
             <p className="t-small mt-1">{family.summary}</p>
             <ul className="mt-4 flex flex-col gap-2">
               {family.skills.map((skill) => {
@@ -51,17 +57,8 @@ export default function SkillsPage() {
                   <li key={skill.id}>
                     <details className="group rounded-panel border border-hairline bg-paper open:shadow-lift">
                       <summary className="flex min-h-[60px] cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
-                        <span
-                          className="grid h-9 w-9 shrink-0 place-items-center rounded-xl font-display text-[14px] font-extrabold"
-                          style={{ background: `${color}1a`, color }}
-                        >
-                          {skill.code}
-                        </span>
-                        <span className="flex flex-1 flex-col">
-                          <span className="t-item">{skill.label}</span>
-                          <span className="t-small">{MASTERY_LABELS[level]}</span>
-                        </span>
-                        <Bars level={level} color={color} label={skill.label} />
+                        <span className="t-item flex-1">{skill.label}</span>
+                        <MasteryBadge level={level} />
                         <ChevronDown className="h-4 w-4 text-slate transition group-open:rotate-180" aria-hidden="true" />
                       </summary>
                       <div className="flex flex-col gap-4 border-t border-rule px-4 pb-4 pt-3">

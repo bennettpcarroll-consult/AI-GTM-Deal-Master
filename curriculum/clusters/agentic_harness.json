@@ -1,7 +1,9 @@
 {
   "id": "agentic_harness",
   "display_name": "Agentic Harness",
+  "glyph": "workflow",
   "value_chain_layer": "Agentic Harness & Observability",
+  "stack_order": 4,
   "archetypal_vendors": [
     "LangChain and LangSmith",
     "Arize",
