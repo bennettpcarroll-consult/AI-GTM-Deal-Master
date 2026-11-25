@@ -1,7 +1,7 @@
 import { CREDIT_THRESHOLD, DRILL_IDS, STAGES, type Stage } from './constants';
 import { trajectoryId } from './composer';
 import { TIERS, type ClusterId, type SignalId, type Tier, type VerticalId } from './curriculum/schema';
-import type { Binding, Turn } from './simulator';
+import type { Binding, SkillEvidence, Turn } from './simulator';
 
 export interface SessionRecord {
   id: string;
@@ -14,6 +14,9 @@ export interface SessionRecord {
   bindings: Record<SignalId, Binding>;
   transcript: Turn[];
   createdAt: string;
+  /** Buyer evidence for consumption skills. Missing on sessions saved before skills existed. */
+  skillEvidence?: Record<string, SkillEvidence>;
+  hintsUsed?: number;
 }
 
 export interface DrillProgress {
@@ -37,11 +40,32 @@ export interface Trajectory {
   boss: Record<string, BossProgress>;
 }
 
+/** Result of the starting diagnostic: skill id to whether the learner picked the strongest reply. */
+export interface DiagnosticResult {
+  completedAt: string;
+  answers: Record<string, boolean>;
+}
+
+/** Engagement counters. Points come only from verified buyer proof, never from time spent. */
+export interface Engagement {
+  streak: number;
+  lastActiveDay: string | null;
+  today: string | null;
+  repsToday: number;
+  points: number;
+  /** Skill ids the learner has practiced in quick reps. */
+  repSkills: string[];
+}
+
 export interface AppState {
   version: 1;
   activeTrajectoryId: string | null;
   trajectories: Trajectory[];
   globalCompetencies: { meddpicc: number };
+  diagnostic?: DiagnosticResult;
+  engagement?: Engagement;
+  /** Clusters whose market lesson the learner has finished. */
+  lessonsDone?: ClusterId[];
 }
 
 export function drillKey(tier: Tier, drillId: string): string {

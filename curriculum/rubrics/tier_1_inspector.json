@@ -4,12 +4,17 @@
   "pillar": "01",
   "role_title": "Deal Inspector",
   "pillar_theme": "Qualification",
-  "color": "#F97316",
-  "text_color": "#C2410C",
+  "color": "#ff9e6b",
+  "text_color": "#b85a24",
   "icon": "target",
   "acv_band": "$100K to $250K",
-  "frameworks": ["meddpicc"],
-  "supporting_frameworks": ["SPIN Selling", "Sandler Up-Front Contracts"],
+  "frameworks": [
+    "meddpicc"
+  ],
+  "supporting_frameworks": [
+    "SPIN Selling",
+    "Sandler Up-Front Contracts"
+  ],
   "core_gate_pass_min": 85,
   "boss_pass_min": 80,
   "auto_fail_flags": [
@@ -19,15 +24,30 @@
       "description": "The seller calls a person a champion without showing that the person has budget, sign-off, or access.",
       "detector": {
         "type": "pattern_without",
-        "trigger": ["our champion", "is (our|my) champion", "champion is"],
-        "required": ["budget", "sign", "approv", "authority", "access to"]
-      }
+        "trigger": [
+          "our champion",
+          "is (our|my) champion",
+          "champion is"
+        ],
+        "required": [
+          "budget",
+          "sign",
+          "approv",
+          "authority",
+          "access to"
+        ]
+      },
+      "skill": "champion"
     },
     {
       "id": "paper_process_ignored",
       "label": "Paper process lag ignored",
       "description": "The seller never probed the paper process, so legal, procurement, and security lag stays unknown.",
-      "detector": { "type": "signal_never_probed", "signal": "paper_process" }
+      "detector": {
+        "type": "signal_never_probed",
+        "signal": "paper_process"
+      },
+      "skill": "paper_process"
     }
   ],
   "artifact": "Verified MEDDPICC scorecard with verbatim buyer citations",
@@ -40,21 +60,41 @@
     {
       "id": "d1",
       "title": "Metrics and economic buyer",
-      "target_signals": ["metrics", "economic_buyer"],
+      "target_signals": [
+        "metrics",
+        "economic_buyer"
+      ],
       "prompt": "Ask what success looks like in numbers, then ask who owns the budget and who signs the PO.",
-      "placement_credit_eligible": true
+      "placement_credit_eligible": true,
+      "practices_skills": [
+        "account_research",
+        "discovery_questioning",
+        "upfront_contract"
+      ]
     },
     {
       "id": "d2",
       "title": "Decision criteria and process",
-      "target_signals": ["decision_criteria", "decision_process"],
-      "prompt": "Find out how they will score vendors, then walk through the approval path step by step."
+      "target_signals": [
+        "decision_criteria",
+        "decision_process"
+      ],
+      "prompt": "Find out how they will score vendors, then walk through the approval path step by step.",
+      "practices_skills": [
+        "listening_summarizing"
+      ]
     },
     {
       "id": "d3",
       "title": "Champion and paper process",
-      "target_signals": ["champion", "paper_process"],
-      "prompt": "Test whether your champion will carry the deal internally, then map legal, procurement, and security lead times."
+      "target_signals": [
+        "champion",
+        "paper_process"
+      ],
+      "prompt": "Test whether your champion will carry the deal internally, then map legal, procurement, and security lead times.",
+      "practices_skills": [
+        "next_step_control"
+      ]
     }
   ],
   "boss_fight": {

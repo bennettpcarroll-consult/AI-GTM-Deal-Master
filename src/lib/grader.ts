@@ -1,6 +1,6 @@
 import { SIGNAL_IDS, type Detector, type Rubric, type SignalId } from './curriculum/schema';
 import { matchesAny } from './patterns';
-import type { Binding, SimState, Turn } from './simulator';
+import type { Binding, SimState, SkillEvidence, Turn } from './simulator';
 
 export interface AutoFailHit {
   id: string;
@@ -16,6 +16,7 @@ export interface GradeResult {
   passed: boolean;
   autoFails: AutoFailHit[];
   verifiedCount: number;
+  skillEvidence: Record<string, SkillEvidence>;
 }
 
 /** Throws when a 4-bar binding is not backed by a buyer turn. This is the anti-checkbox rule. */
@@ -29,6 +30,16 @@ export function assertEvidenceInvariant(bindings: Record<SignalId, Binding>, tur
     const turn = turns.find((candidate) => candidate.id === binding.transcript_turn_id);
     if (!turn || turn.speaker !== 'buyer') {
       throw new Error(`${signal}: verbatim (4-bar) signal must cite a buyer turn`);
+    }
+  }
+}
+
+/** Skill evidence outside MEDDPICC follows the same rule: it must cite a buyer turn. */
+export function assertSkillEvidenceInvariant(evidence: Record<string, SkillEvidence>, turns: Turn[]): void {
+  for (const item of Object.values(evidence)) {
+    const turn = turns.find((candidate) => candidate.id === item.transcript_turn_id);
+    if (!turn || turn.speaker !== 'buyer') {
+      throw new Error(`${item.skill}: skill evidence must cite a buyer turn`);
     }
   }
 }
@@ -67,6 +78,7 @@ export function evaluateAutoFails(rubric: Rubric, state: SimState): AutoFailHit[
  */
 export function gradeSession(rubric: Rubric, state: SimState): GradeResult {
   assertEvidenceInvariant(state.bindings, state.turns);
+  assertSkillEvidenceInvariant(state.skillEvidence, state.turns);
   const score = scoreSignals(state.bindings, state.targetSignals);
   const gate = state.mode === 'boss' ? rubric.boss_pass_min : rubric.core_gate_pass_min;
   const autoFails = evaluateAutoFails(rubric, state);
@@ -79,6 +91,7 @@ export function gradeSession(rubric: Rubric, state: SimState): GradeResult {
     gate,
     passed: score >= gate && autoFails.length === 0 && fullyVerified,
     autoFails,
-    verifiedCount
+    verifiedCount,
+    skillEvidence: state.skillEvidence
   };
 }

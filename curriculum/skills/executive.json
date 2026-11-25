@@ -1,0 +1,75 @@
+{
+  "id": "executive",
+  "display_name": "Executive selling",
+  "summary": "Teach, tailor and take control with the C-suite: insight, value, answer first, business case.",
+  "skills": [
+    {
+      "id": "commercial_insight",
+      "code": "E1",
+      "label": "Commercial insight",
+      "definition": "Reframe the problem with an insight the buyer had not considered, backed by a number.",
+      "evidence": "The buyer reacts to the reframe as new.",
+      "talk_track": {
+        "move": "Lead with an insight that reframes their problem.",
+        "strong": "Banks like yours lose more to alert fatigue than to missed fraud. Here is the number.",
+        "weak": "Let me walk you through our features.",
+        "proof": "Buyer reacts to the reframe, for example “we have never measured that”"
+      },
+      "rep": {
+        "buyer_line": "We think our process is pretty good already.",
+        "off_move": "Our product has 40 features. Let me show you the top ten."
+      }
+    },
+    {
+      "id": "value_messaging",
+      "code": "E2",
+      "label": "Value messaging",
+      "definition": "Before and after, positive outcomes and proof, in the buyer’s terms.",
+      "evidence": "The buyer repeats the outcome in their own words.",
+      "talk_track": {
+        "move": "State before, after, and proof from a similar customer.",
+        "strong": "Today, 4 hours per case. After, 20 minutes, proven with a bank your size.",
+        "weak": "We have a best-in-class AI platform.",
+        "proof": "Buyer repeats the outcome in their words"
+      },
+      "rep": {
+        "buyer_line": "Why should I care about another AI tool?",
+        "off_move": "Because our platform is best in class and fully AI powered."
+      }
+    },
+    {
+      "id": "answer_first",
+      "code": "E3",
+      "label": "Answer first",
+      "definition": "Give the recommendation first, then three supporting reasons.",
+      "evidence": "The executive engages with the recommendation.",
+      "talk_track": {
+        "move": "Lead with the answer, then the reasons.",
+        "strong": "My recommendation: start with fraud operations. Three reasons.",
+        "weak": "So, to give you some background first...",
+        "proof": "Executive engages with the recommendation"
+      },
+      "rep": {
+        "buyer_line": "I have five minutes. What should I do?",
+        "off_move": "Let me start with some background on our company history."
+      }
+    },
+    {
+      "id": "business_case",
+      "code": "E4",
+      "label": "Business case",
+      "definition": "A multi-year ROI and the cost of waiting that finance accepts.",
+      "evidence": "Finance accepts the inputs and the method.",
+      "talk_track": {
+        "move": "Show multi-year ROI and the cost of a year’s delay, from their inputs.",
+        "strong": "Using your numbers, three-year ROI is 4x, and waiting a year costs about 2 million dollars.",
+        "weak": "It pays for itself, trust me.",
+        "proof": "Finance accepts the inputs and the method"
+      },
+      "rep": {
+        "buyer_line": "Finance will ask why we should spend this now.",
+        "off_move": "Because the price goes up next quarter."
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "foundation_models__insurance",
+  "cluster_id": "foundation_models",
+  "vertical_id": "insurance",
+  "situation": "A Insurance (Underwriting & Claims) account is evaluating Foundation Models for claims document processing. It would pay through a committed token budget. Combined-ratio pressure makes every change look expensive, and every denial must be explainable to a regulator.",
+  "workload": "claims document processing",
+  "consumption_profile": {
+    "unit": "tokens",
+    "current_volume": "400,000 claims documents a month",
+    "growth": "about 10 percent a year",
+    "seasonality": "volume doubles after a major storm",
+    "reveals": {
+      "forecast": {
+        "speaker": "Head of Claims",
+        "partial": "There is a lot of volume in claims document processing and it keeps growing, but I would need to pull the exact numbers.",
+        "verbatim": "We handle 400,000 claims documents a month today, growing about 10 percent a year, and volume doubles after a major storm."
+      },
+      "ramp": {
+        "speaker": "Head of Claims",
+        "partial": "We will not sign a large commit on tokens before we see real usage.",
+        "verbatim": "We can commit to 50 percent of that forecast in year one and run the rest on demand until usage proves out."
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "id": "data_context__banking_fsi",
+  "cluster_id": "data_context",
+  "vertical_id": "banking_fsi",
+  "situation": "A Tier-1 Banking & FSI account is evaluating Data & Context for fraud alert reviews. It would pay through pure consumption. Risk committees block anything they cannot audit, even when the business case is strong.",
+  "workload": "fraud alert reviews",
+  "consumption_profile": {
+    "unit": "queries",
+    "current_volume": "1.2 million alerts a month",
+    "growth": "about 15 percent a year",
+    "seasonality": "volume spikes in November and December",
+    "reveals": {
+      "forecast": {
+        "speaker": "CIO",
+        "partial": "There is a lot of volume in fraud alert reviews and it keeps growing, but I would need to pull the exact numbers.",
+        "verbatim": "We handle 1.2 million alerts a month today, growing about 15 percent a year, and volume spikes in November and December."
+      },
+      "ramp": {
+        "speaker": "CIO",
+        "partial": "We will not sign a large commit on queries before we see real usage.",
+        "verbatim": "We can commit to 60 percent of that forecast in year one and run the rest on demand until usage proves out."
+      }
+    }
+  }
+}

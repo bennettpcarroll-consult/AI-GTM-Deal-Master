@@ -2,26 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+  :focus-visible {
+    outline: 2.5px solid #1f6fd1;
+    outline-offset: 3px;
+  }
+}
+
 @layer components {
-  .card {
-    @apply rounded-[20px] border border-[#E5E7EB] bg-white;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -12px rgba(15, 23, 42, 0.12);
+  /* Type roles. Every line of copy uses one of these. */
+  .t-display { @apply font-display text-[40px] font-extrabold leading-[0.98] tracking-[-0.04em] sm:text-[56px]; }
+  .t-stat { @apply font-display text-[56px] font-extrabold leading-none tracking-[-0.035em] tabular-nums sm:text-[64px]; }
+  .t-title { @apply font-display text-[30px] font-extrabold leading-[1.05] tracking-[-0.035em] sm:text-[36px]; }
+  .t-heading { @apply font-display text-[20px] font-bold leading-[1.15] tracking-[-0.02em] sm:text-[22px]; }
+  .t-quote { @apply font-display text-[21px] font-bold leading-[1.3] tracking-[-0.015em]; }
+  .t-lede { @apply text-[16px] leading-[1.45] text-slate sm:text-[17px]; }
+  .t-item { @apply text-[16px] font-bold leading-[1.3] sm:text-[17px]; }
+  .t-body { @apply text-[15px] leading-[1.55] sm:text-[16px]; }
+  .t-small { @apply text-[13px] leading-[1.45] text-slate; }
+  .t-label { @apply text-[12px] font-semibold uppercase leading-[1.2] tracking-[0.08em] text-slate; }
+
+  /* Surfaces */
+  .card { @apply rounded-card border border-hairline bg-paper shadow-card; }
+  .panel { @apply rounded-panel bg-deep; }
+
+  /* Actions. One lit CTA per view; everything else is quiet. */
+  .btn-lit {
+    @apply inline-flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full px-6 text-[17px] font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-40;
+    background-image: linear-gradient(90deg, #d9480f, #c2255c, #7048e8, #0c8599);
+    box-shadow: 0 10px 28px -10px rgb(194 37 92 / 0.55);
+  }
+  .btn-lit:hover:not(:disabled) { filter: brightness(1.06); }
+  .btn-lit:active:not(:disabled) { transform: translateY(1px); }
+  .btn-quiet {
+    @apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-rule-strong bg-paper px-5 text-[15px] font-bold text-ink transition hover:bg-deep disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-profit {
+    @apply inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-profit-ink px-6 text-[17px] font-bold text-white transition hover:brightness-110;
+  }
+  .btn-leak {
+    @apply inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-leak-ink px-6 text-[17px] font-bold text-white transition hover:brightness-110;
   }
 
-  .spectrum-text {
-    background-image: linear-gradient(90deg, #f97316 0%, #ec4899 35%, #7c3aed 65%, #06b6d4 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  /* Choice rows used for one-question-per-screen steps. */
+  .choice {
+    @apply flex min-h-[64px] w-full items-center gap-4 rounded-panel border-2 border-rule-strong bg-paper px-4 py-3 text-left transition hover:border-people-ink/50;
   }
+  .choice[aria-pressed='true'] { @apply border-people-ink bg-people-soft; }
+  .choice[data-state='right'] { @apply border-profit bg-profit-soft; }
+  .choice[data-state='wrong'] { @apply border-leak bg-leak-soft; }
+}
 
-  .spectrum-cta {
-    background-image: linear-gradient(90deg, #f97316, #ec4899, #7c3aed, #06b6d4);
-    box-shadow: 0 10px 28px -10px rgba(236, 72, 153, 0.55);
-    transition: filter 150ms ease;
-  }
-
-  .spectrum-cta:hover:not(:disabled) {
-    filter: brightness(1.05);
-  }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
 }

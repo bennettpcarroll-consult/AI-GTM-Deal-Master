@@ -1,0 +1,109 @@
+{
+  "id": "fundamentals",
+  "display_name": "Sales fundamentals",
+  "summary": "The habits every enterprise seller needs before any framework: research, questions, listening, control of the call.",
+  "skills": [
+    {
+      "id": "account_research",
+      "code": "F1",
+      "label": "Account research",
+      "definition": "Arrive with a point of view on the account before the first question.",
+      "evidence": "The buyer confirms or corrects your account hypothesis.",
+      "talk_track": {
+        "move": "Open with what you already know, then ask why.",
+        "strong": "I saw fraud operations moved under the CIO last quarter. What prompted that?",
+        "weak": "Can you tell me a bit about your company?",
+        "proof": "Buyer confirms or corrects your hypothesis about the account"
+      },
+      "rep": {
+        "buyer_line": "Before we start, what do you already know about how we run things here?",
+        "off_move": "I have not looked into it yet. Could you walk me through the basics?"
+      }
+    },
+    {
+      "id": "discovery_questioning",
+      "code": "F2",
+      "label": "Discovery questioning",
+      "definition": "Ask open, layered questions that uncover how work happens today.",
+      "evidence": "The buyer describes their current process in their own steps.",
+      "talk_track": {
+        "move": "Ask how the work runs today, step by step, before you suggest anything.",
+        "strong": "Walk me through how an alert gets worked today, from flag to close.",
+        "weak": "Would faster alert triage help you?",
+        "proof": "Buyer describes the current process in their own steps"
+      },
+      "rep": {
+        "buyer_line": "We are open to ideas. Where do you want to start?",
+        "off_move": "Let me show you a quick demo of what we can do."
+      }
+    },
+    {
+      "id": "listening_summarizing",
+      "code": "F3",
+      "label": "Listening and summarizing",
+      "definition": "Play the buyer’s words back so they know you heard the real problem.",
+      "evidence": "The buyer confirms your summary, or corrects it.",
+      "talk_track": {
+        "move": "Summarize in their words and check you got it right.",
+        "strong": "So the real cost is analyst hours, not missed fraud. Did I get that right?",
+        "weak": "Great, that makes sense. Moving on.",
+        "proof": "Buyer confirms your summary of their problem"
+      },
+      "rep": {
+        "buyer_line": "Honestly the bigger issue is the hours my team burns, not the misses.",
+        "off_move": "Got it. Our product handles misses really well, so let me explain that."
+      }
+    },
+    {
+      "id": "upfront_contract",
+      "code": "F4",
+      "label": "Up-front contract",
+      "definition": "Agree the agenda, the time and the possible outcomes at the start.",
+      "evidence": "The buyer agrees to the agenda and how the call will end.",
+      "talk_track": {
+        "move": "Set time, agenda and outcome, and give the buyer permission to say no.",
+        "strong": "We have 20 minutes. If this is useful we agree a next step. If not, we say so. Fair?",
+        "weak": "Thanks for the time. Let me tell you about our company.",
+        "proof": "Buyer agrees to the agenda and outcome"
+      },
+      "rep": {
+        "buyer_line": "Thanks for making time. We have about twenty minutes.",
+        "off_move": "Great, I have a 30-slide deck, so I will move quickly."
+      }
+    },
+    {
+      "id": "objection_handling",
+      "code": "F5",
+      "label": "Objection handling",
+      "definition": "Understand an objection before you answer it: acknowledge, clarify, respond, confirm.",
+      "evidence": "The buyer narrows the objection to one root cause you can address.",
+      "talk_track": {
+        "move": "Acknowledge, then ask a clarifying question before you answer.",
+        "strong": "That is a fair concern. When you say liability, is it the decision itself or the audit trail?",
+        "weak": "Do not worry, our model is very accurate.",
+        "proof": "Buyer narrows the objection to one root cause"
+      },
+      "rep": {
+        "buyer_line": "If the model gets a decision wrong, who carries the liability, you or us?",
+        "off_move": "Our accuracy is industry leading, so that will not happen."
+      }
+    },
+    {
+      "id": "next_step_control",
+      "code": "F6",
+      "label": "Next-step control",
+      "definition": "End every conversation with a dated next step and a named owner.",
+      "evidence": "The buyer commits to a named owner and a date.",
+      "talk_track": {
+        "move": "Propose a specific next step with a date, owner and purpose.",
+        "strong": "Can we put 30 minutes with your CISO on the calendar for Tuesday?",
+        "weak": "I will send some information over.",
+        "proof": "Buyer agrees a named owner and a date"
+      },
+      "rep": {
+        "buyer_line": "This was useful. What happens next?",
+        "off_move": "I will follow up by email sometime next week."
+      }
+    }
+  ]
+}
