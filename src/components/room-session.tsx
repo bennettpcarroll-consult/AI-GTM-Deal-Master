@@ -29,9 +29,9 @@ type Phase = 'brief' | 'room' | 'debrief';
 interface Proof {
   key: string;
   title: string;
-  quote: string;
-  speaker: string;
-  why: string;
+  turnId: string;
+  /** Shown only the first time the learner earns this proof, so it never turns into boilerplate. */
+  why: string | null;
 }
 
 const NOT_SURE_MESSAGE = "I'm not sure yet, so I won't guess. Can you walk me through it?";
@@ -68,6 +68,8 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
   const skills = skillIds.map((id) => curriculum.skills.find((skill) => skill.id === id)).filter((skill): skill is Skill => Boolean(skill));
   const signalSkill = (signal: SignalId) => curriculum.skills.find((skill) => skill.signal === signal);
   const signalLabel = (signal: SignalId) => signals.find((definition) => definition.id === signal)?.label ?? signal;
+  const provenBefore = (key: string) =>
+    trajectory.sessions.some((session) => session.bindings[key as SignalId]?.bars === 4 || session.skillEvidence?.[key]?.level === 'verbatim');
 
   const [phase, setPhase] = useState<Phase>('brief');
   const [sim, setSim] = useState<SimState>(() => startSimulation(ctx, { mode, targetSignals: payload.target_signals }));
@@ -89,14 +91,14 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
   const latest = sim.turns.slice(lastLearnerIndex + 1).filter((turn) => turn.speaker === 'buyer');
 
   useEffect(() => {
-    if (phase !== 'room' || proofs.length > 0) return;
+    if (phase !== 'room') return;
     inputRef.current?.focus({ preventScroll: true });
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: reduce ? 'auto' : 'smooth' });
-  }, [phase, proofs.length, sim.turns.length]);
+  }, [phase, sim.turns.length]);
 
   const submit = (text: string) => {
-    if (text.trim().length === 0 || proofs.length > 0) return;
+    if (text.trim().length === 0) return;
     const next = sendLearnerMessage(ctx, sim, text);
     const fresh: Proof[] = [];
     for (const signal of next.targetSignals) {
@@ -105,9 +107,8 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
         fresh.push({
           key: signal,
           title: `${signalLabel(signal)} verified`,
-          quote: turn?.content ?? '',
-          speaker: turn?.speakerRole ?? 'Buyer',
-          why: signalSkill(signal)?.talk_track.move ?? ''
+          turnId: turn?.id ?? '',
+          why: provenBefore(signal) ? null : (signalSkill(signal)?.talk_track.move ?? null)
         });
       }
     }
@@ -118,9 +119,8 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
         fresh.push({
           key: skillId,
           title: `${skill?.label ?? skillId} verified`,
-          quote: turn?.content ?? '',
-          speaker: turn?.speakerRole ?? 'Buyer',
-          why: skill?.talk_track.move ?? ''
+          turnId: turn?.id ?? '',
+          why: provenBefore(skillId) ? null : (skill?.talk_track.move ?? null)
         });
       }
     }
@@ -161,6 +161,7 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
     update((current) => recordActivity(recordSession(current, trajectory.id, record), { reps: 1, proofs: points }));
     setDebrief({ grade: result, record, points });
     setPhase('debrief');
+    window.scrollTo({ top: 0 });
   };
 
   if (phase === 'brief') {
@@ -262,8 +263,6 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
     );
   }
 
-  const proof = proofs[0];
-
   return (
     <FocusScreen
       top={
@@ -311,32 +310,6 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
         </div>
       }
       footer={
-        proof ? (
-          <div className="-mx-5 animate-rise rounded-t-card bg-profit-soft px-5 pb-2 pt-5" role="status">
-            <div className="mb-3 flex items-center gap-3">
-              <span className="grid h-10 w-10 animate-pop place-items-center rounded-full bg-profit-ink text-white">
-                <Check className="h-5 w-5" strokeWidth={3} aria-hidden="true" />
-              </span>
-              <div>
-                <p className="t-heading text-profit-ink">{proof.title}</p>
-                <p className="text-[13px] font-semibold text-profit-ink">+10 proof points</p>
-              </div>
-            </div>
-            <div className="mb-3 rounded-panel bg-paper p-4">
-              <p className="t-label">Buyer proof, verbatim</p>
-              <p className="t-body mt-1.5 italic">“{proof.quote}”</p>
-              <p className="t-small mt-1.5">{proof.speaker}</p>
-            </div>
-            {proof.why && (
-              <p className="t-body mb-4">
-                <span className="font-bold">Why it worked:</span> {proof.why}
-              </p>
-            )}
-            <button type="button" className="btn-profit" autoFocus onClick={() => setProofs(proofs.slice(1))}>
-              Continue
-            </button>
-          </div>
-        ) : (
           <form
             onSubmit={(event: FormEvent) => {
               event.preventDefault();
@@ -389,7 +362,6 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
               )}
             </div>
           </form>
-        )
       }
     >
       <div className="flex flex-1 flex-col justify-end gap-4 py-6">
@@ -418,7 +390,7 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
         )}
         <div key={sim.turns.length} className="flex animate-rise flex-col gap-4">
           {latest.map((turn) => (
-            <BuyerTurn key={turn.id} turn={turn} tint={tint} color={color} />
+            <BuyerTurn key={turn.id} turn={turn} proofs={proofs.filter((proof) => proof.turnId === turn.id)} />
           ))}
         </div>
         {hint && (
@@ -435,32 +407,29 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
   );
 }
 
-function initials(role: string): string {
-  const words = role.replace(/\(.*?\)/g, '').split(/\s+/).filter((word) => /^[A-Z]/.test(word));
-  return (words.length >= 2 ? `${words[0]?.[0]}${words[1]?.[0]}` : role.slice(0, 2)).toUpperCase();
-}
-
-function BuyerTurn({ turn, tint, color }: { turn: Turn; tint: string; color: string }) {
-  const chip = turn.reveal === 'verbatim' ? 'Verbatim proof' : turn.reveal === 'partial' ? 'Partial signal. Push for specifics.' : turn.objection ? 'Objection' : null;
+function BuyerTurn({ turn, proofs }: { turn: Turn; proofs: Proof[] }) {
+  const proven = proofs.length > 0 || turn.reveal === 'verbatim';
+  const status = turn.objection ? 'Objection' : turn.reveal === 'partial' ? 'Partial. Push for the number.' : null;
+  const rule = proven ? BRAND.profit : turn.objection ? BRAND.leak : '#d5d8de';
   return (
-    <div className="flex flex-col gap-2.5">
-      <div className="flex items-center gap-3">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full font-display text-[15px] font-extrabold" style={{ background: tint, color }} aria-hidden="true">
-          {initials(turn.speakerRole)}
-        </span>
-        <div className="flex flex-col">
-          <span className="t-item">{turn.speakerRole}</span>
-          {chip && (
-            <span className={`text-[12px] font-semibold ${turn.reveal === 'verbatim' ? 'text-profit-ink' : turn.objection ? 'text-leak-ink' : 'text-slate'}`}>{chip}</span>
-          )}
-        </div>
-      </div>
-      <blockquote
-        className="t-quote rounded-[4px_24px_24px_24px] px-5 py-4"
-        style={{ background: turn.reveal === 'verbatim' ? BRAND.profitSoft : turn.objection ? BRAND.leakSoft : BRAND.deep }}
-      >
+    <div className="flex flex-col gap-2">
+      <p className="t-small">
+        <span className="font-semibold text-ink">{turn.speakerRole}</span>
+        {status && <span className={turn.objection ? 'text-leak-ink' : ''}> · {status}</span>}
+      </p>
+      <blockquote className="t-quote border-l-[3px] pl-4" style={{ borderColor: rule }}>
         {turn.content}
       </blockquote>
+      {proofs.map((proof) => (
+        <div key={proof.key} className="ml-[19px] flex animate-pop flex-col gap-1" role="status">
+          <p className="flex items-center gap-2 text-[14px] font-bold text-profit-ink">
+            <Check className="h-4 w-4" strokeWidth={3} aria-hidden="true" />
+            {proof.title}
+            <span className="rounded-full bg-profit-soft px-2 py-0.5 text-[12px]">+10</span>
+          </p>
+          {proof.why && <p className="t-small">{proof.why}</p>}
+        </div>
+      ))}
     </div>
   );
 }
@@ -508,7 +477,6 @@ function Debrief({
   onRetake: () => void;
 }) {
   const curriculum = loadCurriculum();
-  const quoteFor = (turnId: string | null) => record.transcript.find((turn) => turn.id === turnId)?.content;
   const questions = record.transcript.filter((turn) => turn.speaker === 'learner').length;
   const consumption = Object.values(grade.skillEvidence);
 
@@ -568,46 +536,46 @@ function Debrief({
       )}
 
       <section className="mt-6 flex flex-col gap-2.5" aria-label="Evidence">
-        <p className="t-label">Evidence</p>
-        {grade.targetSignals.map((signal) => {
-          const binding = grade.bindings[signal];
-          const quote = binding.bars === 4 ? quoteFor(binding.transcript_turn_id) : undefined;
-          return (
-            <div key={signal} className={`rounded-panel border-2 p-4 ${quote ? 'border-profit' : 'border-dashed border-rule-strong'}`}>
-              <div className="flex items-center justify-between gap-3">
-                <span className="t-item">{signalLabel(signal)}</span>
-                <span className={`text-[12px] font-bold ${quote ? 'text-profit-ink' : 'text-slate'}`}>
-                  {quote ? 'Verified' : binding.bars === 3 ? 'Partial' : 'No proof'}
+        <p className="t-label">Buyer proof</p>
+        <ul className="card divide-y divide-rule px-4">
+          {[
+            ...grade.targetSignals.map((signal) => {
+              const bars = grade.bindings[signal].bars;
+              return {
+                key: signal,
+                label: signalLabel(signal),
+                done: bars === 4,
+                next: bars === 3 ? 'Acknowledged without a number, name or date. Ask a sharper follow-up.' : (curriculum.skills.find((skill) => skill.signal === signal)?.talk_track.move ?? 'Not probed yet.')
+              };
+            }),
+            ...consumption.map((item) => ({
+              key: item.skill,
+              label: curriculum.skills.find((candidate) => candidate.id === item.skill)?.label ?? item.skill,
+              done: item.level === 'verbatim',
+              next: 'The buyer hinted at it. Ask for the numbers.'
+            }))
+          ].map((row) => (
+            <li key={row.key} className="flex items-start gap-3 py-3">
+              <span
+                className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full ${row.done ? 'bg-profit text-white' : 'border-2 border-dashed border-rule-strong'}`}
+                aria-hidden="true"
+              >
+                {row.done && <Check className="h-3 w-3" strokeWidth={3.5} />}
+              </span>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[15px] font-semibold">
+                  {row.label}
+                  <span className="sr-only">{row.done ? ', verified' : ', not verified'}</span>
                 </span>
+                {!row.done && <span className="t-small">{row.next}</span>}
               </div>
-              <p className={`mt-1.5 text-[14px] leading-[1.45] ${quote ? 'italic text-charcoal' : 'text-slate'}`}>
-                {quote
-                  ? `“${quote}”`
-                  : binding.bars === 3
-                    ? 'The buyer acknowledged it without a number, a name or a date. Ask a sharper follow-up.'
-                    : (curriculum.skills.find((skill) => skill.signal === signal)?.talk_track.move ?? 'Not probed yet.')}
-              </p>
-            </div>
-          );
-        })}
-        {consumption.map((item) => {
-          const skill = curriculum.skills.find((candidate) => candidate.id === item.skill);
-          const verbatim = item.level === 'verbatim';
-          return (
-            <div key={item.skill} className={`rounded-panel border-2 p-4 ${verbatim ? 'border-profit' : 'border-dashed border-rule-strong'}`}>
-              <div className="flex items-center justify-between gap-3">
-                <span className="t-item">{skill?.label}</span>
-                <span className={`text-[12px] font-bold ${verbatim ? 'text-profit-ink' : 'text-slate'}`}>{verbatim ? 'Verified' : 'Partial'}</span>
-              </div>
-              <p className={`mt-1.5 text-[14px] leading-[1.45] ${verbatim ? 'italic text-charcoal' : 'text-slate'}`}>
-                {verbatim ? `“${quoteFor(item.transcript_turn_id)}”` : 'The buyer hinted at it. Ask for the numbers.'}
-              </p>
-            </div>
-          );
-        })}
+            </li>
+          ))}
+        </ul>
       </section>
 
-      <SkillsBuilt skills={skills} trajectoryId={trajectoryId} />
+      {/* Signal skills already appear under buyer proof, so list only the other skills this drill built. */}
+      <SkillsBuilt skills={skills.filter((skill) => !skill.signal || !grade.targetSignals.includes(skill.signal))} trajectoryId={trajectoryId} />
     </FocusScreen>
   );
 }
