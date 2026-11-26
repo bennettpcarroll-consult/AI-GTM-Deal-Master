@@ -35,6 +35,7 @@ interface Proof {
   why: string | null;
 }
 
+const EARLIER_VISIBLE = 4;
 const NOT_SURE_MESSAGE = "I'm not sure yet, so I won't guess. Can you walk me through it?";
 
 export function RoomSession({ trajectory, tier, mode, drillIndex, update, onRetake }: RoomSessionProps) {
@@ -90,6 +91,8 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
 
   const lastLearnerIndex = sim.turns.map((turn) => turn.speaker).lastIndexOf('learner');
   const latest = sim.turns.slice(lastLearnerIndex + 1).filter((turn) => turn.speaker === 'buyer');
+  const earlier = lastLearnerIndex > 0 ? sim.turns.slice(0, lastLearnerIndex) : [];
+  const hiddenEarlier = Math.max(0, earlier.length - EARLIER_VISIBLE);
 
   useEffect(() => {
     if (phase !== 'room') return;
@@ -347,15 +350,9 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
           </form>
       }
     >
-      <div className="flex flex-1 flex-col justify-end gap-4 py-6">
-        {showTranscript && (
-          <div className="flex flex-col gap-2.5 border-b border-rule pb-4">
-            {sim.turns.slice(0, lastLearnerIndex + 1).map((turn) => (
-              <TurnBubble key={turn.id} turn={turn} />
-            ))}
-          </div>
-        )}
-        {sim.turns.length > 1 && (
+      <div className="flex flex-1 flex-col gap-4 py-6">
+        {/* Earlier turns stay visible as a compact chat. Only a long history folds, keeping the latest four. */}
+        {hiddenEarlier > 0 && (
           <button
             type="button"
             onClick={() => setShowTranscript(!showTranscript)}
@@ -363,13 +360,17 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
             aria-expanded={showTranscript}
           >
             <ChevronDown className={`h-4 w-4 transition ${showTranscript ? 'rotate-180' : ''}`} aria-hidden="true" />
-            {showTranscript ? 'Hide' : 'Show'} earlier turns
+            {showTranscript ? 'Hide earlier turns' : `Show ${hiddenEarlier} earlier turn${hiddenEarlier === 1 ? '' : 's'}`}
           </button>
         )}
-        {lastLearnerIndex >= 0 && !showTranscript && (
-          <p className="ml-auto max-w-[85%] rounded-[24px_24px_4px_24px] bg-work-soft px-4 py-3 text-[15px] leading-[1.45]">
-            {sim.turns[lastLearnerIndex]?.content}
-          </p>
+        {(showTranscript ? earlier : earlier.slice(-EARLIER_VISIBLE)).map((turn) => (
+          <TurnBubble key={turn.id} turn={turn} />
+        ))}
+        {lastLearnerIndex >= 0 && (
+          <div className="flex flex-col items-end gap-1">
+            <span className="t-small">You</span>
+            <p className="max-w-[85%] rounded-[24px_24px_4px_24px] bg-work-soft px-4 py-3 text-[15px] leading-[1.45]">{sim.turns[lastLearnerIndex]?.content}</p>
+          </div>
         )}
         <div key={sim.turns.length} className="flex animate-rise flex-col gap-4">
           {latest.map((turn) => (

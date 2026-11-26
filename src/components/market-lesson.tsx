@@ -12,7 +12,7 @@ const CARD_ICONS = [Layers, Receipt, Coins, Swords];
  * cluster JSON, so the lesson shows where the market sits, what is bought, how the money
  * works and what threatens the deal, instead of a single sentence on an empty screen.
  */
-export function MarketLessonCard({ curriculum, cluster, index }: { curriculum: Curriculum; cluster: Cluster; index: number }) {
+export function MarketLessonCard({ curriculum, cluster, index, eyebrow }: { curriculum: Curriculum; cluster: Cluster; index: number; eyebrow: string }) {
   const card = cluster.lesson.cards[index];
   const style = LAYER_STYLE[cluster.stack_order] ?? LAYER_STYLE[1]!;
   const Icon = CARD_ICONS[index] ?? Lightbulb;
@@ -25,7 +25,7 @@ export function MarketLessonCard({ curriculum, cluster, index }: { curriculum: C
           <Icon className="h-6 w-6" strokeWidth={1.75} />
         </IconTile>
         <div className="flex flex-col">
-          <p className="t-label">Market fundamentals</p>
+          <p className="t-label">{eyebrow}</p>
           <p className="text-[14px] font-semibold" style={{ color: style.ink }}>
             {cluster.display_name}
           </p>

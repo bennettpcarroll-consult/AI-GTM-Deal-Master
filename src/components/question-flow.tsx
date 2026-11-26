@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Check, X } from 'lucide-react';
 import { FocusScreen, StepBar } from './ui';
 
@@ -26,29 +26,35 @@ export function QuestionFlow({
   onDone,
   exitHref,
   onBack,
-  progressLabel
+  progressLabel,
+  stepLabel,
+  progress
 }: {
   questions: FlowQuestion[];
   onDone: (results: Record<string, boolean>) => void;
   exitHref?: string;
   onBack?: () => void;
   progressLabel: string;
+  /** Shown above each question, such as "Step 4 of 6 · Lesson check". The question count is appended. */
+  stepLabel?: string;
+  /** Maps the position in this flow onto a longer journey, so one progress bar spans all of onboarding. */
+  progress?: (done: number) => { value: number; max: number };
 }) {
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [checked, setChecked] = useState(false);
   const [results, setResults] = useState<Record<string, boolean>>({});
   const question = questions[index];
-  if (!question) return null;
-  const correct = picked === question.answer;
+  const correct = question !== undefined && picked === question.answer;
 
   const check = () => {
-    if (picked === null) return;
+    if (picked === null || !question) return;
     setChecked(true);
     setResults((previous) => ({ ...previous, [question.id]: picked === question.answer }));
   };
 
   const next = () => {
+    if (!question) return;
     const finalResults = { ...results, [question.id]: correct };
     if (index + 1 >= questions.length) {
       onDone(finalResults);
@@ -59,14 +65,45 @@ export function QuestionFlow({
     setChecked(false);
   };
 
+  const back = () => {
+    setIndex(index - 1);
+    setPicked(null);
+    setChecked(false);
+  };
+
+  // The numbered keycaps work: 1, 2, 3 pick a reply and Enter checks or continues.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
+      if (!question) return;
+      const number = Number(event.key);
+      if (!checked && Number.isInteger(number) && number >= 1 && number <= question.options.length) {
+        event.preventDefault();
+        setPicked(number - 1);
+      } else if (event.key === 'Enter' && !(target instanceof HTMLButtonElement)) {
+        event.preventDefault();
+        if (checked) next();
+        else check();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
+
+  if (!question) return null;
+  const done = index + (checked ? 1 : 0);
+  const bar = progress ? progress(done) : { value: done, max: questions.length };
+
   return (
     <FocusScreen
       top={
         <StepBar
           exitHref={exitHref}
-          onBack={index === 0 ? onBack : undefined}
-          value={index + (checked ? 1 : 0)}
-          max={questions.length}
+          onBack={index === 0 ? onBack : back}
+          value={bar.value}
+          max={bar.max}
           label={progressLabel}
         />
       }
@@ -100,7 +137,14 @@ export function QuestionFlow({
       }
     >
       <div key={question.id} className="flex animate-rise flex-col gap-5 pt-7">
-        <p className="t-label">{question.kicker}</p>
+        <div className="flex flex-col gap-1">
+          {stepLabel && (
+            <p className="t-label">
+              {stepLabel} · {index + 1} of {questions.length}
+            </p>
+          )}
+          <p className={stepLabel ? 'text-[14px] font-semibold text-people-ink' : 't-label'}>{question.kicker}</p>
+        </div>
         {question.speaker ? (
           <div className="flex flex-col gap-3">
             <p className="t-small font-semibold text-charcoal">{question.speaker} says</p>
@@ -125,7 +169,7 @@ export function QuestionFlow({
                 disabled={checked}
                 onClick={() => setPicked(optionIndex)}
               >
-                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border-2 border-rule-strong text-[13px] font-bold text-slate">
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border-2 border-rule-strong text-[13px] font-bold text-slate" aria-hidden="true">
                   {optionIndex + 1}
                 </span>
                 <span className="t-body">{option}</span>

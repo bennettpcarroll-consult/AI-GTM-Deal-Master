@@ -159,3 +159,27 @@ describe('mastery, reps and engagement', () => {
     expect(recordActivity(state, { reps: 1, proofs: 0 }, '2026-11-28').engagement?.streak).toBe(1);
   });
 });
+
+describe('talk tracks the coach teaches', () => {
+  // QA found the metrics hint line drew a generic reply. The strong move a learner is
+  // taught must always draw at least a partial buyer reveal for its own signal.
+  it('every MEDDPICC strong move draws a buyer reveal for its signal', () => {
+    for (const skill of curriculum.skills.filter((candidate) => candidate.signal)) {
+      const signal = skill.signal!;
+      const { ctx } = consumptionContext(1, 'drill');
+      const state = startSimulation(ctx, { mode: 'drill', targetSignals: [signal] });
+      const next = sendLearnerMessage(ctx, state, skill.talk_track.strong);
+      expect(next.bindings[signal].bars, `${skill.id}: "${skill.talk_track.strong}"`).toBeGreaterThanOrEqual(3);
+      const reveal = next.turns.find((turn) => turn.signal === signal);
+      expect(reveal?.speaker).toBe('buyer');
+    }
+  });
+
+  it('the metrics strong move followed by a sharper number question earns verbatim proof', () => {
+    const { ctx } = consumptionContext(1, 'drill');
+    let state = startSimulation(ctx, { mode: 'drill', targetSignals: ['metrics'] });
+    state = sendLearnerMessage(ctx, state, 'What number has to move for this to be worth it, and by when?');
+    state = sendLearnerMessage(ctx, state, 'How much do you need to cut this quarter?');
+    expect(state.bindings.metrics.bars).toBe(4);
+  });
+});

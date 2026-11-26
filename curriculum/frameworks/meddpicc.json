@@ -10,7 +10,12 @@
     "Name a champion only when that person has access and a personal stake",
     "Ask directly about competition and the build-versus-buy option"
   ],
-  "used_in_tiers": [1, 2, 3, 4],
+  "used_in_tiers": [
+    1,
+    2,
+    3,
+    4
+  ],
   "signals": [
     {
       "id": "metrics",
@@ -18,8 +23,22 @@
       "definition": "The quantified outcome the buyer must hit, stated in their own numbers.",
       "coach_hint": "Ask what success looks like in the buyer's own numbers, not yours.",
       "probes": {
-        "partial": ["\\bmetric", "\\bkpi", "\\bsuccess", "\\bmeasur", "\\boutcome", "\\bbenchmark"],
-        "verbatim": ["what does (success|good) look like", "(what|which) (number|metric|target).*(need|hit|must|success)", "how (much|many).*(need to|have to|must|want to).*(cut|reduce|lift|improve|save|grow)"]
+        "partial": [
+          "\\bmetric",
+          "\\bkpi",
+          "\\bsuccess",
+          "\\bmeasur",
+          "\\boutcome",
+          "\\bbenchmark"
+        ],
+        "verbatim": [
+          "what does (success|good) look like",
+          "(what|which) (number|metric|target).*(need|hit|must|success)",
+          "how (much|many).*(need to|have to|must|want to).*(cut|reduce|lift|improve|save|grow)",
+          "(what|which) (number|metric|kpi|target).*(move|change|improve|worth|by when)",
+          "what (has|needs) to (move|change|improve).*(number|percent|by when|worth)",
+          "how will you measure (success|this|it)"
+        ]
       }
     },
     {
@@ -28,8 +47,20 @@
       "definition": "The person who can approve the spend and say no to it.",
       "coach_hint": "Ask who signs the PO and who has the power to say no.",
       "probes": {
-        "partial": ["\\bbudget", "\\bapprov", "\\bstakeholder", "\\bsponsor"],
-        "verbatim": ["who (signs|approves|owns the budget|has the budget|controls the budget|can sign)", "who has the final (say|sign-?off)", "who is the economic buyer", "who (would|will) (sign|approve)"]
+        "partial": [
+          "\\bbudget",
+          "\\bapprov",
+          "\\bstakeholder",
+          "\\bsponsor"
+        ],
+        "verbatim": [
+          "who (signs|approves|owns the budget|has the budget|controls the budget|can sign)",
+          "who has the final (say|sign-?off)",
+          "who is the economic buyer",
+          "who (would|will) (sign|approve)",
+          "who owns (the|this) (budget|spend|decision)",
+          "(whose|which) budget (does|will|would) this"
+        ]
       }
     },
     {
@@ -38,8 +69,19 @@
       "definition": "How the buyer will score vendors, and which rules rule a vendor out.",
       "coach_hint": "Ask how they will score vendors before you pitch a single feature.",
       "probes": {
-        "partial": ["\\bcriteria", "\\brequirement", "\\bwhat matters", "\\bevaluat"],
-        "verbatim": ["how (do|will|would) you (score|evaluate|compare|weigh)", "what (are|would) (your|the) (must-haves|criteria|requirements|deal-breakers)", "what would (get|rule) (you|us) out"]
+        "partial": [
+          "\\bcriteria",
+          "\\brequirement",
+          "\\bwhat matters",
+          "\\bevaluat"
+        ],
+        "verbatim": [
+          "how (do|will|would) you (score|evaluate|compare|weigh)",
+          "what (are|would) (your|the) (must-haves|criteria|requirements|deal-breakers)",
+          "what would (get|rule) (you|us) out",
+          "how (will|do|would) you (decide|choose|pick) between",
+          "(criterion|criteria).*(tie|break|decide)"
+        ]
       }
     },
     {
@@ -48,8 +90,20 @@
       "definition": "The steps, owners, and timing from evaluation to signature.",
       "coach_hint": "Ask the buyer to walk you through the approval path step by step.",
       "probes": {
-        "partial": ["\\bprocess", "\\btimeline", "\\bnext steps", "\\bsteps"],
-        "verbatim": ["walk me through (your|the) (approval|review|buying|decision) (process|path)", "what does (your|the) (approval|buying|review|decision) process look like", "who else (reviews|signs off|needs to approve|needs to weigh in)"]
+        "partial": [
+          "\\bprocess",
+          "\\btimeline",
+          "\\bnext steps",
+          "\\bsteps"
+        ],
+        "verbatim": [
+          "walk me through (your|the) (approval|review|buying|decision) (process|path)",
+          "what does (your|the) (approval|buying|review|decision) process look like",
+          "who else (reviews|signs off|needs to approve|needs to weigh in)",
+          "after (a|the) (successful )?(pilot|poc|proof)",
+          "what happens on day (one|1)",
+          "what are the steps (to|from|between|after)"
+        ]
       }
     },
     {
@@ -58,8 +112,20 @@
       "definition": "The legal, procurement, and security steps that gate the signature, with real lead times.",
       "coach_hint": "Ask how long legal, procurement, and security take, in their words.",
       "probes": {
-        "partial": ["\\blegal", "\\bprocurement", "\\bcontract", "\\bsecurity review", "\\binfosec", "\\bredline"],
-        "verbatim": ["how long (does|will|do|would) .*(legal|procurement|security|infosec|review|redline|paper)", "what does the paper process look like", "what (does|do) (legal|procurement|infosec|security) need"]
+        "partial": [
+          "\\blegal",
+          "\\bprocurement",
+          "\\bcontract",
+          "\\bsecurity review",
+          "\\binfosec",
+          "\\bredline"
+        ],
+        "verbatim": [
+          "how long (does|will|do|would) .*(legal|procurement|security|infosec|review|redline|paper)",
+          "what does the paper process look like",
+          "what (does|do) (legal|procurement|infosec|security) need",
+          "(infosec|security|legal|procurement).*(in parallel|start reviewing|start now|kick off)"
+        ]
       }
     },
     {
@@ -68,8 +134,21 @@
       "definition": "The business problem the buyer is paying to fix, and what it costs them today.",
       "coach_hint": "Ask what it is costing them today if nothing changes.",
       "probes": {
-        "partial": ["\\bchallenge", "\\bproblem", "\\bpain", "\\bissue", "\\bfrustrat"],
-        "verbatim": ["what('s| is) (costing|keeping|hurting|driving)", "what happens if you (do nothing|don't change|do not change|don't fix|do not fix)", "what would it cost you"]
+        "partial": [
+          "\\bchallenge",
+          "\\bproblem",
+          "\\bpain",
+          "\\bissue",
+          "\\bfrustrat"
+        ],
+        "verbatim": [
+          "what('s| is) (costing|keeping|hurting|driving)",
+          "what happens if you (do nothing|don't change|do not change|don't fix|do not fix)",
+          "what would it cost you",
+          "what does .*cost (you|your)",
+          "how much (time|money|do you lose|does it cost)",
+          "cost .* in (analyst |staff )?(hours|time|dollars)"
+        ]
       }
     },
     {
@@ -78,8 +157,21 @@
       "definition": "A person with access and a personal stake who will sell the deal internally.",
       "coach_hint": "Ask what your champion would need to take this to their leadership team.",
       "probes": {
-        "partial": ["\\binternal", "\\bsupport", "\\bexcited", "\\bon board", "\\bbuy-?in"],
-        "verbatim": ["what would you need to (take|bring|sell|pitch) (this|it) (to|in front of)", "how would you (sell|pitch|take) (this|it) (internally|to)", "will you (champion|sponsor|back|carry) (this|it|us)"]
+        "partial": [
+          "\\binternal",
+          "\\bsupport",
+          "\\bexcited",
+          "\\bon board",
+          "\\bbuy-?in"
+        ],
+        "verbatim": [
+          "what would you need to (take|bring|sell|pitch) (this|it) (to|in front of)",
+          "how would you (sell|pitch|take) (this|it) (internally|to)",
+          "will you (champion|sponsor|back|carry) (this|it|us)",
+          "if i('m| am) not in the room",
+          "make the case (to|for)",
+          "how would you (present|frame|position) (this|it)"
+        ]
       }
     },
     {
@@ -88,8 +180,21 @@
       "definition": "Who else the buyer is evaluating, including building the solution in house.",
       "coach_hint": "Ask who else they are talking to and what they are comparing you against.",
       "probes": {
-        "partial": ["\\balternative", "\\bother vendor", "\\bcompetit", "\\bbuild (it|this) (ourselves|in-house)", "\\bshortlist"],
-        "verbatim": ["who else are you (talking|speaking|looking) to", "what are you (comparing|evaluating) (us|this) (against|to)", "what (else|other vendors) (are|is) on your (shortlist|list)"]
+        "partial": [
+          "\\balternative",
+          "\\bother vendor",
+          "\\bcompetit",
+          "\\bbuild (it|this) (ourselves|in-house)",
+          "\\bshortlist"
+        ],
+        "verbatim": [
+          "who else are you (talking|speaking|looking) to",
+          "what are you (comparing|evaluating) (us|this) (against|to)",
+          "what (else|other vendors) (are|is) on your (shortlist|list)",
+          "(build|do) (this|it) (in-house|yourselves|internally)",
+          "or do nothing",
+          "what('s| is) (the|your) alternative"
+        ]
       }
     }
   ]

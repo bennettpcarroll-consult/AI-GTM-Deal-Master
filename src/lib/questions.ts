@@ -6,7 +6,7 @@ import type { RepQuestion } from './skills';
 export function repToQuestion(rep: RepQuestion, familyLabel: string): FlowQuestion {
   return {
     id: rep.skill.id,
-    kicker: `${rep.skill.code} · ${rep.skill.label} · ${familyLabel}`,
+    kicker: `${rep.skill.label} · ${familyLabel}`,
     prompt: rep.prompt,
     speaker: 'The buyer',
     options: rep.options,
@@ -18,7 +18,7 @@ export function repToQuestion(rep: RepQuestion, familyLabel: string): FlowQuesti
 export function lessonQuizQuestions(lesson: Lesson, clusterName: string): FlowQuestion[] {
   return lesson.quiz.map((item, index) => ({
     id: `quiz-${index}`,
-    kicker: `${clusterName} · check ${index + 1} of ${lesson.quiz.length}`,
+    kicker: clusterName,
     prompt: item.prompt,
     options: item.options,
     answer: item.answer,
