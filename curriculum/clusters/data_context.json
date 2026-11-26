@@ -43,6 +43,9 @@
     "bounded_pov",
     "identify_pain"
   ],
+  "market_map": {
+    "competition": "Data platforms sell AI where the data already lives, while vector databases compete on retrieval speed and native cloud databases call themselves good enough."
+  },
   "lesson": {
     "cards": [
       {

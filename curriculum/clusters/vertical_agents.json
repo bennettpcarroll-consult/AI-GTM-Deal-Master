@@ -5,6 +5,7 @@
   "value_chain_layer": "Vertical & Autonomous Agents",
   "stack_order": 5,
   "archetypal_vendors": [
+    "Factory AI",
     "Cognition (Devin)",
     "Sierra",
     "Harvey",
@@ -43,6 +44,9 @@
     "business_case",
     "value_messaging"
   ],
+  "market_map": {
+    "competition": "Factory AI ships agents into your own VPC with bring-your-own keys, while Cognition runs Devin as a hosted service, and Sierra and Harvey own one function each."
+  },
   "lesson": {
     "cards": [
       {

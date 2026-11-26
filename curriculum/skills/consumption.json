@@ -47,12 +47,15 @@
       "talk_track": {
         "move": "Propose a commit below forecast and on-demand above it.",
         "strong": "Commit to 60 percent of the forecast and run the rest on demand until usage proves out.",
-        "weak": "Let us lock in the biggest commit we can for the best discount.",
-        "proof": "Buyer accepts a ramp schedule"
+        "weak": "Let us sign the biggest deal we can for the best discount.",
+        "proof": "Buyer accepts a ramp schedule",
+        "pin": "Can we ramp the commit in phases, so year-one volume matches real usage?",
+        "settle": "Let us figure out the commit size later.",
+        "assume": "Let us lock the biggest commit we can for the best discount."
       },
       "rep": {
         "buyer_line": "We will not sign a big commit before we see real usage.",
-        "off_move": "Then you will pay full list price. The discount needs a big commit."
+        "off_move": "Then you will pay full list price. The discount needs a big upfront deal."
       },
       "probes": {
         "partial": [
@@ -79,7 +82,10 @@
         "move": "Ask for today’s volume, next year’s growth and the peaks.",
         "strong": "How many reviews a day today, and what volume do you expect next year?",
         "weak": "Most customers your size use about this much.",
-        "proof": "Buyer supplies the volume numbers"
+        "proof": "Buyer supplies the volume numbers",
+        "pin": "What does peak-season volume look like versus a normal month?",
+        "settle": "Okay, lots of volume. Got it.",
+        "assume": "I will assume you look like our average customer."
       },
       "rep": {
         "buyer_line": "We have a lot of volume, and it is growing.",
@@ -108,7 +114,7 @@
       "evidence": "The buyer names users, use cases and a usage target.",
       "talk_track": {
         "move": "Name the first users and their week-one use case.",
-        "strong": "Who are the first 50 users, and what does week one look like for them?",
+        "strong": "Who are the first 50 users, and what does week-one adoption look like for them?",
         "weak": "Once you sign, you are all set.",
         "proof": "Buyer names users and a usage target"
       },

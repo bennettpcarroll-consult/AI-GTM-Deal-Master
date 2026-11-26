@@ -58,7 +58,7 @@ To fork the academy for your own market, edit or add JSON, then run `pnpm curric
 ```text
 curriculum/            declarative JSON packs (validated at build time)
 scripts/               curriculum validator, CI learnings writer
-src/app/               Next.js routes: welcome, start (onboarding), path, skills, reps, room, settings
+src/app/               Next.js routes: welcome, start (2-step onboarding), path, briefing, placement, skills, reps, room, settings
 src/components/        UI components
 src/lib/               composer, simulator, grader, skills, engagement, state store, curriculum loader
 .claude/skills/, _bmad/ BMAD Method skills and config (see AGENTS.md)
@@ -68,7 +68,7 @@ tests/rubric/          Vitest regression suites
 
 ## Status (v1 core)
 
-Included: curriculum packs and validator, 20 trajectories, the runtime composer, a scripted buyer simulator with evidence binding, the deterministic grader, multi-trajectory progress with placement credit, the skills layer with talk tracks, market lessons and the diagnostic, the gamified path, daily reps, streaks and proof points, the focused drill room with proof sheets and scorecard, and the Drizzle schema.
+Included: curriculum packs and validator, 20 trajectories, the runtime composer, a scripted buyer simulator with evidence binding, the deterministic grader, multi-trajectory progress with placement credit, the skills layer with talk tracks, market lessons and the diagnostic, the gamified path, daily reps, streaks and proof points, the zero-typing deal room (three moves per beat, a hidden buyer state, objections and walkouts) with feedback drawers and scorecard, and the Drizzle schema.
 
 Not yet included: Supabase auth and hosted persistence (state lives in the browser's local storage), a live LLM buyer engine and LLM-as-Judge grader (the grader interface is ready for one), voice streaming, shareable credential pages, the `pnpm fork:init` CLI, and the weekly forecast drill.
 

@@ -100,5 +100,65 @@
       "partial": "Our core policy vendor has a claims module we have been meaning to look at.",
       "verbatim": "Our core policy vendor is quoting its own claims automation for free if we renew, so you must show a better loss-ratio case than that."
     }
+  },
+  "veto_holder": {
+    "role": "General Counsel",
+    "reason": "Every automated claim decision needs a reason an adjuster can read to a policyholder."
+  },
+  "talk_tracks": {
+    "metrics": {
+      "open": "What number has to move on claims cycle time for this to be worth it, and by when?",
+      "pin": "How much do you need to cut cycle time, and how many points of loss ratio must it improve?"
+    },
+    "economic_buyer": {
+      "open": "Who signs the PO for claims tools, and up to what amount?",
+      "pin": "Beyond the pilot cap, whose budget does this come out of, and who has the final sign-off?"
+    },
+    "decision_criteria": {
+      "open": "How will you score vendors on explainability and fair-claims compliance? Which criterion breaks a tie?",
+      "pin": "What would rule us out with your compliance team, regardless of price?"
+    },
+    "decision_process": {
+      "open": "After a successful pilot, what happens on day one, day ten and day thirty?",
+      "pin": "Who else needs to approve before a live claim file is touched? Walk me through the approval path."
+    },
+    "paper_process": {
+      "open": "Can legal and compliance start reviewing the claims-handling change in parallel with the pilot?",
+      "pin": "How long does the compliance review take before automation can run on a live claim file?"
+    },
+    "identify_pain": {
+      "open": "What does severity leakage on simple claims cost you each quarter?",
+      "pin": "What happens if you do nothing and the backlog keeps growing through catastrophe season?"
+    },
+    "champion": {
+      "open": "If I am not in the room, how would you make the case to the leadership team?",
+      "pin": "What would you need to take this to leadership and the regulators with confidence?"
+    },
+    "competition": {
+      "open": "What happens if you build this in-house with your core vendor, or do nothing?",
+      "pin": "What are you comparing us against, including your core policy vendor's claims module?"
+    }
+  },
+  "rep_overrides": {
+    "account_research": {
+      "buyer_line": "Before we start, what do you already know about how we run claims here?",
+      "strong": "I saw your simple auto claims now route through a new triage desk. What prompted that?"
+    },
+    "discovery_questioning": {
+      "strong": "Walk me through how a simple auto claim gets worked today, from first notice to payment."
+    },
+    "listening_summarizing": {
+      "buyer_line": "Honestly the bigger issue is the backlog on simple claims, not the complex ones.",
+      "strong": "So the real cost is the simple-claim backlog, not the complex files. Did I get that right?"
+    },
+    "commercial_insight": {
+      "strong": "Carriers like yours lose more to severity leakage on simple claims than to fraud. Here is the number."
+    },
+    "value_messaging": {
+      "strong": "Today, twenty-one days per simple claim. After, seven, proven with a carrier your size."
+    },
+    "answer_first": {
+      "strong": "My recommendation: start with simple auto claims. Three reasons."
+    }
   }
 }

@@ -105,7 +105,7 @@ export function startSimulation(ctx: SimContext, options: { mode: SessionMode; t
  * The first verbatim probe earns only a partial answer. Full proof needs a
  * different verbatim probe, so repeating one question cannot earn full credit.
  */
-export function sendLearnerMessage(ctx: SimContext, state: SimState, text: string): SimState {
+export function sendLearnerMessage(ctx: SimContext, state: SimState, text: string, options: { reaction?: string } = {}): SimState {
   const message = text.trim();
   if (message.length === 0) return state;
 
@@ -187,7 +187,7 @@ export function sendLearnerMessage(ctx: SimContext, state: SimState, text: strin
     addTurn({
       speaker: 'buyer',
       speakerRole: roles[learnerMessages.length % roles.length] ?? 'Buyer',
-      content: NEUTRAL_LINES[neutralIndex % NEUTRAL_LINES.length] ?? 'Go on.'
+      content: options.reaction ?? NEUTRAL_LINES[neutralIndex % NEUTRAL_LINES.length] ?? 'Go on.'
     });
     neutralIndex += 1;
   }

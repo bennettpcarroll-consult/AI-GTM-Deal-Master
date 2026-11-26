@@ -99,5 +99,65 @@
       "partial": "Two peer firms have announced tools, and our partners keep asking about it.",
       "verbatim": "A peer firm just won our largest client's transactional work with an AI-assisted fixed fee, so we cannot wait for a perfect pilot."
     }
+  },
+  "veto_holder": {
+    "role": "General Counsel",
+    "reason": "A vendor without zero retention and matter-level ethical walls is out, whatever the price."
+  },
+  "talk_tracks": {
+    "metrics": {
+      "open": "What number has to move on fixed-fee matters for this to be worth it, and by when?",
+      "pin": "How much do you need to cut write-offs, and what realization rate must hold?"
+    },
+    "economic_buyer": {
+      "open": "Who signs off on technology spend like this, and up to what amount?",
+      "pin": "For the production tier, whose budget does this come out of, and who has the final say?"
+    },
+    "decision_criteria": {
+      "open": "How will you score vendors on ethical walls and zero retention? Which criterion breaks a tie?",
+      "pin": "What would rule us out with General Counsel, regardless of price?"
+    },
+    "decision_process": {
+      "open": "After a successful pilot, what happens on day one, day ten and day thirty for the partnership?",
+      "pin": "Who else needs to approve before the partnership vote? Walk me through the approval path."
+    },
+    "paper_process": {
+      "open": "Can your legal team start the client consent process in parallel with the pilot?",
+      "pin": "How long does client consent and conflicts review usually take before a matter is loaded?"
+    },
+    "identify_pain": {
+      "open": "What does document review that clients refuse to pay for cost you each year?",
+      "pin": "What happens if you do nothing and peer firms keep winning on fixed fees?"
+    },
+    "champion": {
+      "open": "If I am not in the room, how would you make the case to the executive committee?",
+      "pin": "What would you need to take this to the partnership in March with confidence?"
+    },
+    "competition": {
+      "open": "What happens if you build this in-house, or do nothing while peer firms move?",
+      "pin": "What are you comparing us against, including the tools peer firms have announced?"
+    }
+  },
+  "rep_overrides": {
+    "account_research": {
+      "buyer_line": "Before we start, what do you already know about how the firm works?",
+      "strong": "I saw the litigation group moved two large clients to fixed fees this year. What prompted that?"
+    },
+    "discovery_questioning": {
+      "strong": "Walk me through how a document review matter gets staffed today, from intake to the bill."
+    },
+    "listening_summarizing": {
+      "buyer_line": "Honestly the bigger issue is write-offs on review work, not the hours themselves.",
+      "strong": "So the real cost is write-offs on fixed-fee review, not associate hours. Did I get that right?"
+    },
+    "commercial_insight": {
+      "strong": "Firms like yours lose more margin to write-offs on review work than to lost matters. Here is the number."
+    },
+    "value_messaging": {
+      "strong": "Today, three associate days per review set. After, half a day, proven with a firm your size."
+    },
+    "answer_first": {
+      "strong": "My recommendation: start with the litigation group on fixed-fee review. Three reasons."
+    }
   }
 }
