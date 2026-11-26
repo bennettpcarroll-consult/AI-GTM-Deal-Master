@@ -67,6 +67,8 @@ export const clusterSchema = z.object({
   cluster_objections: z.array(nonEmpty).min(1),
   marquee_lineage: z.array(z.object({ label: nonEmpty, url: z.string().url() })).min(1),
   priority_skills: z.array(skillIdSchema).min(2).max(5),
+  /** One line on how the key players compete, shown on the onboarding market map. */
+  market_map: z.object({ competition: nonEmpty }),
   lesson: lessonSchema
 });
 export type Cluster = z.infer<typeof clusterSchema>;
@@ -77,6 +79,10 @@ const buyerRevealSchema = z.object({
   verbatim: nonEmpty
 });
 const buyerRevealsShape = Object.fromEntries(SIGNAL_IDS.map((id) => [id, buyerRevealSchema])) as Record<SignalId, typeof buyerRevealSchema>;
+
+/** The seller's elite lines for one signal in this industry: the opening question, then the follow-up that pins it down. */
+const ladderSchema = z.object({ open: nonEmpty, pin: nonEmpty });
+const talkTracksShape = Object.fromEntries(SIGNAL_IDS.map((id) => [id, ladderSchema])) as Record<SignalId, typeof ladderSchema>;
 
 export const verticalSchema = z.object({
   id: z.enum(VERTICAL_IDS),
@@ -97,7 +103,13 @@ export const verticalSchema = z.object({
     )
     .min(3),
   signature_objections: z.array(nonEmpty).min(1),
-  buyer_reveals: z.object(buyerRevealsShape)
+  buyer_reveals: z.object(buyerRevealsShape),
+  /** The person who can kill the deal, shown on onboarding as "What you will face". */
+  veto_holder: z.object({ role: nonEmpty, reason: nonEmpty }),
+  /** Industry versions of the elite deal-room lines, so a law firm never hears a bank's question. */
+  talk_tracks: z.object(talkTracksShape),
+  /** Industry versions of a skill's buyer line or strong reply, used in deal-room beats. */
+  rep_overrides: z.record(skillIdSchema, z.object({ buyer_line: nonEmpty.optional(), strong: nonEmpty.optional() })).optional()
 });
 export type Vertical = z.infer<typeof verticalSchema>;
 
@@ -199,7 +211,18 @@ export const skillSchema = z.object({
   label: nonEmpty,
   definition: nonEmpty,
   evidence: nonEmpty,
-  talk_track: z.object({ move: nonEmpty, strong: nonEmpty, weak: nonEmpty, proof: nonEmpty }),
+  talk_track: z.object({
+    move: nonEmpty,
+    strong: nonEmpty,
+    weak: nonEmpty,
+    proof: nonEmpty,
+    /** Follow-up that turns a partial answer into buyer proof. Required for skills the buyer can prove. */
+    pin: nonEmpty.optional(),
+    /** Weak follow-up: accepts the vague answer. */
+    settle: nonEmpty.optional(),
+    /** Trap follow-up: assumes the answer instead of asking. */
+    assume: nonEmpty.optional()
+  }),
   rep: z.object({ buyer_line: nonEmpty, off_move: nonEmpty }),
   signal: signalIdSchema.optional(),
   probes: probesSchema.optional(),
@@ -241,3 +264,31 @@ export const diagnosticSchema = z.object({
   items: z.array(z.object({ skill_id: skillIdSchema })).min(4)
 });
 export type Diagnostic = z.infer<typeof diagnosticSchema>;
+
+const effectSchema = z.object({ trust: z.number(), risk: z.number(), urgency: z.number() });
+const moveKindRecord = <T extends z.ZodTypeAny>(item: T) => z.object({ elite: item, weak: item, trap: item });
+
+/** Deal-room rules: the hidden buyer state, buyer reactions and the generic objection moves. */
+export const roomSchema = z.object({
+  id: z.literal('room'),
+  mood: z.object({
+    start: effectSchema,
+    walkout_trust: z.number(),
+    objection_risk: z.number(),
+    boss_objection_every: z.number().int().min(2)
+  }),
+  effects: moveKindRecord(effectSchema),
+  reactions: moveKindRecord(z.array(nonEmpty).min(2)),
+  objection_moves: moveKindRecord(nonEmpty),
+  objection_why: nonEmpty,
+  walkout: nonEmpty,
+  verdicts: z.object({
+    proven: nonEmpty,
+    partial: nonEmpty,
+    rep: nonEmpty,
+    objection: nonEmpty,
+    weak: nonEmpty,
+    trap: nonEmpty
+  })
+});
+export type RoomRules = z.infer<typeof roomSchema>;

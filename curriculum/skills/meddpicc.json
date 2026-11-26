@@ -14,7 +14,10 @@
         "move": "Ask for the number that has to move, and by when.",
         "strong": "What number has to move for this to be worth it, and by when?",
         "weak": "We typically cut alerts by 40 percent.",
-        "proof": "Buyer states a target, such as false positives below 2 percent"
+        "proof": "Buyer states a target, such as false positives below 2 percent",
+        "pin": "How much do you need to cut this quarter, and how will you measure it?",
+        "settle": "Great, so faster is the goal. Let us move on.",
+        "assume": "I will put down 40 percent. That is what most customers see."
       },
       "rep": {
         "buyer_line": "We want the agent to make the review queue better.",
@@ -32,7 +35,10 @@
         "move": "Ask who signs the PO and up to what limit.",
         "strong": "Who signs the PO, and up to what amount?",
         "weak": "Who else should I talk to?",
-        "proof": "Buyer names the signer and a spend limit"
+        "proof": "Buyer names the signer and a spend limit",
+        "pin": "Above that amount, whose budget does this come out of, and who has the final sign-off?",
+        "settle": "Okay, I will take it that you can get this through.",
+        "assume": "Perfect, so you can sign this yourself then."
       },
       "rep": {
         "buyer_line": "I am excited about this and I can get it moving internally.",
@@ -50,7 +56,10 @@
         "move": "Ask how vendors will be scored and what breaks a tie.",
         "strong": "How will you score vendors? Which criterion breaks a tie?",
         "weak": "We match every feature on your list.",
-        "proof": "Buyer lists the criteria in order"
+        "proof": "Buyer lists the criteria in order",
+        "pin": "What would rule us out on day one, regardless of price?",
+        "settle": "Sounds like we tick most of those boxes.",
+        "assume": "We match every feature on your list, so we are good."
       },
       "rep": {
         "buyer_line": "We are looking at three vendors right now.",
@@ -67,8 +76,11 @@
       "talk_track": {
         "move": "Walk the steps after a successful pilot, day by day.",
         "strong": "After a successful pilot, what happens on day one, day ten and day thirty?",
-        "weak": "What is your timeline?",
-        "proof": "Buyer names the steps and the approver for each"
+        "weak": "So when do you think you will decide?",
+        "proof": "Buyer names the steps and the approver for each",
+        "pin": "Who else needs to approve, and in what order? Walk me through the approval path.",
+        "settle": "Okay, so roughly a quarter. I will pencil that in.",
+        "assume": "Great, so I will forecast a signed contract next month."
       },
       "rep": {
         "buyer_line": "If the pilot goes well we will move forward.",
@@ -85,12 +97,15 @@
       "talk_track": {
         "move": "Start the paper process in parallel with the evaluation.",
         "strong": "Can InfoSec start reviewing in parallel with the pilot, not after it?",
-        "weak": "We will deal with legal once you have decided.",
-        "proof": "Buyer gives lead times for legal, security and procurement"
+        "weak": "We will bring the lawyers in once you have decided.",
+        "proof": "Buyer gives lead times for legal, security and procurement",
+        "pin": "How long do legal and procurement usually take to review a contract like this?",
+        "settle": "Let us not worry about the paperwork yet.",
+        "assume": "We can sort the contract out at the end, once you have decided."
       },
       "rep": {
         "buyer_line": "Legal usually gets involved once we pick a vendor.",
-        "off_move": "Sounds good, we can sort contracts out at the end."
+        "off_move": "Sounds good, we can sort the paperwork out at the end."
       },
       "signal": "paper_process"
     },
@@ -103,8 +118,11 @@
       "talk_track": {
         "move": "Ask what the problem costs, in hours, money or risk.",
         "strong": "What does a false positive cost you in analyst hours each month?",
-        "weak": "That sounds painful.",
-        "proof": "Buyer ties the pain to a cost or a risk"
+        "weak": "That sounds rough.",
+        "proof": "Buyer ties the pain to a cost or a risk",
+        "pin": "What happens if you do nothing and this carries on another year?",
+        "settle": "That sounds rough. Let me show you how we help.",
+        "assume": "Our tool makes that a non-issue, so let us move on."
       },
       "rep": {
         "buyer_line": "The review queue is a headache for the team.",
@@ -122,7 +140,10 @@
         "move": "Test whether your contact can sell this when you are not in the room.",
         "strong": "If I am not in the room, how would you make the case to your CRO?",
         "weak": "Great, you are our champion then.",
-        "proof": "Buyer shows access, influence and a personal stake"
+        "proof": "Buyer shows access, influence and a personal stake",
+        "pin": "What would you need to take this to the committee with confidence?",
+        "settle": "Great to hear you are on board.",
+        "assume": "Perfect, you are our champion, so you can sell it internally for us."
       },
       "rep": {
         "buyer_line": "I really like what you showed us. I am on your side.",
@@ -139,8 +160,11 @@
       "talk_track": {
         "move": "Ask about every alternative, including build and do nothing.",
         "strong": "What happens if you build this in-house, or do nothing?",
-        "weak": "Our competitors cannot do what we do.",
-        "proof": "Buyer names the alternatives, including build and do nothing"
+        "weak": "Nobody in this space does what we do.",
+        "proof": "Buyer names the alternatives, including build and do nothing",
+        "pin": "What are you comparing us against, including what you already pay for?",
+        "settle": "We are confident we win on features.",
+        "assume": "Nobody else can do this, so I will assume it is just us."
       },
       "rep": {
         "buyer_line": "We are talking to a couple of other vendors.",

@@ -40,6 +40,9 @@
     "cost_to_serve",
     "competition"
   ],
+  "market_map": {
+    "competition": "Hyperscalers bundle model access into existing cloud commits, while GPU clouds like CoreWeave win on raw capacity and price per hour."
+  },
   "lesson": {
     "cards": [
       {

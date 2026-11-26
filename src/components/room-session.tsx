@@ -1,17 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
-import { ArrowUp, Building2, Check, ChevronDown, Crown, Lightbulb, ShieldAlert, Target, Users, X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Building2, Check, ChevronDown, Crown, MessageSquareWarning, ShieldAlert, Target, Users, X } from 'lucide-react';
 import { IconTile, SignalIcon } from './glyph';
 import { BRAND, PILLAR_TINT } from '@/lib/brand';
-import { composeScenario } from '@/lib/composer';
 import { loadCurriculum, scenarioFor, signalDefinitions } from '@/lib/curriculum/load';
-import type { SignalId, Skill, Tier } from '@/lib/curriculum/schema';
+import { SIGNAL_IDS, type SignalId, type Skill, type Tier } from '@/lib/curriculum/schema';
+import { chooseMove, currentBeat, roomDone, roomProgress, setUpRoom, trustLabel, type Beat, type Outcome, type Pick, type RoomState } from '@/lib/deal-room';
 import { recordActivity } from '@/lib/engagement';
 import { gradeSession, type GradeResult } from '@/lib/grader';
-import { requestHint, sendLearnerMessage, startSimulation, verifiedCount, type SimContext, type SimState, type Turn } from '@/lib/simulator';
-import { buildSkillProbes, drillSkillIds, proofCount, skillMastery, tierSkillIds } from '@/lib/skills';
+import type { Turn } from '@/lib/simulator';
+import { drillSkillIds, proofCount, skillMastery, tierSkillIds } from '@/lib/skills';
 import { recordSession, type SessionRecord, type Trajectory } from '@/lib/store';
 import { useAppState, type UpdateAppState } from '@/lib/use-app-state';
 import { FocusScreen, MasteryBadge, ProgressBar, SignalState } from './ui';
@@ -27,16 +27,7 @@ interface RoomSessionProps {
 
 type Phase = 'brief' | 'room' | 'debrief';
 
-interface Proof {
-  key: string;
-  title: string;
-  turnId: string;
-  /** Shown only the first time the learner earns this proof, so it never turns into boilerplate. */
-  why: string | null;
-}
-
-const EARLIER_VISIBLE = 4;
-const NOT_SURE_MESSAGE = "I'm not sure yet, so I won't guess. Can you walk me through it?";
+const EARLIER_VISIBLE = 6;
 
 export function RoomSession({ trajectory, tier, mode, drillIndex, update, onRetake }: RoomSessionProps) {
   const curriculum = loadCurriculum();
@@ -49,20 +40,11 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
   const color = rubric.text_color;
   const tint = PILLAR_TINT[tier];
 
-  const payload = useMemo(
-    () => composeScenario({ cluster, vertical, rubric, mode, drillIndex }),
-    [cluster, vertical, rubric, mode, drillIndex]
+  const setup = useMemo(
+    () => setUpRoom(curriculum, { clusterId: cluster.id, verticalId: vertical.id, tier, mode, drillIndex }),
+    [curriculum, cluster.id, vertical.id, tier, mode, drillIndex]
   );
-  const ctx = useMemo<SimContext>(
-    () => ({
-      vertical,
-      signals,
-      objections: payload.objection_queue,
-      personaRoles: payload.personas.map((persona) => persona.role),
-      skillProbes: buildSkillProbes(curriculum, scenario)
-    }),
-    [vertical, signals, payload, curriculum, scenario]
-  );
+  const { payload, rc } = setup;
   const skillIds = useMemo(
     () => (isBoss ? tierSkillIds(curriculum, rubric) : drillSkillIds(curriculum, rubric, drillIndex)),
     [curriculum, rubric, drillIndex, isBoss]
@@ -70,21 +52,19 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
   const skills = skillIds.map((id) => curriculum.skills.find((skill) => skill.id === id)).filter((skill): skill is Skill => Boolean(skill));
   const signalSkill = (signal: SignalId) => curriculum.skills.find((skill) => skill.signal === signal);
   const signalLabel = (signal: SignalId) => signals.find((definition) => definition.id === signal)?.label ?? signal;
-  const provenBefore = (key: string) =>
-    trajectory.sessions.some((session) => session.bindings[key as SignalId]?.bars === 4 || session.skillEvidence?.[key]?.level === 'verbatim');
 
   const [phase, setPhase] = useState<Phase>('brief');
-  const [sim, setSim] = useState<SimState>(() => startSimulation(ctx, { mode, targetSignals: payload.target_signals }));
-  const [draft, setDraft] = useState('');
-  const [hint, setHint] = useState<{ text: string; strong?: string } | null>(null);
-  const [proofs, setProofs] = useState<Proof[]>([]);
+  const [room, setRoom] = useState<RoomState>(setup.state);
+  const [picked, setPicked] = useState<number | null>(null);
+  const [feedback, setFeedback] = useState<Outcome | null>(null);
   const [showTranscript, setShowTranscript] = useState(false);
-  const [debrief, setDebrief] = useState<{ grade: GradeResult; record: SessionRecord; points: number } | null>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [debrief, setDebrief] = useState<{ grade: GradeResult; record: SessionRecord; points: number; room: RoomState } | null>(null);
+  const movesRef = useRef<HTMLDivElement>(null);
 
-  const verified = verifiedCount(sim);
-  const targetTotal = sim.targetSignals.length;
-  const allVerified = verified === targetTotal;
+  const sim = room.sim;
+  const beat = currentBeat(rc, room);
+  const done = roomDone(room);
+  const progress = roomProgress(room);
   const drill = rubric.drills[drillIndex];
   const title = isBoss ? rubric.boss_fight.title.replace(/^Boss fight · /, '') : (drill?.title ?? '');
   const kicker = `Pillar ${rubric.pillar} · ${isBoss ? 'Boss fight' : `Drill ${drillIndex + 1} of 3`}`;
@@ -96,57 +76,21 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
 
   useEffect(() => {
     if (phase !== 'room') return;
-    inputRef.current?.focus({ preventScroll: true });
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: reduce ? 'auto' : 'smooth' });
-  }, [phase, sim.turns.length]);
+  }, [phase, sim.turns.length, feedback]);
 
-  const submit = (text: string) => {
-    if (text.trim().length === 0) return;
-    const next = sendLearnerMessage(ctx, sim, text);
-    const fresh: Proof[] = [];
-    for (const signal of next.targetSignals) {
-      if (sim.bindings[signal].bars !== 4 && next.bindings[signal].bars === 4) {
-        const turn = next.turns.find((candidate) => candidate.id === next.bindings[signal].transcript_turn_id);
-        fresh.push({
-          key: signal,
-          title: `${signalLabel(signal)} verified`,
-          turnId: turn?.id ?? '',
-          why: provenBefore(signal) ? null : (signalSkill(signal)?.talk_track.move ?? null)
-        });
-      }
-    }
-    for (const [skillId, evidence] of Object.entries(next.skillEvidence)) {
-      if (evidence.level === 'verbatim' && sim.skillEvidence[skillId]?.level !== 'verbatim') {
-        const skill = curriculum.skills.find((candidate) => candidate.id === skillId);
-        const turn = next.turns.find((candidate) => candidate.id === evidence.transcript_turn_id);
-        fresh.push({
-          key: skillId,
-          title: `${skill?.label ?? skillId} verified`,
-          turnId: turn?.id ?? '',
-          why: provenBefore(skillId) ? null : (skill?.talk_track.move ?? null)
-        });
-      }
-    }
-    setSim(next);
-    setDraft('');
-    setHint(null);
-    setProofs(fresh);
-  };
-
-  const askForHint = () => {
-    const result = requestHint(ctx, sim);
-    setSim(result.state);
-    const open = sim.targetSignals.find((signal) => sim.bindings[signal].bars !== 4);
-    setHint(
-      result.hint
-        ? { text: result.hint, strong: open ? signalSkill(open)?.talk_track.strong : undefined }
-        : { text: 'Every target signal already has buyer proof. Finish the drill.' }
-    );
+  const check = () => {
+    if (picked === null || !beat || feedback) return;
+    const { state, outcome } = chooseMove(rc, room, picked);
+    setRoom(state);
+    setPicked(null);
+    // Boss fights run without coaching. Drills show the verdict and why before the next beat.
+    if (!isBoss) setFeedback(outcome);
   };
 
   const finish = () => {
-    const result = gradeSession(rubric, sim);
+    const result = gradeSession(rubric, room.sim);
     const record: SessionRecord = {
       id: `s-${Date.now().toString(36)}`,
       tier,
@@ -155,18 +99,40 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
       score: result.score,
       passed: result.passed,
       autoFailIds: result.autoFails.map((flag) => flag.id),
-      bindings: sim.bindings,
-      transcript: sim.turns,
+      bindings: room.sim.bindings,
+      transcript: room.sim.turns,
       createdAt: new Date().toISOString(),
-      skillEvidence: sim.skillEvidence,
-      hintsUsed: sim.hintsUsed
+      skillEvidence: room.sim.skillEvidence,
+      hintsUsed: 0
     };
     const points = proofCount(record);
     update((current) => recordActivity(recordSession(current, trajectory.id, record), { reps: 1, proofs: points }));
-    setDebrief({ grade: result, record, points });
+    setDebrief({ grade: result, record, points, room });
     setPhase('debrief');
     window.scrollTo({ top: 0 });
   };
+
+  // 1, 2, 3 pick a move. Enter checks, continues, or opens the debrief.
+  useEffect(() => {
+    if (phase !== 'room') return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
+      const number = Number(event.key);
+      if (!feedback && beat && Number.isInteger(number) && number >= 1 && number <= beat.moves.length) {
+        event.preventDefault();
+        setPicked(number - 1);
+      } else if (event.key === 'Enter' && !(target instanceof HTMLButtonElement) && !(target instanceof HTMLAnchorElement)) {
+        event.preventDefault();
+        if (feedback) setFeedback(null);
+        else if (done) finish();
+        else check();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
 
   if (phase === 'brief') {
     return (
@@ -185,7 +151,7 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
         footer={
           <>
             <p className="t-small mb-3 text-center">
-              Pass at {isBoss ? rubric.boss_pass_min : rubric.core_gate_pass_min}%. {isBoss ? 'Zero red flags, no hints.' : 'A signal only counts when the buyer says it.'}
+              Pass at {isBoss ? rubric.boss_pass_min : rubric.core_gate_pass_min}%. {isBoss ? 'No coaching, zero red flags.' : 'Tap your move. A signal only counts when the buyer says it.'}
             </p>
             <button type="button" className="btn-lit" onClick={() => setPhase('room')}>
               Enter the room
@@ -244,6 +210,7 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
         grade={debrief.grade}
         record={debrief.record}
         points={debrief.points}
+        room={debrief.room}
         title={title}
         kicker={kicker}
         isBoss={isBoss}
@@ -257,101 +224,32 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
     );
   }
 
+  const footer = feedback ? (
+    <FeedbackDrawer outcome={feedback} onContinue={() => setFeedback(null)} />
+  ) : done ? (
+    <button type="button" onClick={finish} className="btn-lit">
+      {room.walkedOut ? 'See what went wrong' : 'See your debrief'}
+    </button>
+  ) : (
+    <button type="button" onClick={check} disabled={picked === null} className="btn-lit">
+      Check
+    </button>
+  );
+
   return (
     <FocusScreen
       top={
-        <div className="flex flex-col gap-3">
-          <div className="flex h-11 items-center gap-3">
-            <Link href="/path" aria-label="Leave the room" className="-ml-2.5 grid h-11 w-11 place-items-center rounded-full text-slate hover:bg-deep">
-              <X className="h-6 w-6" aria-hidden="true" />
-            </Link>
-            {isBoss ? (
-              <ProgressBar value={verified} max={targetTotal} label="Signals verified" color={BRAND.profit} />
-            ) : (
-              <div className="grid flex-1 gap-1.5" style={{ gridTemplateColumns: `repeat(${targetTotal}, minmax(0, 1fr))` }} role="progressbar" aria-label="Signals verified" aria-valuenow={verified} aria-valuemin={0} aria-valuemax={targetTotal}>
-                {sim.targetSignals.map((signal) => (
-                  <span key={signal} className="h-2.5 rounded-full transition-colors duration-500" style={{ background: sim.bindings[signal].bars === 4 ? BRAND.profit : sim.bindings[signal].bars === 3 ? tint : BRAND.deep }} />
-                ))}
-              </div>
-            )}
-            {!isBoss && (
-              <button
-                type="button"
-                onClick={askForHint}
-                aria-label="Coach hint"
-                className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-rule-strong hover:bg-deep"
-                style={{ color }}
-              >
-                <Lightbulb className="h-5 w-5" aria-hidden="true" />
-              </button>
-            )}
-          </div>
-          <ul className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Target signals">
-            {sim.targetSignals.map((signal) => (
-              <li key={signal}>
-                <SignalState bars={sim.bindings[signal].bars} label={signalLabel(signal)} />
-              </li>
-            ))}
-          </ul>
+        <div className="flex h-11 items-center gap-3">
+          <Link href="/path" aria-label="Leave the room" className="-ml-2.5 grid h-11 w-11 place-items-center rounded-full text-slate hover:bg-deep">
+            <X className="h-6 w-6" aria-hidden="true" />
+          </Link>
+          <ProgressBar value={progress.value} max={progress.max} label="Meeting progress" color={color} />
+          <SignalTracker turns={sim.turns} bindings={sim.bindings} signals={isBoss ? [...SIGNAL_IDS] : sim.targetSignals} label={isBoss ? 'MEDDPICC' : 'Signals'} signalLabel={signalLabel} />
         </div>
       }
-      footer={
-          <form
-            onSubmit={(event: FormEvent) => {
-              event.preventDefault();
-              submit(draft);
-            }}
-            className="flex flex-col gap-2.5"
-          >
-            {allVerified && !isBoss ? (
-              <button type="button" onClick={finish} className="btn-lit">
-                All signals proven. Finish drill
-              </button>
-            ) : null}
-            <label htmlFor="move" className="t-label">
-              Your move
-            </label>
-            <div className="flex items-end gap-2">
-              <textarea
-                id="move"
-                ref={inputRef}
-                value={draft}
-                onChange={(event) => setDraft(event.target.value)}
-                onKeyDown={(event: KeyboardEvent<HTMLTextAreaElement>) => {
-                  if (event.key === 'Enter' && !event.shiftKey) {
-                    event.preventDefault();
-                    submit(draft);
-                  }
-                }}
-                rows={2}
-                placeholder="Ask one precise question. Don't pitch yet."
-                className="min-h-[56px] flex-1 resize-none rounded-panel border-2 border-rule-strong bg-paper px-4 py-3 text-[16px] leading-[1.45] placeholder:text-slate focus:border-people-ink focus:outline-none"
-              />
-              <button
-                type="submit"
-                aria-label="Send"
-                disabled={draft.trim().length === 0}
-                className="grid h-14 w-14 shrink-0 place-items-center rounded-full text-white transition disabled:opacity-30"
-                style={{ background: color }}
-              >
-                <ArrowUp className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <button type="button" onClick={() => submit(NOT_SURE_MESSAGE)} className="btn-quiet min-h-[44px] px-4 text-[14px]">
-                Not sure, don&apos;t guess
-              </button>
-              {(!allVerified || isBoss) && (
-                <button type="button" onClick={finish} className="min-h-[44px] px-2 text-[14px] font-semibold text-slate underline-offset-4 hover:underline">
-                  {isBoss ? 'Grade boss fight' : 'End and grade'}
-                </button>
-              )}
-            </div>
-          </form>
-      }
+      footer={footer}
     >
       <div className="flex flex-1 flex-col gap-4 py-6">
-        {/* Earlier turns stay visible as a compact chat. Only a long history folds, keeping the latest four. */}
         {hiddenEarlier > 0 && (
           <button
             type="button"
@@ -374,20 +272,181 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
         )}
         <div key={sim.turns.length} className="flex animate-rise flex-col gap-4">
           {latest.map((turn) => (
-            <BuyerTurn key={turn.id} turn={turn} proofs={proofs.filter((proof) => proof.turnId === turn.id)} />
+            <BuyerTurn key={turn.id} turn={turn} />
           ))}
         </div>
-        {hint && (
-          <div className="flex animate-rise flex-col gap-2 rounded-panel border-2 border-dashed p-4" style={{ borderColor: color }}>
-            <p className="t-label" style={{ color }}>
-              Coach hint
-            </p>
-            <p className="t-body">{hint.text}</p>
-            {hint.strong && <p className="t-small">Try something like: “{hint.strong}”</p>}
+
+        {beat && !feedback && (
+          <div ref={movesRef} key={`${beat.id}-${room.attempts}`} className="mt-2 flex animate-rise flex-col gap-2.5" role="group" aria-label="Your move">
+            <MoveHeading beat={beat} isBoss={isBoss} retry={room.attempts > 0} color={color} tint={tint} signalLabel={signalLabel} skillLabel={(id) => curriculum.skills.find((skill) => skill.id === id)?.label ?? ''} />
+            {beat.moves.map((move, index) => (
+              <button key={move.text} type="button" className="choice" aria-pressed={picked === index} onClick={() => setPicked(index)}>
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border-2 border-rule-strong text-[13px] font-bold text-slate" aria-hidden="true">
+                  {index + 1}
+                </span>
+                <span className="t-body">{move.text}</span>
+              </button>
+            ))}
           </div>
         )}
       </div>
     </FocusScreen>
+  );
+}
+
+/** One line above the moves. Drills name the goal. Boss fights only say whose turn it is. */
+function MoveHeading({
+  beat,
+  isBoss,
+  retry,
+  color,
+  tint,
+  signalLabel,
+  skillLabel
+}: {
+  beat: Beat;
+  isBoss: boolean;
+  retry: boolean;
+  color: string;
+  tint: string;
+  signalLabel: (signal: SignalId) => string;
+  skillLabel: (id: string) => string;
+}) {
+  if (isBoss) return <p className="t-label">Your move</p>;
+  const goal =
+    beat.kind === 'objection'
+      ? 'Handle the objection'
+      : beat.signal
+        ? `${beat.kind === 'pin' ? 'Pin down' : 'Open'}: ${signalLabel(beat.signal)}`
+        : beat.kind === 'pin'
+          ? `Pin down: ${skillLabel(beat.skillId ?? '')}`
+          : skillLabel(beat.skillId ?? '');
+  return (
+    <div className="flex items-center gap-2">
+      <span className="grid h-7 w-7 place-items-center rounded-lg" style={{ background: tint, color }} aria-hidden="true">
+        {beat.kind === 'objection' ? (
+          <MessageSquareWarning className="h-4 w-4" />
+        ) : beat.signal ? (
+          <SignalIcon signal={beat.signal} className="h-4 w-4" />
+        ) : (
+          <Target className="h-4 w-4" />
+        )}
+      </span>
+      <p className="text-[14px] font-bold" style={{ color }}>
+        {goal}
+      </p>
+      {retry && <span className="t-small">· Try again</span>}
+    </div>
+  );
+}
+
+/** The Duolingo reveal: one verdict line, detail folded away, one way forward. */
+function FeedbackDrawer({ outcome, onContinue }: { outcome: Outcome; onContinue: () => void }) {
+  const good = outcome.kind === 'elite';
+  return (
+    <div className={`-mx-5 max-h-[70dvh] animate-rise overflow-y-auto rounded-t-card px-5 pb-2 pt-5 ${good ? 'bg-profit-soft' : 'bg-leak-soft'}`} role="status">
+      <div className="mb-3 flex items-center gap-3">
+        <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full text-white ${good ? 'bg-profit-ink' : 'bg-leak-ink'}`}>
+          {good ? <Check className="h-5 w-5" aria-hidden="true" /> : <X className="h-5 w-5" aria-hidden="true" />}
+        </span>
+        <p className={`text-[17px] font-bold leading-snug ${good ? 'text-profit-ink' : 'text-leak-ink'}`}>{outcome.verdict}</p>
+      </div>
+      <div className="mb-4 flex flex-col divide-y divide-rule rounded-panel bg-paper/70">
+        {!good && <Disclosure label="Elite move">“{outcome.elite}”</Disclosure>}
+        <Disclosure label="Why it works">{outcome.why}</Disclosure>
+        {outcome.evidence && (
+          <Disclosure label="Buyer evidence">
+            <span className="flex flex-col gap-1">
+              <span className="t-quote text-[15px]">“{outcome.evidence.quote}”</span>
+              <span className="t-small">{outcome.evidence.level === 'verbatim' ? `Counts as proof for ${outcome.evidence.label}.` : 'Acknowledged, but no number, name or date yet.'}</span>
+            </span>
+          </Disclosure>
+        )}
+      </div>
+      <button type="button" onClick={onContinue} className={good ? 'btn-profit' : 'btn-leak'} autoFocus>
+        {good ? 'Continue' : 'Try again'}
+      </button>
+    </div>
+  );
+}
+
+function Disclosure({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <details className="group px-4">
+      <summary className="flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-2 text-[14px] font-semibold [&::-webkit-details-marker]:hidden">
+        {label}
+        <ChevronDown className="h-4 w-4 text-slate transition group-open:rotate-180" aria-hidden="true" />
+      </summary>
+      <div className="t-body pb-3 text-charcoal">{children}</div>
+    </details>
+  );
+}
+
+/** "MEDDPICC 3/8" pill. Opens to each signal's state and the buyer's own words. */
+function SignalTracker({
+  turns,
+  bindings,
+  signals,
+  label,
+  signalLabel
+}: {
+  turns: Turn[];
+  bindings: RoomState['sim']['bindings'];
+  signals: SignalId[];
+  label: string;
+  signalLabel: (signal: SignalId) => string;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const verified = signals.filter((signal) => bindings[signal].bars === 4).length;
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) setOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => event.key === 'Escape' && setOpen(false);
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative shrink-0">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className="flex min-h-[44px] items-center gap-1.5 rounded-full border border-rule-strong px-3 text-[13px] font-bold tabular-nums hover:bg-deep"
+      >
+        <span className={verified === signals.length ? 'text-profit-ink' : ''}>
+          {label} {verified}/{signals.length}
+        </span>
+        <ChevronDown className={`h-4 w-4 text-slate transition ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+      </button>
+      {open && (
+        <div className="absolute right-0 top-12 z-30 w-[min(340px,calc(100vw-40px))] animate-rise rounded-panel border border-hairline bg-paper p-2 shadow-float">
+          <ul className="flex flex-col">
+            {signals.map((signal) => {
+              const binding = bindings[signal];
+              const quote = binding.bars >= 3 ? turns.find((turn) => turn.signal === signal && turn.reveal === (binding.bars === 4 ? 'verbatim' : 'partial'))?.content : undefined;
+              return (
+                <li key={signal} className="flex flex-col gap-1 rounded-xl px-3 py-2.5">
+                  <span className="flex items-center gap-2">
+                    <SignalIcon signal={signal} className="h-4 w-4 text-slate" />
+                    <SignalState bars={binding.bars} label={signalLabel(signal)} />
+                  </span>
+                  {quote && <span className="t-small pl-6 italic">“{quote}”</span>}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -400,29 +459,18 @@ function meetLine(roles: string[]): string {
   return `You will meet the ${roles[0]}, the ${roles[1]} and ${rest} other${rest === 1 ? '' : 's'} from the buying committee.`;
 }
 
-function BuyerTurn({ turn, proofs }: { turn: Turn; proofs: Proof[] }) {
-  const proven = proofs.length > 0 || turn.reveal === 'verbatim';
-  const status = turn.objection ? 'Objection' : turn.reveal === 'partial' ? 'Partial. Push for the number.' : null;
-  const rule = proven ? BRAND.profit : turn.objection ? BRAND.leak : '#d5d8de';
+function BuyerTurn({ turn }: { turn: Turn }) {
+  const status = turn.objection ? 'Objection' : turn.reveal === 'partial' ? 'Partial. Push for the number.' : turn.reveal === 'verbatim' ? 'Verified' : null;
+  const rule = turn.reveal === 'verbatim' ? BRAND.profit : turn.objection ? BRAND.leak : '#d5d8de';
   return (
     <div className="flex flex-col gap-2">
       <p className="t-small">
         <span className="font-semibold text-ink">{turn.speakerRole}</span>
-        {status && <span className={turn.objection ? 'text-leak-ink' : ''}> · {status}</span>}
+        {status && <span className={turn.objection ? 'text-leak-ink' : turn.reveal === 'verbatim' ? 'font-semibold text-profit-ink' : ''}> · {status}</span>}
       </p>
       <blockquote className="t-quote border-l-[3px] pl-4" style={{ borderColor: rule }}>
         {turn.content}
       </blockquote>
-      {proofs.map((proof) => (
-        <div key={proof.key} className="ml-[19px] flex animate-pop flex-col gap-1" role="status">
-          <p className="flex items-center gap-2 text-[14px] font-bold text-profit-ink">
-            <Check className="h-4 w-4" strokeWidth={3} aria-hidden="true" />
-            {proof.title}
-            <span className="rounded-full bg-profit-soft px-2 py-0.5 text-[12px]">+10</span>
-          </p>
-          {proof.why && <p className="t-small">{proof.why}</p>}
-        </div>
-      ))}
     </div>
   );
 }
@@ -446,6 +494,7 @@ function Debrief({
   grade,
   record,
   points,
+  room,
   title,
   kicker,
   isBoss,
@@ -459,6 +508,7 @@ function Debrief({
   grade: GradeResult;
   record: SessionRecord;
   points: number;
+  room: RoomState;
   title: string;
   kicker: string;
   isBoss: boolean;
@@ -470,8 +520,10 @@ function Debrief({
   onRetake: () => void;
 }) {
   const curriculum = loadCurriculum();
-  const questions = record.transcript.filter((turn) => turn.speaker === 'learner').length;
   const consumption = Object.values(grade.skillEvidence);
+  // Misses worth replaying: the last miss on each beat, newest first. Drills repeat a missed beat, so one beat can hold several.
+  const misses = [...new Map(room.picks.filter((pick) => pick.kind !== 'elite').map((pick) => [pick.beatId, pick] as const)).values()].reverse();
+  const walkoutRole = room.walkedOut ? record.transcript.at(-1)?.speakerRole : undefined;
 
   return (
     <FocusScreen
@@ -502,7 +554,7 @@ function Debrief({
       <dl className="mt-6 grid grid-cols-3 gap-2">
         {[
           ['Proof points', `+${points * 10}`],
-          ['Questions', String(questions)],
+          ['Buyer trust', trustLabel(room.mood, room.walkedOut)],
           ['Red flags', String(grade.autoFails.length)]
         ].map(([label, value]) => (
           <div key={label} className="panel flex flex-col items-center gap-0.5 p-3">
@@ -511,6 +563,12 @@ function Debrief({
           </div>
         ))}
       </dl>
+
+      {walkoutRole && (
+        <p className="mt-4 rounded-panel bg-leak-soft p-4 text-[14px] font-semibold text-leak-ink" role="status">
+          The {walkoutRole} ended the meeting. Too many moves cost trust.
+        </p>
+      )}
 
       {grade.autoFails.length > 0 && (
         <section className="mt-4 rounded-panel border border-leak bg-leak-soft p-4" aria-label="Red flags">
@@ -567,9 +625,38 @@ function Debrief({
         </ul>
       </section>
 
+      {misses.length > 0 && <MovesToSharpen misses={misses} />}
+
       {/* Signal skills already appear under buyer proof, so list only the other skills this drill built. */}
       <SkillsBuilt skills={skills.filter((skill) => !skill.signal || !grade.targetSignals.includes(skill.signal))} trajectoryId={trajectoryId} />
     </FocusScreen>
+  );
+}
+
+/** Folded by default: each miss with what the buyer said, what you said and the elite move. */
+function MovesToSharpen({ misses }: { misses: Pick[] }) {
+  return (
+    <details className="group mt-6 rounded-panel border border-hairline">
+      <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-2 px-4 [&::-webkit-details-marker]:hidden">
+        <span className="t-item">Moves to sharpen ({misses.length})</span>
+        <ChevronDown className="h-4 w-4 text-slate transition group-open:rotate-180" aria-hidden="true" />
+      </summary>
+      <ul className="flex flex-col divide-y divide-rule border-t border-hairline">
+        {misses.map((pick) => (
+          <li key={pick.beatId} className="flex flex-col gap-2 px-4 py-3">
+            <p className="t-small italic">“{pick.prompt}”</p>
+            <p className="flex items-start gap-2 text-[14px] text-leak-ink">
+              <X className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+              <span>{pick.text}</span>
+            </p>
+            <p className="flex items-start gap-2 text-[14px] font-semibold text-profit-ink">
+              <Check className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+              <span>{pick.elite}</span>
+            </p>
+          </li>
+        ))}
+      </ul>
+    </details>
   );
 }
 

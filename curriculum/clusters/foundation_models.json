@@ -44,6 +44,9 @@
     "competition",
     "commercial_insight"
   ],
+  "market_map": {
+    "competition": "Frontier labs compete on model quality, safety and enterprise controls, while open-weight models and multi-model routers push price per token down."
+  },
   "lesson": {
     "cards": [
       {

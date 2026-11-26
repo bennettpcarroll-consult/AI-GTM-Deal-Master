@@ -100,5 +100,43 @@
       "partial": "We have looked at the big cloud providers' built-in options too.",
       "verbatim": "We are also evaluating a cloud-native option our platform group already licenses, so you have to beat its price and its auditability."
     }
+  },
+  "veto_holder": {
+    "role": "Head of Model Risk",
+    "reason": "No model reaches production without a validation pack they can defend to examiners."
+  },
+  "talk_tracks": {
+    "metrics": {
+      "open": "What number has to move on the fraud queue for this to be worth it, and by when?",
+      "pin": "How much do you need to cut false positives this year without raising missed fraud?"
+    },
+    "economic_buyer": {
+      "open": "Who signs the PO for a platform like this, and up to what amount?",
+      "pin": "Above that cap, whose budget does this come out of, and who has the final sign-off?"
+    },
+    "decision_criteria": {
+      "open": "How will you score vendors on zero retention, keys and audit logs? Which criterion breaks a tie?",
+      "pin": "What would rule us out on day one, regardless of price?"
+    },
+    "decision_process": {
+      "open": "After a successful proof of value, what happens on day one, day ten and day thirty?",
+      "pin": "Who else needs to approve after the committee? Walk me through the approval path."
+    },
+    "paper_process": {
+      "open": "Can InfoSec start reviewing in parallel with the proof of value, not after it?",
+      "pin": "How long do legal redlines on the data processing agreement usually take here?"
+    },
+    "identify_pain": {
+      "open": "What does a false positive cost you in analyst hours each month?",
+      "pin": "What happens if you do nothing and the audit findings keep stacking up?"
+    },
+    "champion": {
+      "open": "If I am not in the room, how would you make the case to the risk committee?",
+      "pin": "What would you need to take this to the examiners and the committee with confidence?"
+    },
+    "competition": {
+      "open": "What happens if you build this in-house, or do nothing?",
+      "pin": "What are you comparing us against, including what your platform group already licenses?"
+    }
   }
 }

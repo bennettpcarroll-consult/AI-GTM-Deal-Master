@@ -43,6 +43,9 @@
     "competition",
     "bounded_pov"
   ],
+  "market_map": {
+    "competition": "Observability and eval vendors compete with each other on trace depth, and with the internal frameworks that platform teams already built."
+  },
   "lesson": {
     "cards": [
       {

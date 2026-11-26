@@ -21,6 +21,7 @@ import skillsMeddpicc from '../../../curriculum/skills/meddpicc.json';
 import skillsConsumption from '../../../curriculum/skills/consumption.json';
 import skillsExecutive from '../../../curriculum/skills/executive.json';
 import diagnostic from '../../../curriculum/diagnostic.json';
+import room from '../../../curriculum/room.json';
 import scnComputeinfraBankingfsi from '../../../curriculum/scenarios/compute_infra__banking_fsi.json';
 import scnComputeinfraInsurance from '../../../curriculum/scenarios/compute_infra__insurance.json';
 import scnComputeinfraLawfirms from '../../../curriculum/scenarios/compute_infra__law_firms.json';
@@ -50,6 +51,7 @@ import {
   FAMILY_IDS,
   clusterSchema,
   diagnosticSchema,
+  roomSchema,
   frameworkSchema,
   scenarioSchema,
   skillFamilySchema,
@@ -58,6 +60,7 @@ import {
   type Cluster,
   type ClusterId,
   type Diagnostic,
+  type RoomRules,
   type FamilyId,
   type Scenario,
   type Skill,
@@ -79,6 +82,7 @@ export interface Curriculum {
   skills: Skill[];
   scenarios: Record<string, Scenario>;
   diagnostic: Diagnostic;
+  room: RoomRules;
 }
 
 export interface CurriculumSource {
@@ -110,6 +114,7 @@ export const CURRICULUM_SOURCES: CurriculumSource[] = [
   { file: 'skills/consumption.json', data: skillsConsumption },
   { file: 'skills/executive.json', data: skillsExecutive },
   { file: 'diagnostic.json', data: diagnostic },
+  { file: 'room.json', data: room },
   { file: 'scenarios/compute_infra__banking_fsi.json', data: scnComputeinfraBankingfsi },
   { file: 'scenarios/compute_infra__insurance.json', data: scnComputeinfraInsurance },
   { file: 'scenarios/compute_infra__law_firms.json', data: scnComputeinfraLawfirms },
@@ -165,6 +170,7 @@ export function buildCurriculum(sources: CurriculumSource[] = CURRICULUM_SOURCES
   const families: Partial<Record<FamilyId, SkillFamily>> = {};
   const scenarios: Record<string, Scenario> = {};
   let diagnosticPack: Diagnostic | null = null;
+  let roomPack: RoomRules | null = null;
 
   for (const source of sources) {
     const folder = source.file.split('/')[0];
@@ -210,6 +216,8 @@ export function buildCurriculum(sources: CurriculumSource[] = CURRICULUM_SOURCES
       scenarios[scenario.id] = scenario;
     } else if (source.file === 'diagnostic.json') {
       diagnosticPack = parseSource(source, diagnosticSchema, issues);
+    } else if (source.file === 'room.json') {
+      roomPack = parseSource(source, roomSchema, issues);
     } else {
       issues.push(`${source.file}: unknown curriculum folder "${folder}"`);
     }
@@ -252,6 +260,9 @@ export function buildCurriculum(sources: CurriculumSource[] = CURRICULUM_SOURCES
     if (skillIds.has(skill.id)) issues.push(`skill "${skill.id}" is defined more than once`);
     skillIds.add(skill.id);
     if (skill.scenario_reveal && !skill.probes) issues.push(`skill "${skill.id}" has a scenario reveal but no probes`);
+    if ((skill.signal || skill.probes) && !(skill.talk_track.pin && skill.talk_track.settle && skill.talk_track.assume)) {
+      issues.push(`skill "${skill.id}" can be proven by the buyer, so its talk track needs pin, settle and assume lines`);
+    }
   }
   for (const signal of SIGNAL_IDS) {
     const count = skills.filter((skill) => skill.signal === signal).length;
@@ -288,7 +299,12 @@ export function buildCurriculum(sources: CurriculumSource[] = CURRICULUM_SOURCES
   if (!diagnosticPack) issues.push('missing diagnostic.json');
   else diagnosticPack.items.forEach((item, index) => requireSkill(item.skill_id, `diagnostic item ${index + 1}`));
 
-  if (issues.length > 0 || !diagnosticPack) throw new CurriculumError(issues);
+  if (!roomPack) issues.push('missing room.json');
+  for (const id of VERTICAL_IDS) {
+    for (const skillId of Object.keys(verticals[id]?.rep_overrides ?? {})) requireSkill(skillId, `vertical ${id} rep_overrides`);
+  }
+
+  if (issues.length > 0 || !diagnosticPack || !roomPack) throw new CurriculumError(issues);
 
   return {
     clusters: clusters as Record<ClusterId, Cluster>,
@@ -298,7 +314,8 @@ export function buildCurriculum(sources: CurriculumSource[] = CURRICULUM_SOURCES
     families: FAMILY_IDS.map((id) => families[id] as SkillFamily),
     skills,
     scenarios,
-    diagnostic: diagnosticPack
+    diagnostic: diagnosticPack,
+    room: roomPack
   };
 }
 

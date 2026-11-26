@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Award, Check, ChevronDown, Crown, Dumbbell, Lock, Play } from 'lucide-react';
+import { ArrowRight, Award, BookOpen, Check, ChevronDown, Crown, Dumbbell, Lock, Play, ScanSearch } from 'lucide-react';
 import { AppShell } from '@/components/app-shell';
 import { PillarIcon } from '@/components/pillar-icon';
 import { Loading, ProgressBar } from '@/components/ui';
@@ -18,11 +18,11 @@ interface PathNode {
   key: string;
   href: string;
   title: string;
-  kind: 'drill' | 'boss';
+  kind: 'lesson' | 'drill' | 'boss';
   state: NodeState;
 }
 
-function nodesFor(trajectory: Trajectory, rubric: Rubric): PathNode[] {
+function nodesFor(trajectory: Trajectory, rubric: Rubric, briefingDone: boolean): PathNode[] {
   const tier = rubric.tier;
   const unlocked = tierUnlocked(trajectory, tier);
   const drills: PathNode[] = rubric.drills.map((drill, index) => ({
@@ -40,11 +40,14 @@ function nodesFor(trajectory: Trajectory, rubric: Rubric): PathNode[] {
     kind: 'boss',
     state: !unlocked ? 'locked' : trajectory.boss[String(tier)]?.passed ? 'done' : allDrills ? 'open' : 'locked'
   };
-  return [...drills, boss];
+  // Pillar 01 opens with the market briefing, so the learner sees the market before the first buyer.
+  const briefing: PathNode[] =
+    tier === 1 ? [{ key: 'briefing', href: '/briefing', title: 'Market briefing', kind: 'lesson', state: briefingDone ? 'done' : 'open' }] : [];
+  return [...briefing, ...drills, boss];
 }
 
 /** Zig-zag offsets so the path reads as a trail, not a list. */
-const OFFSETS = ['0px', '64px', '-48px', '24px'];
+const OFFSETS = ['0px', '64px', '-48px', '24px', '-24px'];
 
 export default function PathPage() {
   const { state } = useAppState();
@@ -67,7 +70,8 @@ export default function PathPage() {
   }
 
   const engagement = currentEngagement(state);
-  const allNodes = TIERS.map((tier) => ({ tier, nodes: nodesFor(trajectory, curriculum.rubrics[tier]) }));
+  const briefingDone = (state.lessonsDone ?? []).includes(trajectory.clusterId);
+  const allNodes = TIERS.map((tier) => ({ tier, nodes: nodesFor(trajectory, curriculum.rubrics[tier], briefingDone) }));
   const current = allNodes.flatMap(({ nodes }) => nodes).find((node) => node.state === 'open');
   if (current) current.state = 'current';
   const goalMet = engagement.repsToday >= DAILY_GOAL;
@@ -91,16 +95,28 @@ export default function PathPage() {
         </Link>
       </section>
 
+      {!state.diagnostic && (
+        <Link href="/placement" className="mt-3 flex min-h-[56px] items-center gap-3 rounded-[20px] border border-hairline px-4 py-3 hover:bg-deep">
+          <ScanSearch className="h-5 w-5 shrink-0 text-people-ink" aria-hidden="true" />
+          <span className="flex flex-1 flex-col">
+            <span className="text-[15px] font-semibold">Take the 2-minute placement check</span>
+            <span className="t-small">Optional. Your daily reps start with your gaps.</span>
+          </span>
+          <ArrowRight className="h-4 w-4 text-slate" aria-hidden="true" />
+        </Link>
+      )}
+
       {allNodes.map(({ tier, nodes }) => {
         const rubric = curriculum.rubrics[tier];
         const unlocked = tierUnlocked(trajectory, tier);
         const passedSteps = nodes.filter((node) => node.state === 'done').length;
+        const pillarCurrent = nodes.find((node) => node.state === 'current');
         const trail = (
           <ol className="mt-6 flex flex-col items-center gap-5">
             {nodes.map((node, index) => (
               <li
                 key={node.key}
-                className={`flex flex-col items-center gap-2 ${node.state === 'current' ? 'pt-12' : ''}`}
+                className="flex flex-col items-center gap-2"
                 style={{ transform: `translateX(${OFFSETS[index] ?? '0px'})` }}
               >
                 <PathButton node={node} color={rubric.text_color} tint={PILLAR_TINT[tier as Tier]} />
@@ -148,13 +164,18 @@ export default function PathPage() {
                   {rubric.transition_banner.title}
                 </h2>
                 <p className="t-small">
-                  {rubric.acv_band} deals · {passedSteps} of {nodes.length} steps
+                  {rubric.acv_band} deals · {passedSteps} of {nodes.length} complete
                 </p>
               </div>
-              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-paper" style={{ color: rubric.text_color }} aria-hidden="true">
+              <span className="grid h-12 w-12 shrink-0 place-items-center self-start rounded-2xl bg-paper" style={{ color: rubric.text_color }} aria-hidden="true">
                 <PillarIcon name={rubric.icon} className="h-6 w-6" />
               </span>
             </div>
+            {pillarCurrent && (
+              <Link href={pillarCurrent.href} className="btn-lit mt-3">
+                {continueLabel(pillarCurrent)} <ArrowRight className="h-5 w-5" aria-hidden="true" />
+              </Link>
+            )}
             {trail}
           </section>
         );
@@ -173,10 +194,16 @@ export default function PathPage() {
   );
 }
 
+function continueLabel(node: PathNode): string {
+  if (node.kind === 'lesson') return 'Start the market briefing';
+  if (node.kind === 'boss') return 'Take on the boss fight';
+  return `Continue: ${node.title}`;
+}
+
 function PathButton({ node, color, tint }: { node: PathNode; color: string; tint: string }) {
   const size = node.kind === 'boss' ? 'h-[88px] w-[88px] rounded-[28px]' : 'h-[76px] w-[76px] rounded-full';
-  const label = `${node.kind === 'boss' ? 'Boss fight' : 'Drill'}: ${node.title}, ${node.state === 'current' ? 'start here' : node.state === 'open' ? 'upcoming' : node.state}`;
-  const Icon = node.kind === 'boss' ? Crown : Play;
+  const label = `${node.kind === 'boss' ? 'Boss fight' : node.kind === 'lesson' ? 'Lesson' : 'Drill'}: ${node.title}, ${node.state === 'current' ? 'start here' : node.state === 'open' ? 'upcoming' : node.state}`;
+  const Icon = node.kind === 'boss' ? Crown : node.kind === 'lesson' ? BookOpen : Play;
 
   if (node.state === 'locked') {
     return (
@@ -212,15 +239,6 @@ function PathButton({ node, color, tint }: { node: PathNode; color: string; tint
   }
   return (
     <span className="relative">
-      {isCurrent && (
-        <span
-          className="absolute -top-11 left-1/2 -translate-x-1/2 animate-pop whitespace-nowrap rounded-xl border-2 bg-paper px-3 py-1.5 text-[13px] font-bold shadow-lift"
-          style={{ borderColor: color, color }}
-          aria-hidden="true"
-        >
-          Start
-        </span>
-      )}
       <Link
         href={node.href}
         aria-label={label}

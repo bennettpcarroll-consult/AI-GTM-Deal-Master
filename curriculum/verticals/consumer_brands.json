@@ -99,5 +99,65 @@
       "partial": "Our commerce platform has its own assistant that we already pay for.",
       "verbatim": "The commerce platform's bundled assistant comes with our renewal, so you must prove incremental lift over what we already have."
     }
+  },
+  "veto_holder": {
+    "role": "CMO",
+    "reason": "One off-brand answer in public ends the program, so brand safety outranks price."
+  },
+  "talk_tracks": {
+    "metrics": {
+      "open": "What number has to move on assisted conversion for this to be worth it, and by when?",
+      "pin": "How much do you need to cut cost per resolution before the holiday peak?"
+    },
+    "economic_buyer": {
+      "open": "Who signs the PO for the digital budget, and up to what amount?",
+      "pin": "For seasonal spend above the cap, whose budget does this come out of, and who has the final sign-off?"
+    },
+    "decision_criteria": {
+      "open": "How will you score vendors on brand safety? Which criterion breaks a tie?",
+      "pin": "What would rule us out with your brand team, regardless of price?"
+    },
+    "decision_process": {
+      "open": "After a successful pilot, what happens on day one, day ten and day thirty before November?",
+      "pin": "Who else needs to approve seasonal spend? Walk me through the approval path."
+    },
+    "paper_process": {
+      "open": "Can security start the PCI scope review in parallel with the pilot?",
+      "pin": "How long does the PCI scope review take before anything touches the payment flow?"
+    },
+    "identify_pain": {
+      "open": "What does last holiday's contact center surge cost you each year?",
+      "pin": "What happens if you do nothing and holiday volume spikes again?"
+    },
+    "champion": {
+      "open": "If I am not in the room, how would you make the case in the Monday growth review?",
+      "pin": "What would you need to take this to the CFO and the growth review with confidence?"
+    },
+    "competition": {
+      "open": "What happens if you build this in-house, or do nothing?",
+      "pin": "What are you comparing us against, including the assistant bundled with your commerce platform?"
+    }
+  },
+  "rep_overrides": {
+    "account_research": {
+      "buyer_line": "Before we start, what do you already know about how we run digital here?",
+      "strong": "I saw you moved the contact center under digital before last holiday. What prompted that?"
+    },
+    "discovery_questioning": {
+      "strong": "Walk me through how a customer question gets answered today, from chat to resolution."
+    },
+    "listening_summarizing": {
+      "buyer_line": "Honestly the bigger issue is the holiday surge, not the everyday volume.",
+      "strong": "So the real cost is the holiday surge, not the everyday volume. Did I get that right?"
+    },
+    "commercial_insight": {
+      "strong": "Brands like yours lose more to abandoned carts during peak than to support costs. Here is the number."
+    },
+    "value_messaging": {
+      "strong": "Today, eight-minute waits at peak. After, instant answers, proven with a brand your size."
+    },
+    "answer_first": {
+      "strong": "My recommendation: start with order-status questions before the holiday peak. Three reasons."
+    }
   }
 }
