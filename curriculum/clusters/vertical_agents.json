@@ -82,7 +82,7 @@
         "options": [
           "The vendor",
           "The buyer",
-          "Nobody"
+          "The systems integrator"
         ],
         "answer": 0,
         "why": "If the agent fails, the vendor does not get paid for that outcome."
