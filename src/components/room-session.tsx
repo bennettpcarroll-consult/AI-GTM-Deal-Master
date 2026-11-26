@@ -787,7 +787,7 @@ function ArcBrief({ scene, color, tint, onFullCapstone }: { scene: ArcScene; col
             <span className="t-item">Fast track: {scene.beats.length} moves</span>
             <span className="t-small">You landed every drill move first time, so you only play the core moves.</span>
             {onFullCapstone && (
-              <button type="button" onClick={onFullCapstone} className="mt-1 self-start text-[14px] font-semibold underline" style={{ color }}>
+              <button type="button" onClick={onFullCapstone} className="mt-1 self-start text-[14px] font-semibold text-ink underline">
                 Play the full capstone instead
               </button>
             )}

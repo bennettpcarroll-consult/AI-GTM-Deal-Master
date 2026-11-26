@@ -52,7 +52,7 @@ export default function PathPage() {
                 className="flex flex-col items-center gap-2"
                 style={{ transform: `translateX(${OFFSETS[index] ?? '0px'})` }}
               >
-                <PathButton node={node} color={rubric.text_color} tint={PILLAR_TINT[tier as Tier]} />
+                <PathButton node={node} />
                 <span
                   className={`max-w-[160px] text-center text-[13px] leading-tight ${
                     node.state === 'current' ? 'font-bold text-ink' : node.state === 'locked' ? 'font-semibold text-slate' : 'font-semibold text-charcoal'
@@ -136,7 +136,7 @@ function continueLabel(node: PathNode): string {
   return `Continue: ${node.title}`;
 }
 
-function PathButton({ node, color, tint }: { node: PathNode; color: string; tint: string }) {
+function PathButton({ node }: { node: PathNode }) {
   const size = node.kind === 'review' ? 'h-[88px] w-[88px] rounded-[28px]' : 'h-[76px] w-[76px] rounded-full';
   const kindLabel = { lesson: 'Lesson', concept: 'Concept', drill: 'Drill', recap: 'Recap', review: 'Final review' }[node.kind];
   const label = `${kindLabel}: ${node.title}, ${node.state === 'current' ? 'start here' : node.state === 'open' ? 'upcoming' : node.state}`;
@@ -162,13 +162,12 @@ function PathButton({ node, color, tint }: { node: PathNode; color: string; tint
   }
   const isCurrent = node.state === 'current';
   if (!isCurrent) {
-    // Upcoming: open to play, but visually quieter than the one drill the learner should do next.
+    // Upcoming: open to play, but neutral. Only the next step wears the action gradient.
     return (
       <Link
         href={node.href}
         aria-label={label}
-        className={`grid place-items-center border-[3px] bg-paper transition active:translate-y-[3px] ${size}`}
-        style={{ borderColor: color, color, boxShadow: `0 5px 0 ${tint}` }}
+        className={`grid place-items-center border-[3px] border-rule-strong bg-paper text-slate shadow-[0_5px_0_#e5e7eb] transition hover:text-ink active:translate-y-[3px] ${size}`}
       >
         <Icon className="h-7 w-7" aria-hidden="true" />
       </Link>
@@ -179,11 +178,8 @@ function PathButton({ node, color, tint }: { node: PathNode; color: string; tint
       <Link
         href={node.href}
         aria-label={label}
-        className={`grid place-items-center text-white transition active:translate-y-[3px] ${size}`}
-        style={{
-          background: color,
-          boxShadow: isCurrent ? `0 5px 0 rgb(14 17 22 / 0.25), 0 0 0 8px ${tint}` : '0 5px 0 rgb(14 17 22 / 0.25)'
-        }}
+        className={`action-lit grid place-items-center text-white transition active:translate-y-[3px] ${size}`}
+        style={{ boxShadow: '0 5px 0 rgb(14 17 22 / 0.22), 0 0 0 8px rgb(121 80 242 / 0.14)' }}
       >
         <Icon className="h-8 w-8" fill="currentColor" aria-hidden="true" />
       </Link>
