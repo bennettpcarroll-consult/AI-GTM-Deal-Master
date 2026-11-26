@@ -7,7 +7,8 @@ import { QuestionFlow } from '@/components/question-flow';
 import { FocusScreen, Loading } from '@/components/ui';
 import { loadCurriculum } from '@/lib/curriculum/load';
 import { currentEngagement, dayKey, DAILY_GOAL, recordActivity } from '@/lib/engagement';
-import { repToQuestion } from '@/lib/questions';
+import { repToQuestion, sharpenQuestion } from '@/lib/questions';
+import { dueSharpen, findArcBeat, reviewSharpen } from '@/lib/sharpen';
 import { dailyReps, familyOf, masteryMap } from '@/lib/skills';
 import { useAppState } from '@/lib/use-app-state';
 
@@ -21,9 +22,23 @@ export default function RepsPage() {
   const questions = useMemo(() => {
     if (!state) return [];
     const mastery = masteryMap(curriculum, state, trajectory);
-    return dailyReps(curriculum, mastery, `${dayKey()}-${round}`).map((rep) =>
+    const day = dayKey();
+    // Missed deal-room moves that are due come first (spaced retrieval), capped so a set stays short and mixed.
+    const due = trajectory && round === 0 ? dueSharpen(state, trajectory.id, day) : [];
+    const sharpen = due.flatMap((item) => {
+      const found = findArcBeat(curriculum, item.trajectoryId, item.beatId);
+      return found ? [sharpenQuestion(found, day, item.failure ? curriculum.failureModes[item.failure]?.lesson : undefined)] : [];
+    });
+    const reps = dailyReps(curriculum, mastery, `${day}-${round}`, 5 - sharpen.length).map((rep) =>
       repToQuestion(rep, curriculum.families.find((family) => family.id === familyOf(curriculum, rep.skill.id))?.display_name ?? '')
     );
+    // Interleave: a missed move, then a skill rep, so the set never runs the same kind of question back to back.
+    const mixed = [];
+    for (let i = 0; i < Math.max(sharpen.length, reps.length); i += 1) {
+      if (sharpen[i]) mixed.push(sharpen[i]!);
+      if (reps[i]) mixed.push(reps[i]!);
+    }
+    return mixed;
     // Picked once per round, so the set does not reshuffle while the learner answers.
   }, [Boolean(state), round]);
 
@@ -76,11 +91,20 @@ export default function RepsPage() {
       exitHref="/path"
       progressLabel="Reps progress"
       onDone={(answers) => {
+        const beats = Object.fromEntries(
+          Object.entries(answers)
+            .filter(([id]) => id.startsWith('beat:'))
+            .map(([id, value]) => [id.slice('beat:'.length), value])
+        );
         const correctSkills = Object.entries(answers)
-          .filter(([, value]) => value)
+          .filter(([id, value]) => value && !id.startsWith('beat:'))
           .map(([skill]) => skill);
-        update((current) => recordActivity(current, { reps: questions.length, proofs: 0, skills: correctSkills }));
-        setResult({ correct: correctSkills.length, total: questions.length });
+        const correct = Object.values(answers).filter(Boolean).length;
+        update((current) => {
+          const reviewed = trajectory ? reviewSharpen(current, trajectory.id, beats, dayKey()) : current;
+          return recordActivity(reviewed, { reps: questions.length, proofs: 0, skills: correctSkills });
+        });
+        setResult({ correct, total: questions.length });
       }}
     />
   );

@@ -96,7 +96,7 @@ describe('zero-typing deal room', () => {
   });
 
   it('raises an objection after a trap, and clears it only when the learner handles it', () => {
-    const { rc, state } = setUp('agentic_harness', 'banking_fsi', 1, 'drill', 0);
+    const { rc, state } = setUp('data_context', 'banking_fsi', 1, 'drill', 0);
     const trapped = chooseMove(rc, state, pickIndex(rc, state, 'trap')).state;
     expect(trapped.objection).not.toBeNull();
     expect(currentBeat(rc, trapped)?.kind).toBe('objection');
