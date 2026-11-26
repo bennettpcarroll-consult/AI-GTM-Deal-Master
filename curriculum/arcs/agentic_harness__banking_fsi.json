@@ -1,0 +1,3014 @@
+{
+ "id": "agentic_harness__banking_fsi",
+ "cluster": "agentic_harness",
+ "vertical": "banking_fsi",
+ "account": {
+  "name": "Northbridge",
+  "summary": "A tier-one retail and commercial bank with 41 agent prototypes and three in production. Model risk validation is where agents stall."
+ },
+ "pillars": [
+  {
+   "tier": 1,
+   "stage": "Qualify the opportunity",
+   "problem": "Is this a real deal, or a platform team's science project?",
+   "concept": {
+    "title": "A coach tells you things. A champion sells for you.",
+    "body": "Most first meetings end with an enthusiast who loved the demo. That person is a coach until they show access, influence and a personal stake. This pillar trains one habit: qualify with evidence. Get the buyer's own number, the real signer and the steps to a signature, each in the buyer's words.",
+    "weak": "Great, so you're our champion. Can you get this approved?",
+    "strong": "When you took the last platform to the CIO, what did it need to clear?"
+   },
+   "cast": [
+    {
+     "id": "priya",
+     "name": "Priya Shah",
+     "role": "Head of AI Platform"
+    },
+    {
+     "id": "daniel",
+     "name": "Daniel Okafor",
+     "role": "Head of Model Risk"
+    },
+    {
+     "id": "elena",
+     "name": "Elena Varga",
+     "role": "CISO"
+    },
+    {
+     "id": "marcus",
+     "name": "Marcus Webb",
+     "role": "CIO"
+    }
+   ],
+   "drills": [
+    {
+     "id": "d1",
+     "title": "Find the pain and the number",
+     "setting": "First meeting. Priya asked for it after her team trialled your tracing. Daniel from model risk joins for twenty minutes.",
+     "beats": [
+      {
+       "speaker": "priya",
+       "line": "Before we start, what do you already know about how we build agents here?",
+       "skill": "account_research",
+       "why": "Opening with a specific hypothesis earns the right to ask harder questions, and the correction teaches you more than a blank question would.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "From your summit talk: about forty agent prototypes, three in production. My guess is validation is where they stall. Is that close?",
+         "reply": "Close. Forty-one prototypes, and yes, validation is where they go to die."
+        },
+        {
+         "kind": "weak",
+         "failure": "hand_over_control",
+         "text": "Not much beyond your website, honestly. Could you walk me through how the agent program is set up?",
+         "reply": "That's a long story. Daniel, do you want to take it?"
+        },
+        {
+         "kind": "trap",
+         "failure": "early_pitch",
+         "text": "I know you're on LangChain, so the quickest win is swapping in our SDK. It takes about an afternoon.",
+         "reply": "We're not here to swap SDKs."
+        }
+       ],
+       "goal": "Show you did the research",
+       "id": "t1-d1-1"
+      },
+      {
+       "speaker": "daniel",
+       "line": "From where I sit, agents arrive at model risk half-documented.",
+       "skill": "discovery_questioning",
+       "why": "Asking for the steps in order shows you where time goes. The buyer's own sequence is the raw material for every number that follows.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Walk me through what happens when an agent lands on your desk, from intake to sign-off.",
+         "reply": "Intake, then we rebuild the test set, rerun it by hand and write the report. Fourteen weeks on average."
+        },
+        {
+         "kind": "weak",
+         "failure": "leading_question",
+         "text": "So documentation is the main gap? We generate validation evidence straight from the traces.",
+         "reply": "Documentation is one gap. You're jumping ahead."
+        },
+        {
+         "kind": "trap",
+         "failure": "benchmark",
+         "text": "That's common. Most banks we see fix it with a standard intake template. Would that help here?",
+         "reply": "We have a template. That isn't the problem."
+        }
+       ],
+       "goal": "Map how the work runs today",
+       "id": "t1-d1-2"
+      },
+      {
+       "speaker": "priya",
+       "line": "And while they sit in that queue, the business sponsors keep asking me when.",
+       "skill": "identify_pain",
+       "why": "Asking how big the queue is and what a week costs moves the conversation from frustration to money, without putting words in their mouth.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "How many agents are in that queue right now, and what does a week of delay cost the business that sponsored one?",
+         "reply": "Thirty-seven are waiting. The cost is hard to say. The sponsors just escalate to me.",
+         "evidence": {
+          "key": "identify_pain",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "leading_question",
+         "text": "Is the queue mostly a staffing issue? More validators might be quicker than new tooling.",
+         "reply": "We've asked for headcount twice. That's not it."
+        },
+        {
+         "kind": "trap",
+         "failure": "benchmark",
+         "text": "Banks we work with cut validation time by about 60 percent. Would that be worth exploring?",
+         "reply": "Every vendor says sixty percent."
+        }
+       ],
+       "goal": "Open the pain",
+       "signal": "identify_pain",
+       "id": "t1-d1-3"
+      },
+      {
+       "speaker": "priya",
+       "line": "The KYC refresh agent is the one everyone asks me about.",
+       "skill": "identify_pain",
+       "why": "One concrete agent makes the cost countable. The buyer now owns a number you can carry into every later meeting.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Take the KYC refresh agent. What does each week it sits in validation cost the KYC operations team?",
+         "reply": "Operations estimate it saves 1,200 analyst hours a month. Every week in the queue is roughly 300 hours we keep paying for.",
+         "evidence": {
+          "key": "identify_pain",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Understood, so speed to production is the real pain. Let's look at how we shorten that queue.",
+         "reply": "Sure, but the sponsors want a number, not speed."
+        },
+        {
+         "kind": "trap",
+         "failure": "leading_question",
+         "text": "So if we saved even ten percent of analyst time, the business case would write itself, right?",
+         "reply": "I wouldn't put that in front of our CRO."
+        }
+       ],
+       "goal": "Pin the pain to a number",
+       "signal": "identify_pain",
+       "id": "t1-d1-4"
+      },
+      {
+       "speaker": "daniel",
+       "line": "If we did this, I'd need to know it actually worked.",
+       "skill": "metrics",
+       "why": "Asking what success means, and how they would measure it, lets the person with the veto define the bar you will be judged against.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "What would have to be true for you to call it working, and how would you measure it?",
+         "reply": "Faster validation without lowering the bar. I haven't put a number on it yet.",
+         "evidence": {
+          "key": "metrics",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "vanity_metric",
+         "text": "Would trace volume and active users work as the measure, so you see adoption grow each week?",
+         "reply": "Usage isn't my metric. Risk is."
+        },
+        {
+         "kind": "trap",
+         "failure": "feature_dump",
+         "text": "You'd get a full dashboard of every agent run. Most teams find that's proof enough on its own.",
+         "reply": "A dashboard isn't a validation standard."
+        }
+       ],
+       "goal": "Open the metric",
+       "signal": "metrics",
+       "id": "t1-d1-5"
+      },
+      {
+       "speaker": "priya",
+       "line": "Our CRO wants a target she can hold us to.",
+       "skill": "metrics",
+       "why": "A number, a date and an unchanged evidence standard turn a wish into a metric the CRO can sponsor and Daniel can sign.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "What validation time would the CRO hold you to, and by which quarter, without changing the evidence standard?",
+         "reply": "Under four weeks per agent by Q3, with the same evidence pack the examiners already accept.",
+         "reply_by": "daniel",
+         "evidence": {
+          "key": "metrics",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "leading_question",
+         "text": "Would halving it be a fair target? That's roughly where our other customers end up.",
+         "reply": "Don't pick my target for me."
+        },
+        {
+         "kind": "trap",
+         "failure": "accept_vague",
+         "text": "Could we call it a success if your team still likes using it after the pilot?",
+         "reply": "Liking it won't get past the CRO."
+        }
+       ],
+       "goal": "Pin the metric",
+       "signal": "metrics",
+       "id": "t1-d1-6"
+      }
+     ]
+    },
+    {
+     "id": "d2",
+     "title": "Coach or champion",
+     "setting": "A week later. Priya has been talking you up internally and wants to move.",
+     "beats": [
+      {
+       "speaker": "priya",
+       "line": "I've shared the KYC numbers everywhere. Honestly, the hours matter less to me than getting agents out of pilot purgatory.",
+       "skill": "listening_summarizing",
+       "why": "Summarising in their words proves you listened, and it surfaces what this person personally needs from the deal.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "So for you it's less about the 300 hours and more that agents never leave pilot. Did I get that right?",
+         "reply": "Exactly. My team's credibility is riding on it."
+        },
+        {
+         "kind": "weak",
+         "failure": "not_listening",
+         "text": "Makes sense. On the 300 hours, can I walk you through a quick ROI model I've drafted?",
+         "reply": "I just said that isn't the main thing."
+        },
+        {
+         "kind": "trap",
+         "failure": "over_promise",
+         "text": "Pilot purgatory is everywhere. We usually get banks out of it in about six weeks.",
+         "reply": "That's a big claim for someone who hasn't seen our process."
+        }
+       ],
+       "goal": "Play back what you heard",
+       "id": "t1-d2-1"
+      },
+      {
+       "speaker": "priya",
+       "line": "I love this. I'll push it internally.",
+       "skill": "champion",
+       "why": "Past behaviour is the best test of influence. How they moved the last platform tells you whether they can move yours.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Appreciate that. When you took the last platform to the CIO, what did it need to clear, and who pushed back?",
+         "reply": "Security pushed back hardest. I got it through in the end, though it took two quarters.",
+         "evidence": {
+          "key": "champion",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "single_threading",
+         "text": "Great. Could you set up a session with your platform engineers next week so they can see it too?",
+         "reply": "Sure, they'll love it."
+        },
+        {
+         "kind": "trap",
+         "failure": "coach_as_champion",
+         "text": "That helps a lot. Can you get the pilot budget approved this quarter so we can start?",
+         "reply": "Budget isn't mine to approve, to be honest.",
+         "flag": "coach_as_champion"
+        }
+       ],
+       "goal": "Test the champion",
+       "signal": "champion",
+       "id": "t1-d2-2"
+      },
+      {
+       "speaker": "priya",
+       "line": "So what do you need from me?",
+       "skill": "champion",
+       "why": "A specific task with a date is the champion test. A real champion commits and tells you how they will make the case.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Would you take the KYC numbers to the CIO yourself this month, and walk me through how you'd make the case?",
+         "reply": "Yes. I'll put it on Marcus's agenda for the 14th, framed as the fastest way to clear the model risk queue. I'll need a one-pager I can defend.",
+         "evidence": {
+          "key": "champion",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Just keep the momentum going and let me know if anyone has questions along the way.",
+         "reply": "Okay, will do."
+        },
+        {
+         "kind": "trap",
+         "failure": "go_around",
+         "text": "Could you forward me the CIO's email so I can reach out to him directly this week?",
+         "reply": "I'd rather not. He doesn't take cold vendor emails."
+        }
+       ],
+       "goal": "Give the champion a task",
+       "signal": "champion",
+       "id": "t1-d2-3"
+      },
+      {
+       "speaker": "priya",
+       "line": "Marcus likes the idea, but he'll ask where the money comes from.",
+       "skill": "economic_buyer",
+       "why": "Asking whose budget it is, and who signs at this size, separates the person who likes the idea from the person who pays for it.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Whose budget would a platform like this come out of, and who signs at this size?",
+         "reply": "Probably Marcus's platform budget. Though anything touching model risk, Helen in risk usually has a say.",
+         "evidence": {
+          "key": "economic_buyer",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "assumed_authority",
+         "text": "What sort of budget range are you working with for agent tooling this year?",
+         "reply": "We don't have a line item yet."
+        },
+        {
+         "kind": "trap",
+         "failure": "assumed_authority",
+         "text": "If the CIO likes it, I assume he can just sign off on the pilot himself?",
+         "reply": "I wouldn't assume that here."
+        }
+       ],
+       "goal": "Find the budget owner",
+       "signal": "economic_buyer",
+       "id": "t1-d2-4"
+      },
+      {
+       "speaker": "priya",
+       "line": "Helen getting involved could slow us down.",
+       "skill": "economic_buyer",
+       "why": "Co-sign or veto, and above what amount: that one question tells you exactly who must be in the room and when.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Does the CRO co-sign or can she veto, and above what amount does that kick in?",
+         "reply": "Marcus signs up to $250K alone. Above that, or anything model risk flags, Helen co-signs, and she can veto.",
+         "evidence": {
+          "key": "economic_buyer",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "single_threading",
+         "text": "Let's keep Helen out of it for now and take it through the CIO. We can loop her in later.",
+         "reply": "If Helen hears about it late, it's dead."
+        },
+        {
+         "kind": "trap",
+         "failure": "work_around_veto",
+         "text": "Sounds like Helen's the blocker. What's the fastest way around her?",
+         "reply": "There is no way around Helen."
+        }
+       ],
+       "goal": "Pin the signer and the limit",
+       "signal": "economic_buyer",
+       "id": "t1-d2-5"
+      }
+     ]
+    },
+    {
+     "id": "d3",
+     "title": "Map the path to signature",
+     "setting": "Priya has the CIO's interest. Elena, the CISO, joins to talk about what happens after a pilot.",
+     "beats": [
+      {
+       "speaker": "priya",
+       "line": "If the pilot works, I think we can move quickly.",
+       "skill": "decision_process",
+       "why": "Walking the days after a successful pilot exposes every approval before it can surprise you.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "After a successful pilot, what happens on day one, day ten and day thirty, and who has to say yes at each step?",
+         "reply": "Committee review, then security, then contracting. I'm honestly not sure of the order.",
+         "evidence": {
+          "key": "decision_process",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Great. And roughly when would you want the platform live in production?",
+         "reply": "Yesterday. But that isn't how it works here."
+        },
+        {
+         "kind": "trap",
+         "failure": "premature_close",
+         "text": "So if the pilot hits the target, we can expect a signed order next month?",
+         "reply": "Not a chance, with our process."
+        }
+       ],
+       "goal": "Open the decision process",
+       "signal": "decision_process",
+       "id": "t1-d3-1"
+      },
+      {
+       "speaker": "elena",
+       "line": "Every new vendor touching production data comes through me.",
+       "skill": "decision_process",
+       "why": "Asking where their review sits, and who follows, gets the real sequence from the person who controls one of its gates.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Where does your review sit in that sequence, and who else has to approve before contracting starts?",
+         "reply": "Architecture review, then my vendor risk assessment, then model risk, then legal. Procurement only starts once all four sign.",
+         "evidence": {
+          "key": "decision_process",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "defensive",
+         "text": "Understood. We're SOC 2 Type II certified, so your review should be fairly quick.",
+         "reply": "SOC 2 is where my review starts, not where it ends."
+        },
+        {
+         "kind": "trap",
+         "failure": "sequential_paper",
+         "text": "Could we run the security review after the pilot, once we know it's worth everyone's time?",
+         "reply": "Then you'll wait three months after the pilot."
+        }
+       ],
+       "goal": "Pin the approval sequence",
+       "signal": "decision_process",
+       "id": "t1-d3-2"
+      },
+      {
+       "speaker": "elena",
+       "line": "Traces will contain customer data from KYC files.",
+       "skill": "paper_process",
+       "why": "Proposing that the review starts in parallel, on synthetic data, shows you respect the control and want to save months.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Could your vendor risk review start in parallel with the pilot, on synthetic data first?",
+         "reply": "Possibly. Legal will still want the DPA redlined before any real data flows.",
+         "evidence": {
+          "key": "paper_process",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "defensive",
+         "text": "Our traces can be redacted, so is customer data really a concern for you here?",
+         "reply": "That's for me to decide."
+        },
+        {
+         "kind": "trap",
+         "failure": "sequential_paper",
+         "text": "We'll handle the contract side once you've decided. No need to involve legal yet.",
+         "reply": "Legal is always involved. Early.",
+         "flag": "paper_process_ignored"
+        }
+       ],
+       "goal": "Start the paper process early",
+       "signal": "paper_process",
+       "id": "t1-d3-3"
+      },
+      {
+       "speaker": "elena",
+       "line": "Our DPA redlines are notorious.",
+       "skill": "paper_process",
+       "why": "Lead times and the factor that changes them, here data residency, let you plan the critical path instead of hoping.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "How long do DPA redlines usually take, and does keeping traces in your VPC change the vendor risk tier?",
+         "reply": "Ninety days on redlines. Traces with customer data make you Tier 1 vendor risk, unless they stay in our VPC. That cuts the review to six weeks.",
+         "evidence": {
+          "key": "paper_process",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Could you send your DPA template when it's convenient, so we can turn it around?",
+         "reply": "Sure."
+        },
+        {
+         "kind": "trap",
+         "failure": "over_promise",
+         "text": "We'll accept your DPA as it is, so legal shouldn't hold anything up on our side.",
+         "reply": "You haven't read it yet."
+        }
+       ],
+       "goal": "Pin the lead times",
+       "signal": "paper_process",
+       "id": "t1-d3-4"
+      },
+      {
+       "speaker": "priya",
+       "line": "This was useful. What happens next?",
+       "skill": "next_step_control",
+       "why": "A named meeting with a date, an owner and a purpose keeps control of the deal. Information sent by email does not.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Can we book 45 minutes with Daniel and Elena next Tuesday to agree pilot scope and start vendor risk in parallel?",
+         "reply": "Tuesday works. I'll send the invite."
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Shall I send a summary and some materials, and we reconnect in a couple of weeks?",
+         "reply": "Sounds good."
+        },
+        {
+         "kind": "trap",
+         "failure": "premature_close",
+         "text": "I'll send the order form over now so it's ready whenever you need it.",
+         "reply": "Let's not get ahead of ourselves."
+        }
+       ],
+       "goal": "Lock the next step",
+       "id": "t1-d3-5"
+      }
+     ]
+    }
+   ],
+   "capstone": {
+    "title": "The CIO walks in",
+    "setting": "A week later you're expecting Priya. Marcus Webb, the CIO, joins instead and has ten minutes.",
+    "curveball": "The person who signs joins unannounced and asks why this is on his desk.",
+    "beats": [
+     {
+      "speaker": "marcus",
+      "line": "I have ten minutes. Why is this on my desk and not in the platform team's budget?",
+      "skill": "economic_buyer",
+      "why": "You named why it needs him and checked the sign-off in one breath, which is what a CIO with ten minutes wants.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "Because it unblocks 37 agents your sponsors are waiting on, and it touches model risk, so it needs you and Helen. Is that how you see the sign-off?",
+        "reply": "Yes. It's my budget up to $250K, and Helen co-signs on model risk. Keep the pilot under that.",
+        "evidence": {
+         "key": "economic_buyer",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "hand_over_control",
+        "text": "Before the details, could you tell me your priorities for the year, and then Priya can walk you through it?",
+        "reply": "I have ten minutes."
+       },
+       {
+        "kind": "trap",
+        "failure": "assumed_authority",
+        "text": "It's a small pilot, so honestly it could sit in Priya's budget if that's easier for you.",
+        "reply": "Then why am I in this meeting?"
+       }
+      ],
+      "signal": "economic_buyer",
+      "core": true,
+      "id": "t1-capstone-1"
+     },
+     {
+      "speaker": "marcus",
+      "line": "Everyone tells me their tool saves time.",
+      "skill": "identify_pain",
+      "why": "Restating the pain in Daniel's and Priya's own numbers is evidence a CIO cannot wave away.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "Daniel's numbers: 37 agents waiting, fourteen weeks each. The KYC agent alone is 300 analyst hours a week stuck in that queue.",
+        "reply": "Three hundred a week? Nobody has put it to me like that. That's real money.",
+        "evidence": {
+         "key": "identify_pain",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "benchmark",
+        "text": "We typically save teams around 40 percent of validation time across the agent lifecycle.",
+        "reply": "Typically."
+       },
+       {
+        "kind": "trap",
+        "failure": "feature_dump",
+        "text": "Our tracing and eval suite is the most complete on the market. Can I show you quickly?",
+        "reply": "No."
+       }
+      ],
+      "signal": "identify_pain",
+      "core": true,
+      "id": "t1-capstone-2"
+     },
+     {
+      "speaker": "marcus",
+      "line": "Priya is keen. Is she the right person to run this?",
+      "skill": "champion",
+      "why": "You showed Priya acting like a champion and asked Marcus to back her with clear roles. That converts a coach into an owner.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "She's already booked model risk and security for scoping. Would you back her to own the pilot, with Daniel signing off the exit criteria?",
+        "reply": "Yes. Priya owns it, Daniel signs the criteria, and I want an update before Helen's committee.",
+        "evidence": {
+         "key": "champion",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "accept_vague",
+        "text": "She's great. Honestly, whoever you think is best works for us. Who would you like to own it day to day?",
+        "reply": "Hmm."
+       },
+       {
+        "kind": "trap",
+        "failure": "coach_as_champion",
+        "text": "Priya's our champion, so we'd run everything through her, including the pilot budget and the paperwork.",
+        "reply": "Priya can't sign anything.",
+        "flag": "coach_as_champion"
+       }
+      ],
+      "signal": "champion",
+      "core": true,
+      "id": "t1-capstone-3"
+     },
+     {
+      "speaker": "marcus",
+      "line": "What do you need from me today?",
+      "skill": "decision_process",
+      "why": "A small, specific ask tied to the path the buyer already described is easy to say yes to.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "Agreement that if the pilot clears Daniel's four-week target, it goes to Helen's committee in Q2. Is that the right path?",
+        "reply": "That's the path. The committee meets in May. Get it there with Daniel's sign-off.",
+        "evidence": {
+         "key": "decision_process",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "accept_vague",
+        "text": "Nothing today, really. Is it all right if we keep working with Priya and loop you in later?",
+        "reply": "Fine."
+       },
+       {
+        "kind": "trap",
+        "failure": "premature_close",
+        "text": "A signature on the pilot order today would help us lock in this quarter's pricing.",
+        "reply": "Not today."
+       }
+      ],
+      "signal": "decision_process",
+      "id": "t1-capstone-4"
+     }
+    ]
+   }
+  },
+  {
+   "tier": 2,
+   "stage": "Reframe before price",
+   "problem": "The CIO sees observability as a cost line, and the platform group already licenses free agent tracing.",
+   "concept": {
+    "title": "Banks don't lose to bad agents. They lose to agents that never ship.",
+    "body": "A commercial insight reframes the buyer's problem in money they have not measured. Lead with it, tailor it to each person on the committee, and keep the cost of inaction in view before price comes up. Discounting before value is agreed is the most common way to lose a reframe.",
+    "weak": "Our platform has the deepest agent tracing on the market.",
+    "strong": "Your 37 stalled agents hold about $9M a year of value nobody is collecting."
+   },
+   "cast": [
+    {
+     "id": "helen",
+     "name": "Helen Brandt",
+     "role": "Chief Risk Officer"
+    },
+    {
+     "id": "tom",
+     "name": "Tom Reyes",
+     "role": "Head of Procurement"
+    },
+    {
+     "id": "marcus",
+     "name": "Marcus Webb",
+     "role": "CIO"
+    },
+    {
+     "id": "priya",
+     "name": "Priya Shah",
+     "role": "Head of AI Platform"
+    },
+    {
+     "id": "aisha",
+     "name": "Aisha Rahman",
+     "role": "Deputy CFO"
+    }
+   ],
+   "drills": [
+    {
+     "id": "d1",
+     "title": "Teach the insight",
+     "setting": "Marcus has put you in front of Helen Brandt, the CRO. She thinks observability is a tooling line item.",
+     "beats": [
+      {
+       "speaker": "helen",
+       "line": "Marcus says you have a view on our agent program. I've sat through a lot of tooling pitches this year.",
+       "skill": "commercial_insight",
+       "why": "An insight that reframes the problem earns a senior buyer's attention. Features and generic discovery both lose it.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Banks like yours aren't losing to bad agents. They're losing to agents that never ship. Your queue is worth more than your tooling budget.",
+         "reply": "That's a different framing. Go on."
+        },
+        {
+         "kind": "weak",
+         "failure": "feature_dump",
+         "text": "We help risk teams see every agent decision, with full tracing, replay and lineage.",
+         "reply": "Visibility is what every vendor sells me."
+        },
+        {
+         "kind": "trap",
+         "failure": "hand_over_control",
+         "text": "I'd like to understand your priorities first. What keeps you up at night right now?",
+         "reply": "Please don't ask me that."
+        }
+       ],
+       "goal": "Lead with the insight",
+       "id": "t2-d1-1"
+      },
+      {
+       "speaker": "helen",
+       "line": "Model risk exists to slow things down. That's the job.",
+       "skill": "identify_pain",
+       "why": "Agreeing with the control, then asking what the delay costs the business lines, moves the pain from Daniel's team to the P&L.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Agreed, it should. What does it cost the business lines when an approved use case waits two quarters for validation?",
+         "reply": "The business lines complain. I haven't seen it costed.",
+         "evidence": {
+          "key": "identify_pain",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "leading_question",
+         "text": "Totally. We're not trying to speed validation up, just make life easier for Daniel's team.",
+         "reply": "Then this is a team tool, not my problem."
+        },
+        {
+         "kind": "trap",
+         "failure": "fear_without_numbers",
+         "text": "Does it worry you that competitors are shipping agents faster than you are?",
+         "reply": "Everyone says that."
+        }
+       ],
+       "goal": "Raise the pain to the business",
+       "signal": "identify_pain",
+       "id": "t2-d1-2"
+      },
+      {
+       "speaker": "helen",
+       "line": "Give me something I can take to the executive committee.",
+       "skill": "identify_pain",
+       "why": "Scaling the one number you own to the whole queue, and naming whose P&L carries it, gives the CRO an executive-grade problem.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "If KYC alone is 300 analyst hours a week, what's the cost across all 37 agents, and whose P&L carries it?",
+         "reply": "Priya's estimate is around $9M a year in benefits we haven't realised, sitting with operations and fraud. That gets attention.",
+         "evidence": {
+          "key": "identify_pain",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "benchmark",
+         "text": "I can put together a short deck on industry benchmarks for agent ROI in banking.",
+         "reply": "Benchmarks don't move my committee."
+        },
+        {
+         "kind": "trap",
+         "failure": "fear_without_numbers",
+         "text": "The bigger risk is a regulator finding an unvalidated agent in production, surely?",
+         "reply": "We don't have unvalidated agents in production. That's what my team is for."
+        }
+       ],
+       "goal": "Pin the business cost",
+       "signal": "identify_pain",
+       "id": "t2-d1-3"
+      },
+      {
+       "speaker": "helen",
+       "line": "If I back this, what am I signing up to deliver?",
+       "skill": "metrics",
+       "why": "Asking what the executive committee needs to see makes the CRO define success at her level, not yours.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "What would the executive committee need to see by year end to call this a success?",
+         "reply": "Agents in production, I suppose, without a single model risk finding.",
+         "evidence": {
+          "key": "metrics",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "over_promise",
+         "text": "Would a 50 percent faster validation cycle, guaranteed in the contract, do it?",
+         "reply": "You can't guarantee my team's output."
+        },
+        {
+         "kind": "trap",
+         "failure": "vanity_metric",
+         "text": "A strong adoption number. We'd aim for every agent team using the platform by Q4.",
+         "reply": "Usage isn't value."
+        }
+       ],
+       "goal": "Open the value metric",
+       "signal": "metrics",
+       "id": "t2-d1-4"
+      },
+      {
+       "speaker": "helen",
+       "line": "Production agents is vague, I know.",
+       "skill": "metrics",
+       "why": "A count, a value and a quality bar, owned by the CRO, is a metric she can stand behind in front of her peers.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "How many agents in production by December, and how much of the $9M would that need to unlock, for you to stand behind it?",
+         "reply": "Twelve agents in production by December, unlocking at least $3M, with zero repeat findings. I'd stand behind that.",
+         "evidence": {
+          "key": "metrics",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Could we leave the exact target open until after the pilot, so nobody gets boxed in?",
+         "reply": "Then I can't sponsor it."
+        },
+        {
+         "kind": "trap",
+         "failure": "over_promise",
+         "text": "Let's say twenty agents by December. If we aim high, the budget follows.",
+         "reply": "That's how pilots lose credibility."
+        }
+       ],
+       "goal": "Pin the value metric",
+       "signal": "metrics",
+       "id": "t2-d1-5"
+      }
+     ]
+    },
+    {
+     "id": "d2",
+     "title": "Tailor value to the committee",
+     "setting": "Helen and Marcus are both in, and each cares about something different. Procurement is drafting an RFP.",
+     "beats": [
+      {
+       "speaker": "marcus",
+       "line": "Helen cares about risk. I care about not adding another platform my team has to babysit.",
+       "skill": "value_messaging",
+       "why": "One before-and-after per person, with proof, tells each buyer you understood their job and not only the deal.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "For you, one harness replaces the four tracing tools your teams built. For Helen, every agent decision becomes replayable for the examiners.",
+         "reply": "That's the first time someone has addressed both of us."
+        },
+        {
+         "kind": "weak",
+         "failure": "generic_value",
+         "text": "Our platform is best in class for risk and engineering teams alike, with one license, one console and one support team.",
+         "reply": "That's what everyone says."
+        },
+        {
+         "kind": "trap",
+         "failure": "over_promise",
+         "text": "It's fully managed, so your team will never need to touch it at all, and Helen gets the same dashboards as engineering.",
+         "reply": "Every platform needs touching."
+        }
+       ],
+       "goal": "Tailor the value to each buyer",
+       "id": "t2-d2-1"
+      },
+      {
+       "speaker": "helen",
+       "line": "I'll co-sign, but I won't own a failed program.",
+       "skill": "economic_buyer",
+       "why": "Economic buyers commit when the deal serves their own agenda. Asking for the personal win surfaces it.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "What would a win look like for you personally this year, beyond the program itself?",
+         "reply": "A clean exam. The regulator has questions about our AI governance.",
+         "evidence": {
+          "key": "economic_buyer",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "assumed_authority",
+         "text": "Understood. Can we agree you're the executive sponsor, then, and put that in writing?",
+         "reply": "I said co-sign."
+        },
+        {
+         "kind": "trap",
+         "failure": "work_around_veto",
+         "text": "You won't be exposed. Marcus owns the budget, so in the end it's really his call.",
+         "reply": "If it touches model risk, it's my call too."
+        }
+       ],
+       "goal": "Find the buyer's personal win",
+       "signal": "economic_buyer",
+       "id": "t2-d2-2"
+      },
+      {
+       "speaker": "helen",
+       "line": "The exam is the thing on my mind.",
+       "skill": "economic_buyer",
+       "why": "Tying the deal to a dated event the buyer owns turns sponsorship from a favour into self-interest.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "When is the exam, and what would you need to show the examiners about agent governance by then?",
+         "reply": "Q3. I need every production agent to have replayable evidence and a validation trail. Get me that and I'll sponsor this at committee.",
+         "evidence": {
+          "key": "economic_buyer",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Would a compliance whitepaper help your team prepare for the exam?",
+         "reply": "A whitepaper isn't evidence."
+        },
+        {
+         "kind": "trap",
+         "failure": "over_promise",
+         "text": "We've helped other banks through exams. You'll be in very safe hands with us.",
+         "reply": "Nobody passes my exam for me."
+        }
+       ],
+       "goal": "Pin the compelling event",
+       "signal": "economic_buyer",
+       "id": "t2-d2-3"
+      },
+      {
+       "speaker": "marcus",
+       "line": "Procurement is drafting an RFP for agent observability.",
+       "skill": "decision_criteria",
+       "why": "Asking how vendors will be scored before the RFP lands gives you time to shape it. Waiting means competing on someone else's terms.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Before it goes out, how will vendors be scored, and which criterion would break a tie?",
+         "reply": "Cost, security and integration, probably. I haven't seen the weights.",
+         "evidence": {
+          "key": "decision_criteria",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Great. Please send it over when it's ready and we'll respond in full.",
+         "reply": "Will do."
+        },
+        {
+         "kind": "trap",
+         "failure": "wrong_person",
+         "text": "Could you share who else is on the RFP list, so we know who we're up against?",
+         "reply": "I can't share that."
+        }
+       ],
+       "goal": "Open the decision criteria",
+       "signal": "decision_criteria",
+       "id": "t2-d2-4"
+      },
+      {
+       "speaker": "helen",
+       "line": "If it's an RFP, I want risk criteria in it.",
+       "skill": "decision_criteria",
+       "why": "Proposing criteria the buyer already needs, here the exam standard, sets a bar that favours you without asking for favours.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Would you add replayable eval evidence and full trace lineage as must-haves, so every vendor is held to the exam standard?",
+         "reply": "Yes. Replay and lineage go in as must-haves, weighted above price. Anything without them is out.",
+         "evidence": {
+          "key": "decision_criteria",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "defensive",
+         "text": "Could we suggest weighting cost a bit lower, since we're not the cheapest option?",
+         "reply": "That's very transparent."
+        },
+        {
+         "kind": "trap",
+         "failure": "feature_dump",
+         "text": "We tick every box on a standard observability RFP, so we're comfortable either way.",
+         "reply": "So does everyone."
+        }
+       ],
+       "goal": "Shape the criteria",
+       "signal": "decision_criteria",
+       "id": "t2-d2-5"
+      }
+     ]
+    },
+    {
+     "id": "d3",
+     "title": "Hold the cost of inaction",
+     "setting": "Tom Reyes from procurement joins. The platform group already licenses a hyperscaler that includes agent tracing.",
+     "beats": [
+      {
+       "speaker": "tom",
+       "line": "Our cloud provider includes agent tracing for free. Why would we pay you?",
+       "skill": "competition",
+       "why": "Naming every alternative, including build and wait, shows you are not afraid of the comparison and tells you which one to beat.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Fair question. What's the alternative you're weighing: the bundled tracing, your internal wrapper, or waiting a year?",
+         "reply": "Mostly the bundled tracing. Some engineers want to extend the wrapper.",
+         "evidence": {
+          "key": "competition",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "trash_competitor",
+         "text": "Their tracing is basic. It doesn't do evals, replay or lineage at all, so why would you settle for it?",
+         "reply": "Sounds like a sales line."
+        },
+        {
+         "kind": "trap",
+         "failure": "discount_before_value",
+         "text": "We can be flexible on price to stay competitive with the bundled option this quarter.",
+         "reply": "Good to know.",
+         "flag": "discount_before_pbo"
+        }
+       ],
+       "goal": "Surface the real alternative",
+       "signal": "competition",
+       "id": "t2-d3-1"
+      },
+      {
+       "speaker": "marcus",
+       "line": "Honestly, building on the wrapper is tempting. We control it.",
+       "skill": "competition",
+       "why": "Asking who maintains it in two years makes the hidden cost of build visible without attacking the people who built it.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "If you extend the wrapper, who maintains evals and replay in two years, and what happens to the exam evidence if they leave?",
+         "reply": "That's the issue. Two engineers built it, and one has resigned. The bundle has no replay, so Helen won't accept it.",
+         "evidence": {
+          "key": "competition",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "benchmark",
+         "text": "Building in-house almost always costs more than people expect it to.",
+         "reply": "So does buying."
+        },
+        {
+         "kind": "trap",
+         "failure": "trash_competitor",
+         "text": "Surely your engineers are better spent on agents than on maintaining tooling?",
+         "reply": "Don't tell me how to staff my team."
+        }
+       ],
+       "goal": "Stress the build option",
+       "signal": "competition",
+       "id": "t2-d3-2"
+      },
+      {
+       "speaker": "tom",
+       "line": "Even so, your price is 30 percent above the bundle.",
+       "skill": "objection_handling",
+       "why": "Acknowledging, then isolating the objection, tells you whether price is the real blocker before you spend anything.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "That's fair. Is price the only thing between us and a recommendation, or is there something else?",
+         "reply": "Price and the three-year term. Nothing else."
+        },
+        {
+         "kind": "weak",
+         "failure": "defensive",
+         "text": "Our customers find the value more than covers the difference, usually within a year.",
+         "reply": "Your customers aren't my budget."
+        },
+        {
+         "kind": "trap",
+         "failure": "discount_before_value",
+         "text": "If that's the blocker, I can take 30 percent off to match the bundle. Would that work?",
+         "reply": "Then why was it 30 percent higher?",
+         "flag": "discount_before_pbo"
+        }
+       ],
+       "goal": "Isolate the objection",
+       "id": "t2-d3-3"
+      },
+      {
+       "speaker": "priya",
+       "line": "Tom is taking this to finance. I can help.",
+       "skill": "champion",
+       "why": "Asking what finance needs to hear from Priya, not from you, tests whether she can carry the case in rooms you are not in.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Thank you. What would finance need to hear from you, not from us, for this to clear?",
+         "reply": "Probably the business case in my words. Tom trusts numbers he didn't get from a vendor.",
+         "evidence": {
+          "key": "champion",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "single_threading",
+         "text": "That would be great. Could you just forward them our proposal for now?",
+         "reply": "Sure."
+        },
+        {
+         "kind": "trap",
+         "failure": "coach_as_champion",
+         "text": "Perfect. As our champion, can you push Tom to approve before quarter end?",
+         "reply": "That isn't how Tom works."
+        }
+       ],
+       "goal": "Test the champion's reach",
+       "signal": "champion",
+       "id": "t2-d3-4"
+      },
+      {
+       "speaker": "priya",
+       "line": "I can do that.",
+       "skill": "champion",
+       "why": "A champion presenting the cost of waiting in their own words is worth more than any vendor deck.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Would you present the cost-of-waiting case to Tom and finance yourself on Thursday, with Daniel's validation numbers behind it?",
+         "reply": "Yes. I'll present Thursday with Daniel. If finance pushes back, I'll take it to Marcus myself.",
+         "evidence": {
+          "key": "champion",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Great. Could you let me know how it goes, and I'll answer any questions that come up?",
+         "reply": "Okay."
+        },
+        {
+         "kind": "trap",
+         "failure": "vendor_template",
+         "text": "Great. I'll build the deck for you, and you can present it to finance exactly as it is.",
+         "reply": "Finance will smell a vendor deck."
+        }
+       ],
+       "goal": "Give the champion the case",
+       "signal": "champion",
+       "id": "t2-d3-5"
+      }
+     ]
+    }
+   ],
+   "capstone": {
+    "title": "The deputy CFO's discount",
+    "setting": "Committee pre-read. Aisha Rahman, the Deputy CFO, joins unannounced and opens with price.",
+    "curveball": "Finance asks for 25 percent off before anyone has agreed the value.",
+    "beats": [
+     {
+      "speaker": "aisha",
+      "line": "I've read the proposal. Take 25 percent off and I'll recommend it.",
+      "skill": "metrics",
+      "why": "Moving the conversation from price to the outcome finance is buying protects the value case without refusing outright.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "Before price, can we agree the outcome? Helen's target is twelve agents and $3M by December. Is that the number finance holds us to?",
+        "reply": "If Helen has signed up to twelve and $3M, yes. That's the number.",
+        "evidence": {
+         "key": "metrics",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "negotiate_against_self",
+        "text": "I understand. Can I see what I can do on price and come back to you first thing tomorrow?",
+        "reply": "Fine."
+       },
+       {
+        "kind": "trap",
+        "failure": "discount_before_value",
+        "text": "We can do 20 percent off the first year if we sign before the end of this month.",
+        "reply": "So the first price wasn't real.",
+        "flag": "discount_before_pbo"
+       }
+      ],
+      "signal": "metrics",
+      "core": true,
+      "id": "t2-capstone-1"
+     },
+     {
+      "speaker": "aisha",
+      "line": "The bundled option costs us nothing.",
+      "skill": "competition",
+      "why": "Using the criteria Helen already set reframes the comparison as you against delay, not you against free.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "It costs nothing to license. Without replay it fails Helen's exam criteria, so the real comparison is us against a year of delay.",
+        "reply": "Helen did say replay is a must-have. So it's you or waiting.",
+        "evidence": {
+         "key": "competition",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "generic_value",
+        "text": "The bundle is a good product, but we're far more specialised for regulated banks.",
+        "reply": "Specialised is expensive."
+       },
+       {
+        "kind": "trap",
+        "failure": "trash_competitor",
+        "text": "Honestly, the bundle is a toy. No serious bank runs agents on it.",
+        "reply": "Several of our peers do."
+       }
+      ],
+      "signal": "competition",
+      "core": true,
+      "id": "t2-capstone-2"
+     },
+     {
+      "speaker": "aisha",
+      "line": "Who here actually owns the decision?",
+      "skill": "economic_buyer",
+      "why": "Laying out the authority you verified, then asking who else can stop it, checks for a hidden veto in front of finance.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "Marcus signs, Helen co-signs on model risk, and finance approves the term. Is there anyone else who can stop it at committee?",
+        "reply": "No. Marcus and Helen, with my sign-off on the term. If the three of us agree, it passes.",
+        "evidence": {
+         "key": "economic_buyer",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "single_threading",
+        "text": "We've mainly been working with Priya. Would she be best placed to answer that one?",
+        "reply": "Priya doesn't sign anything."
+       },
+       {
+        "kind": "trap",
+        "failure": "assumed_authority",
+        "text": "I assumed you'd be the final approver, given it's ultimately a budget question.",
+        "reply": "I approve the term, not the decision."
+       }
+      ],
+      "signal": "economic_buyer",
+      "core": true,
+      "id": "t2-capstone-3"
+     },
+     {
+      "speaker": "aisha",
+      "line": "Why now, rather than next fiscal year?",
+      "skill": "identify_pain",
+      "why": "The cost of inaction, in the buyer's own numbers and tied to their own deadline, is the honest answer to why now.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "Because waiting costs $3M of benefit this year and a Q3 exam without replayable evidence. That costs more than the platform.",
+        "reply": "Put that way, the exam is the deadline, not our budget cycle.",
+        "evidence": {
+         "key": "identify_pain",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "accept_vague",
+        "text": "There's never a perfect time, and honestly the team is ready to start now. Why wait for next year?",
+        "reply": "That isn't a reason."
+       },
+       {
+        "kind": "trap",
+        "failure": "fake_urgency",
+        "text": "Our pricing is only guaranteed until the end of the month, so this quarter is the best moment to commit.",
+        "reply": "Invented deadlines annoy me."
+       }
+      ],
+      "signal": "identify_pain",
+      "id": "t2-capstone-4"
+     }
+    ]
+   }
+  },
+  {
+   "tier": 3,
+   "stage": "Bound the proof, price the ramp",
+   "problem": "The committee approved a proof of value. Without exit gates it becomes a free pilot, and without a forecast finance cannot price it.",
+   "concept": {
+    "title": "Exit gates decide the pilot, not opinions.",
+    "body": "A proof of value without exit criteria turns into a free pilot that never ends. Agree the gates, the dates and who signs before the first trace flows. Then build the forecast from the buyer's own volumes, so the price is a number finance can check, and commit to the part of the forecast they are sure of.",
+    "weak": "Let's run a pilot and see how it goes.",
+    "strong": "If it hits Daniel's three gates by day 14, do we go to signature by day 30?"
+   },
+   "cast": [
+    {
+     "id": "sam",
+     "name": "Sam Lee",
+     "role": "Platform Engineering Lead"
+    },
+    {
+     "id": "grace",
+     "name": "Grace Kim",
+     "role": "Head of FinOps"
+    },
+    {
+     "id": "daniel",
+     "name": "Daniel Okafor",
+     "role": "Head of Model Risk"
+    },
+    {
+     "id": "helen",
+     "name": "Helen Brandt",
+     "role": "Chief Risk Officer"
+    },
+    {
+     "id": "priya",
+     "name": "Priya Shah",
+     "role": "Head of AI Platform"
+    },
+    {
+     "id": "elena",
+     "name": "Elena Varga",
+     "role": "CISO"
+    },
+    {
+     "id": "leo",
+     "name": "Leo Marsh",
+     "role": "Data Protection Officer"
+    }
+   ],
+   "drills": [
+    {
+     "id": "d1",
+     "title": "Set the exit gates",
+     "setting": "Helen's committee approved a proof of value. Daniel and Sam Lee, who runs platform engineering, want to scope it.",
+     "beats": [
+      {
+       "speaker": "sam",
+       "line": "We'd like to trial it on a few agents and see how it feels.",
+       "skill": "bounded_pov",
+       "why": "A bounded proof names the agents, the length and who writes the exit criteria. Open-ended trials are how banks end up with pilots that never finish.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Let's bound it: KYC refresh and dispute triage, thirty days, with exit criteria Daniel signs before we start. Does that work?",
+         "reply": "Two agents and thirty days is sensible. Daniel will want to write the criteria himself."
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Sure. Why not connect whichever agents you like, and we check in once you've had a feel for it?",
+         "reply": "That's how our last three pilots drifted."
+        },
+        {
+         "kind": "weak",
+         "failure": "feature_dump",
+         "text": "Let's switch on everything, tracing, evals, replay and guardrails, so you see the whole platform.",
+         "reply": "That's a lot to evaluate at once."
+        },
+        {
+         "kind": "trap",
+         "failure": "unbounded_pilot",
+         "text": "Take as long as you need. There's no charge until you're ready to buy anything.",
+         "reply": "Free and open-ended. Our CFO hates those.",
+         "flag": "unbounded_pilot"
+        }
+       ],
+       "goal": "Bound the proof of value",
+       "id": "t3-d1-1"
+      },
+      {
+       "speaker": "daniel",
+       "line": "I'll write the criteria. What would you propose I measure?",
+       "skill": "decision_criteria",
+       "why": "Asking which manual check the harness must replace lets the validator set criteria from real work, not from your feature list.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "You know your process better than I do. Which checks does your team redo by hand today, and which would prove the harness can replace them?",
+         "reply": "Trace completeness and eval coverage. If either has gaps, my team redoes the work by hand.",
+         "evidence": {
+          "key": "decision_criteria",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "leading_question",
+         "text": "Would accuracy on a benchmark dataset be the right test? We score very well on those.",
+         "reply": "Benchmarks aren't our data."
+        },
+        {
+         "kind": "weak",
+         "failure": "vanity_metric",
+         "text": "We usually suggest the number of traces captured and dashboard adoption across the team.",
+         "reply": "Volume tells me nothing about risk."
+        },
+        {
+         "kind": "trap",
+         "failure": "lower_the_bar",
+         "text": "Could we keep the criteria light for the pilot and tighten them up for production?",
+         "reply": "Light criteria means a second validation later.",
+         "flag": "no_eval_harness"
+        }
+       ],
+       "goal": "Open the decision criteria",
+       "signal": "decision_criteria",
+       "id": "t3-d1-2"
+      },
+      {
+       "speaker": "daniel",
+       "line": "Write them down, so nobody argues on day thirty.",
+       "skill": "decision_criteria",
+       "why": "A threshold per criterion, signed by the validator, turns a pilot opinion into a pass or fail decision nobody can relitigate.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "What threshold on each would you sign: trace completeness, eval coverage of your policy tests, and added latency?",
+         "reply": "100 percent trace completeness, coverage of all 212 policy tests, and under 50 milliseconds added at p95. Hit those and I sign.",
+         "evidence": {
+          "key": "decision_criteria",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Let's agree we're aiming for strong coverage and refine the actual numbers as we go.",
+         "reply": "As we go means never."
+        },
+        {
+         "kind": "weak",
+         "failure": "over_promise",
+         "text": "We'll guarantee zero latency impact, so you can take that one off the list entirely.",
+         "reply": "Nobody can guarantee zero."
+        },
+        {
+         "kind": "trap",
+         "failure": "benchmark",
+         "text": "Most banks accept 95 percent coverage. Shall we just use that as our bar here?",
+         "reply": "Our examiners don't grade on a curve."
+        }
+       ],
+       "goal": "Pin the exit criteria",
+       "signal": "decision_criteria",
+       "id": "t3-d1-3"
+      },
+      {
+       "speaker": "sam",
+       "line": "My team can have both agents instrumented in a week.",
+       "skill": "decision_process",
+       "why": "Asking for the checkpoint and the signer inside the thirty days finds out who can stop the pilot before they do.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Great. Between day one and day thirty, which checkpoint tells us we're on track, and who decides to go to signature?",
+         "reply": "A mid-point review with Daniel, I suppose. Signature is Marcus and Helen.",
+         "evidence": {
+          "key": "decision_process",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "premature_close",
+         "text": "Perfect. Does that mean we could have the paper signed about a month from now?",
+         "reply": "You're skipping a few steps."
+        },
+        {
+         "kind": "weak",
+         "failure": "hand_over_control",
+         "text": "Sounds good. Let us know when you're ready and we'll follow your lead on the rest.",
+         "reply": "Someone has to run the plan."
+        },
+        {
+         "kind": "trap",
+         "failure": "fake_urgency",
+         "text": "If we start on Monday, I can hold this year's price for you right through to signature.",
+         "reply": "Price isn't what's slowing us down."
+        }
+       ],
+       "goal": "Open the decision process",
+       "signal": "decision_process",
+       "id": "t3-d1-4"
+      },
+      {
+       "speaker": "daniel",
+       "line": "A mid-point review only helps if it can stop the pilot.",
+       "skill": "decision_process",
+       "why": "A go or no-go gate with a date, and a signature date that follows it, gives every approver a reason to hold their calendar.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Then let's make day 14 a go or no-go gate on your three criteria, with signature on day 30 if it passes. Can you and Helen hold those dates?",
+         "reply": "Day 14 gate with me, day 30 signature with Marcus and Helen. Helen's committee sits on the 28th, so that works.",
+         "evidence": {
+          "key": "decision_process",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Let's play the dates by ear and see how the team gets on in the first fortnight.",
+         "reply": "Then Helen won't put it on her agenda."
+        },
+        {
+         "kind": "weak",
+         "failure": "single_threading",
+         "text": "Sam can run the day 14 review on his own, so we don't have to take up your time.",
+         "reply": "Sam can't sign off model risk."
+        },
+        {
+         "kind": "trap",
+         "failure": "premature_close",
+         "text": "If day 14 goes well, could we sign straight away and skip the rest of the pilot?",
+         "reply": "Skipping the gate defeats the point."
+        }
+       ],
+       "goal": "Pin the gate and the dates",
+       "signal": "decision_process",
+       "id": "t3-d1-5"
+      }
+     ]
+    },
+    {
+     "id": "d2",
+     "title": "Forecast and price the usage",
+     "setting": "The pilot is scoped. Grace Kim, Head of FinOps, needs a forecast before Helen's committee will price it.",
+     "beats": [
+      {
+       "speaker": "grace",
+       "line": "I need to know what this costs at full scale, not at pilot size.",
+       "skill": "usage_forecast",
+       "why": "Building the forecast from the buyer's own volumes makes it their number. A rate card or a peer average makes it yours.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Let's build it from your volumes. How many agent runs a day across the twelve production agents, and how many steps in a typical run?",
+         "reply": "About 20,000 runs a day at full rollout, with roughly thirty steps each.",
+         "evidence": {
+          "key": "usage_forecast",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "rate_card",
+         "text": "Our list price is one cent per trace. Shall I send you the full rate card today?",
+         "reply": "A rate card isn't a forecast."
+        },
+        {
+         "kind": "weak",
+         "failure": "average_customer",
+         "text": "Most banks your size spend about $400K a year with us. That's a safe estimate.",
+         "reply": "We aren't most banks."
+        },
+        {
+         "kind": "trap",
+         "failure": "max_commit",
+         "text": "Simplest is to commit to our top tier, so you never have to think about overages.",
+         "reply": "So the simplest option is the biggest bill?"
+        }
+       ],
+       "goal": "Open the usage forecast",
+       "id": "t3-d2-1"
+      },
+      {
+       "speaker": "grace",
+       "line": "Thirty steps a run. So what does that come to?",
+       "skill": "pricing_unit_fluency",
+       "why": "Translating trace units into cost per business case lets finance check the price against a unit cost they already track.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "At 20,000 runs and thirty steps, that's 600,000 trace units a day. Is about four cents per KYC case something you can check against your unit costs?",
+         "reply": "Four cents a case against $11 of analyst time. I can model that. Call it $310K in year one.",
+         "evidence": {
+          "key": "usage_forecast",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "bury_the_answer",
+         "text": "It depends on retention, sampling and eval frequency. Can I send a detailed model next week?",
+         "reply": "I need a number for the committee."
+        },
+        {
+         "kind": "weak",
+         "failure": "generic_value",
+         "text": "It's very cost-effective compared with the value your agents will create for the bank.",
+         "reply": "Compared with what, exactly?"
+        },
+        {
+         "kind": "trap",
+         "failure": "over_promise",
+         "text": "Usage pricing means you only pay for value, so cost shouldn't really be a concern for you.",
+         "reply": "Cost is my whole job."
+        }
+       ],
+       "goal": "Pin the forecast in their units",
+       "id": "t3-d2-2"
+      },
+      {
+       "speaker": "grace",
+       "line": "$310K is over Marcus's signing limit.",
+       "skill": "economic_buyer",
+       "why": "When the price crosses a limit, asking who carries it to the co-signer keeps the deal inside the bank's controls.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Right, above $250K Helen co-signs. Would you take the forecast to her with Marcus, or should Priya and I walk her through it?",
+         "reply": "I'll take it with Marcus. Helen wants numbers from finance, not from vendors.",
+         "evidence": {
+          "key": "economic_buyer",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Whatever works best internally. We're flexible on how the paperwork is structured.",
+         "reply": "Flexible isn't a plan."
+        },
+        {
+         "kind": "weak",
+         "failure": "single_threading",
+         "text": "Let's keep it with Marcus for now and tell Helen once the price is final.",
+         "reply": "Helen hates surprises."
+        },
+        {
+         "kind": "trap",
+         "failure": "work_around_veto",
+         "text": "Could we split it into two orders under $250K, so Marcus can sign both alone?",
+         "reply": "That's exactly what our controls are built to catch."
+        }
+       ],
+       "goal": "Open the economic buyer at this price",
+       "signal": "economic_buyer",
+       "id": "t3-d2-3"
+      },
+      {
+       "speaker": "helen",
+       "line": "I've seen Grace's forecast. I'll co-sign, on conditions.",
+       "skill": "economic_buyer",
+       "why": "Asking for the conditions for year one and year two separately gets the co-signer to state her terms, which you can then meet.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Thank you. What would make you comfortable co-signing year one, and what would you need to see before year two?",
+         "reply": "Year one at $310K with a usage cap I can see. Year two only if the exam goes cleanly. I'll co-sign on those terms.",
+         "evidence": {
+          "key": "economic_buyer",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "defensive",
+         "text": "We've been very transparent on price, so I'm not sure what else we could add here.",
+         "reply": "Then we're done."
+        },
+        {
+         "kind": "weak",
+         "failure": "negotiate_against_self",
+         "text": "Would it help if we took 10 percent off year one to make it easier to approve?",
+         "reply": "I didn't ask for a discount."
+        },
+        {
+         "kind": "trap",
+         "failure": "assumed_authority",
+         "text": "Great. Then we'll put you down as the signer and send the order straight to you.",
+         "reply": "Marcus signs. I co-sign. Get it right."
+        }
+       ],
+       "goal": "Pin the co-signer's terms",
+       "signal": "economic_buyer",
+       "id": "t3-d2-4"
+      },
+      {
+       "speaker": "sam",
+       "line": "Databricks has offered to run a bake-off against you for free.",
+       "skill": "competition",
+       "why": "Welcoming the bake-off on the buyer's own gates makes the comparison fair, and it tells you what the rival is really selling.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Happy to. Would you run both on the same three exit gates Daniel wrote, using the same two agents?",
+         "reply": "Same gates and same agents seems fair. Their pitch is that it comes bundled with our lakehouse.",
+         "evidence": {
+          "key": "competition",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "trash_competitor",
+         "text": "Databricks is great for data, but isn't their agent tooling still very immature?",
+         "reply": "Our data team would disagree."
+        },
+        {
+         "kind": "weak",
+         "failure": "discount_before_value",
+         "text": "We'd match whatever price they put on the table, if that helps you decide.",
+         "reply": "Good to know."
+        },
+        {
+         "kind": "trap",
+         "failure": "unbounded_pilot",
+         "text": "Let's extend our pilot to ninety days, so there's no pressure while they catch up.",
+         "reply": "Ninety days was never the plan.",
+         "flag": "unbounded_pilot"
+        }
+       ],
+       "goal": "Open the competition",
+       "signal": "competition",
+       "id": "t3-d2-5"
+      },
+      {
+       "speaker": "sam",
+       "line": "If they pass the gates too, it comes down to cost.",
+       "skill": "cost_to_serve",
+       "why": "Comparing the full cost to serve, including the engineers who maintain a build, moves the decision off sticker price.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Then let's compare the full cost: runs, storage and the engineers who maintain it. Who on your side would own their build in year two?",
+         "reply": "Nobody, honestly. Their option needs two engineers to maintain the evals. Grace put that at $380K a year.",
+         "evidence": {
+          "key": "competition",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "benchmark",
+         "text": "Have you seen the cost of ownership studies? They usually favour specialist tools like ours.",
+         "reply": "Usually."
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Cost is only one part of it. Fit matters just as much over the long run.",
+         "reply": "Fit doesn't go in a spreadsheet."
+        },
+        {
+         "kind": "trap",
+         "failure": "fake_urgency",
+         "text": "Their roadmap is a year behind ours, so a bake-off will only waste your team's time.",
+         "reply": "We'll decide that ourselves."
+        }
+       ],
+       "goal": "Pin the full cost to serve",
+       "signal": "competition",
+       "id": "t3-d2-6"
+      }
+     ]
+    },
+    {
+     "id": "d3",
+     "title": "Ramp and residency",
+     "setting": "The pilot cleared the day 14 gate. Now the ramp has to be committed, and the data has to stay where Elena wants it.",
+     "beats": [
+      {
+       "speaker": "priya",
+       "line": "We passed the gate. Marcus is asking what success looks like after go-live.",
+       "skill": "metrics",
+       "why": "A leading metric the team can move in weeks, tied to the lagging one the executive owns, gives early proof without changing the goal.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Let's split it: a leading metric you'll see by week two, validation cycle time, and the lagging one Helen owns, agents live with value unlocked.",
+         "reply": "Cycle time is the one my team can move first. Helen's twelve agents is the lagging one.",
+         "evidence": {
+          "key": "metrics",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "vanity_metric",
+         "text": "We'd show traces per day climbing, which is a great sign the platform is sticking.",
+         "reply": "Marcus doesn't care about traces."
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Success is really whatever Marcus and Helen decide it should be in the end.",
+         "reply": "They'll ask you."
+        },
+        {
+         "kind": "trap",
+         "failure": "over_promise",
+         "text": "We'd guarantee the twelve agents by December and write that into the contract.",
+         "reply": "You don't control our validation queue."
+        }
+       ],
+       "goal": "Split leading and lagging metrics",
+       "signal": "metrics",
+       "id": "t3-d3-1"
+      },
+      {
+       "speaker": "daniel",
+       "line": "Cycle time is easy to claim and hard to prove.",
+       "skill": "metrics",
+       "why": "Naming the start point, the end point and the sample makes the leading metric something the validator will put his name to.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "What cycle time would prove it on the next three agents, measured from intake to your sign-off?",
+         "reply": "Three weeks from intake to sign-off, on the next three agents. Down from fourteen. I'd put my name on that.",
+         "evidence": {
+          "key": "metrics",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "leading_question",
+         "text": "Would a 50 percent cut be enough? That's roughly what we normally see.",
+         "reply": "Don't anchor me."
+        },
+        {
+         "kind": "weak",
+         "failure": "bury_the_answer",
+         "text": "Could we set up a full measurement framework and agree the target together later?",
+         "reply": "Later isn't a target."
+        },
+        {
+         "kind": "trap",
+         "failure": "lower_the_bar",
+         "text": "Could we measure from first trace instead of intake? It makes the number look better.",
+         "reply": "Better looking and less true."
+        }
+       ],
+       "goal": "Pin the leading metric",
+       "signal": "metrics",
+       "id": "t3-d3-2"
+      },
+      {
+       "speaker": "grace",
+       "line": "What do you want us to commit to for year one?",
+       "skill": "ramp_commit",
+       "why": "Committing to the share of the forecast the buyer is sure of protects them from a slow ramp and protects you from a cut later.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Commit to 60 percent of the forecast, so the floor is what you're sure of, with overage at the same rate. Does that fit your budgeting?",
+         "reply": "Sixty percent is defensible. I'd want a true-up after six months.",
+         "evidence": {
+          "key": "ramp_commit",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "max_commit",
+         "text": "Commit to the full forecast up front and we'll give you a better unit price for it.",
+         "reply": "And if adoption is slow, we eat it."
+        },
+        {
+         "kind": "weak",
+         "failure": "rate_card",
+         "text": "Why not pay as you go for now, and commit later once usage has settled down?",
+         "reply": "Then I can't budget it."
+        },
+        {
+         "kind": "trap",
+         "failure": "commit_without_forecast",
+         "text": "Let's just pick a round number for the commit, say $500K, and adjust it next year.",
+         "reply": "Where does $500K come from?",
+         "flag": "commit_without_forecast"
+        }
+       ],
+       "goal": "Size the commit to the forecast",
+       "id": "t3-d3-3"
+      },
+      {
+       "speaker": "grace",
+       "line": "A true-up after six months, then.",
+       "skill": "ramp_commit",
+       "why": "Linking the true-up to the metric the validator signed means the commit grows only when the value does, which finance can defend.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Agreed. Should the true-up be tied to the cycle-time target Daniel signed, so the commit grows only when the value does?",
+         "reply": "Yes. $186K committed, true-up at month six against Daniel's three-week target. I'll take that to Helen.",
+         "evidence": {
+          "key": "ramp_commit",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Sure. Shall we revisit everything at six months and see where things have landed?",
+         "reply": "Revisit what, exactly?"
+        },
+        {
+         "kind": "weak",
+         "failure": "negotiate_against_self",
+         "text": "If six months feels long, we could drop the commit to 40 percent instead.",
+         "reply": "I didn't ask for less."
+        },
+        {
+         "kind": "trap",
+         "failure": "fake_urgency",
+         "text": "We'll need the full commit signed this week to keep this quarter's price.",
+         "reply": "Then we'll wait for next quarter."
+        }
+       ],
+       "goal": "Tie the true-up to value",
+       "id": "t3-d3-4"
+      },
+      {
+       "speaker": "elena",
+       "line": "Before production, traces with customer data must stay inside Northbridge.",
+       "skill": "paper_process",
+       "why": "Asking which deployment changes the risk tier, and who reviews it, finds the shortest compliant path instead of arguing the control.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Understood. If traces stay in your VPC with a hybrid deployment, which vendor risk tier does that put us in, and who runs the review?",
+         "reply": "Hybrid in our VPC is Tier 2. My team runs it, and legal still owns the DPA.",
+         "evidence": {
+          "key": "paper_process",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "defensive",
+         "text": "Our cloud is certified in your region, so residency really shouldn't be a blocker.",
+         "reply": "Shouldn't is not my standard."
+        },
+        {
+         "kind": "weak",
+         "failure": "sequential_paper",
+         "text": "We'll sort out the deployment model once the commercial terms are agreed.",
+         "reply": "Then you'll lose a quarter."
+        },
+        {
+         "kind": "trap",
+         "failure": "dodge_governance",
+         "text": "Could we start production on our cloud and move into your VPC later on?",
+         "reply": "No customer data leaves Northbridge."
+        }
+       ],
+       "goal": "Open the residency path",
+       "signal": "paper_process",
+       "id": "t3-d3-5"
+      },
+      {
+       "speaker": "elena",
+       "line": "Tier 2 still takes time.",
+       "skill": "paper_process",
+       "why": "Lead times for each review, run in parallel and landed before the committee, turn paper from a surprise into a plan.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "How long does Tier 2 take, and could legal redline the DPA in parallel so both finish before Helen's committee?",
+         "reply": "Four weeks for Tier 2 and three for the DPA if legal starts now. In parallel, both finish before the committee on the 28th.",
+         "evidence": {
+          "key": "paper_process",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Whatever timeline works for your team is completely fine by us. When would you like to start?",
+         "reply": "That timeline is long."
+        },
+        {
+         "kind": "weak",
+         "failure": "over_promise",
+         "text": "We've passed reviews like this in two weeks at other banks, so it should be quick here too.",
+         "reply": "Not here, you haven't."
+        },
+        {
+         "kind": "trap",
+         "failure": "sequential_paper",
+         "text": "Let's finish the security review first, then start legal once that's done.",
+         "reply": "That adds three weeks for nothing."
+        }
+       ],
+       "goal": "Pin the parallel paper path",
+       "signal": "paper_process",
+       "id": "t3-d3-6"
+      }
+     ]
+    }
+   ],
+   "capstone": {
+    "title": "Model risk pulls the plug",
+    "setting": "Day 14 review. Daniel's report shows eval coverage at 98 percent, and Leo Marsh, the Data Protection Officer, has joined.",
+    "curveball": "The pilot misses one exit gate, and a stakeholder nobody briefed raises data protection.",
+    "beats": [
+     {
+      "speaker": "daniel",
+      "line": "Coverage is 98 percent. The gate was 100. I can't sign.",
+      "skill": "bounded_pov",
+      "why": "Holding the gate you agreed, then asking exactly what failed and when to rerun it, keeps the validator on your side.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "The gate is the gate. Which four of the 212 tests failed, and if we fix them by day 21, will you rerun the gate then?",
+        "reply": "Four policy tests on dispute triage. Fix them and I'll rerun the full gate on day 21.",
+        "evidence": {
+         "key": "decision_criteria",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "lower_the_bar",
+        "text": "98 percent is very close. Could we agree it's good enough for this stage?",
+        "reply": "That isn't how gates work."
+       },
+       {
+        "kind": "weak",
+        "failure": "defensive",
+        "text": "Those four tests may be badly written. Has your team double-checked them?",
+        "reply": "They're the tests the examiners use."
+       },
+       {
+        "kind": "trap",
+        "failure": "unbounded_pilot",
+        "text": "Let's extend the pilot another sixty days and get it to 100 percent then.",
+        "reply": "Sixty days wasn't in anyone's plan.",
+        "flag": "unbounded_pilot"
+       }
+      ],
+      "signal": "decision_criteria",
+      "core": true,
+      "id": "t3-capstone-1"
+     },
+     {
+      "speaker": "leo",
+      "line": "Nobody told me traces contain customer data. Where is the DPIA?",
+      "skill": "paper_process",
+      "why": "Accepting the control, showing what is already in place and asking for the reviewer's lead time turns a blocker into a dated step.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "You're right to ask. Traces stay in your VPC under Elena's review. What would a DPIA need from us, and how long does it take?",
+        "reply": "Data flows, retention and the sub-processor list. If I have them by Friday, I can finish in three weeks.",
+        "evidence": {
+         "key": "paper_process",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "defensive",
+        "text": "Elena already approved the deployment. Doesn't that cover the data protection side as well?",
+        "reply": "Elena doesn't sign DPIAs."
+       },
+       {
+        "kind": "weak",
+        "failure": "sequential_paper",
+        "text": "We can do the DPIA after the pilot, once we know for certain that it's going ahead.",
+        "reply": "Then there won't be one."
+       },
+       {
+        "kind": "trap",
+        "failure": "dodge_governance",
+        "text": "Honestly, the data is pseudonymised, so a DPIA isn't really needed for a pilot like this one.",
+        "reply": "I'll decide what's needed."
+       }
+      ],
+      "signal": "paper_process",
+      "core": true,
+      "id": "t3-capstone-2"
+     },
+     {
+      "speaker": "priya",
+      "line": "Helen's committee is on the 28th. Do we still make it?",
+      "skill": "decision_process",
+      "why": "Replanning out loud, with each owner confirming their own date, shows control of the deal at the moment it could slip.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "Let's replan: gate rerun on day 21, DPIA done by day 25, committee on the 28th. Daniel, Leo, can you both hold those dates?",
+        "reply": "Day 21 for the rerun works. Leo says day 25 for the DPIA. The 28th still holds.",
+        "reply_by": "daniel",
+        "evidence": {
+         "key": "decision_process",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "accept_vague",
+        "text": "Let's see how the fixes go and decide about the committee next week.",
+        "reply": "Next week is too late for the agenda."
+       },
+       {
+        "kind": "weak",
+        "failure": "hand_over_control",
+        "text": "Priya, could you work out a new plan with Daniel and Leo and let me know?",
+        "reply": "You're the one with the plan."
+       },
+       {
+        "kind": "trap",
+        "failure": "premature_close",
+        "text": "Could Helen approve it on the 28th, before the gate rerun, to save time?",
+        "reply": "Not without Daniel's sign-off."
+       }
+      ],
+      "signal": "decision_process",
+      "core": true,
+      "id": "t3-capstone-3"
+     },
+     {
+      "speaker": "grace",
+      "line": "Do the misses change the forecast I gave Helen?",
+      "skill": "usage_forecast",
+      "why": "Answering first, with the numbers unchanged and the fix at your cost, keeps finance's trust when the plan moves.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "No. Volumes are the same, so year one stays at $310K with $186K committed. Fixing the four tests is on us, at no cost.",
+        "reply": "Good. Then the numbers I gave Helen still stand."
+       },
+       {
+        "kind": "weak",
+        "failure": "bury_the_answer",
+        "text": "It's hard to say. Let me rerun the full model and send it after the committee.",
+        "reply": "Helen needs it before."
+       },
+       {
+        "kind": "weak",
+        "failure": "negotiate_against_self",
+        "text": "To make up for the miss, we could take $30K off year one for you.",
+        "reply": "I didn't ask for that."
+       },
+       {
+        "kind": "trap",
+        "failure": "commit_without_forecast",
+        "text": "Let's raise the commit to cover the extra work. It's simpler that way.",
+        "reply": "That's backwards.",
+        "flag": "commit_without_forecast"
+       }
+      ],
+      "id": "t3-capstone-4"
+     }
+    ]
+   }
+  },
+  {
+   "tier": 4,
+   "stage": "Close the multi-year platform",
+   "problem": "The pilot worked. Now the executive committee must commit to three years, finance must audit the case, and the frontline must use it.",
+   "concept": {
+    "title": "Answer first. Three reasons. The P&L on one page.",
+    "body": "Executives decide in minutes and delegate the detail. Lead with the recommendation and three reasons in their numbers. Then prove the plan survives contact with the business: a case finance can audit under a downside, an adoption plan the frontline owns, and a paper path with a date on every step.",
+    "weak": "Let me walk you through some background first.",
+    "strong": "Sign the three-year platform. It ships twelve agents this year, pays back by month five, and clears the exam."
+   },
+   "cast": [
+    {
+     "id": "victoria",
+     "name": "Victoria Hale",
+     "role": "Chief Operating Officer"
+    },
+    {
+     "id": "james",
+     "name": "James Moreau",
+     "role": "Chief Financial Officer"
+    },
+    {
+     "id": "nina",
+     "name": "Nina Ford",
+     "role": "Deputy General Counsel"
+    },
+    {
+     "id": "grace",
+     "name": "Grace Kim",
+     "role": "Head of FinOps"
+    },
+    {
+     "id": "priya",
+     "name": "Priya Shah",
+     "role": "Head of AI Platform"
+    },
+    {
+     "id": "helen",
+     "name": "Helen Brandt",
+     "role": "Chief Risk Officer"
+    },
+    {
+     "id": "rachel",
+     "name": "Rachel Stone",
+     "role": "Head of Payments"
+    }
+   ],
+   "drills": [
+    {
+     "id": "d1",
+     "title": "Answer first to the COO",
+     "setting": "The pilot cleared every gate. Victoria Hale, the COO, has five minutes before the executive committee pre-read.",
+     "beats": [
+      {
+       "speaker": "victoria",
+       "line": "I have five minutes. What are you asking me for?",
+       "skill": "answer_first",
+       "why": "The ask, then three reasons in the executive's terms. Context can follow if she asks for it, and usually she won't.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Back a three-year platform at committee. It ships twelve agents this year, pays back by month five, and gives Helen replayable exam evidence.",
+         "reply": "That's clear. Why should operations care?"
+        },
+        {
+         "kind": "weak",
+         "failure": "bury_the_answer",
+         "text": "Some context first: the pilot ran for thirty days on two agents, with three exit gates.",
+         "reply": "I said five minutes."
+        },
+        {
+         "kind": "weak",
+         "failure": "hand_over_control",
+         "text": "I'd love to hear what matters most to you before I get into our proposal.",
+         "reply": "I asked what you want."
+        },
+        {
+         "kind": "trap",
+         "failure": "feature_dump",
+         "text": "Let me show you the dashboard from the pilot. It tells the story better than I can.",
+         "reply": "I don't have time for a demo.",
+         "flag": "buries_financial_thesis"
+        }
+       ],
+       "goal": "Lead with the answer",
+       "id": "t4-d1-1"
+      },
+      {
+       "speaker": "victoria",
+       "line": "Operations already has a cost programme. This could be one more thing.",
+       "skill": "identify_pain",
+       "why": "Asking what a finished but stalled agent costs in hours or headcount finds the pain in the COO's own budget, not in IT's.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "What does it cost operations when a finished agent can't go live, in hours or headcount you're carrying anyway?",
+         "reply": "We hired twenty contractors for the KYC backlog because the agent wasn't live. That's not small.",
+         "evidence": {
+          "key": "identify_pain",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "generic_value",
+         "text": "This fits your cost programme perfectly. In the end it's all about efficiency.",
+         "reply": "Everything claims that."
+        },
+        {
+         "kind": "weak",
+         "failure": "leading_question",
+         "text": "So the contractors are the real problem here, would you say that's fair?",
+         "reply": "You tell me."
+        },
+        {
+         "kind": "trap",
+         "failure": "fear_without_numbers",
+         "text": "If you don't move now, competitors will automate operations long before you do.",
+         "reply": "That's a slogan."
+        }
+       ],
+       "goal": "Find the operating pain",
+       "signal": "identify_pain",
+       "id": "t4-d1-2"
+      },
+      {
+       "speaker": "victoria",
+       "line": "Twenty contractors, and the hiring freeze starts in January.",
+       "skill": "identify_pain",
+       "why": "Tying the cost to the executive's own deadline gives her a reason to act this year that she can repeat to the board.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "What happens to those contractor costs if the agents aren't live by the January freeze?",
+         "reply": "We'd have to keep them through next year. That's $2M I'd rather not explain to the board.",
+         "evidence": {
+          "key": "identify_pain",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "That sounds like a tough spot. How can we help in whatever way is most useful?",
+         "reply": "Help how?"
+        },
+        {
+         "kind": "weak",
+         "failure": "over_promise",
+         "text": "We'll have every KYC agent live by January, so you can let them all go.",
+         "reply": "You can't promise that."
+        },
+        {
+         "kind": "trap",
+         "failure": "benchmark",
+         "text": "Most banks cut their contractor spend by half in year one with us.",
+         "reply": "We're not most banks."
+        }
+       ],
+       "goal": "Pin the cost of inaction",
+       "signal": "identify_pain",
+       "id": "t4-d1-3"
+      },
+      {
+       "speaker": "victoria",
+       "line": "If I back it, Helen and James need to be with me.",
+       "skill": "economic_buyer",
+       "why": "Asking who decides if the executives disagree, and what that person needs, finds the real signer of a multi-year deal.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Who has final say at committee if you, Helen and James disagree, and what would James need before he votes?",
+         "reply": "James chairs the committee. He'll want the business case to clear our hurdle rate.",
+         "evidence": {
+          "key": "economic_buyer",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "assumed_authority",
+         "text": "As COO, I assume your backing alone is enough to carry the vote?",
+         "reply": "It isn't."
+        },
+        {
+         "kind": "weak",
+         "failure": "single_threading",
+         "text": "Let's not complicate it. If you back it, I'm sure the others will follow.",
+         "reply": "You don't know James."
+        },
+        {
+         "kind": "trap",
+         "failure": "work_around_veto",
+         "text": "Could you approve it under your operations budget, so it skips the committee?",
+         "reply": "Nothing this size skips it."
+        }
+       ],
+       "goal": "Open the final authority",
+       "signal": "economic_buyer",
+       "id": "t4-d1-4"
+      },
+      {
+       "speaker": "victoria",
+       "line": "James is careful. He'll ask what happens if it slips.",
+       "skill": "economic_buyer",
+       "why": "The vote date and what must be on the page are the two facts that let you build the exact case the signer needs.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "When does the committee vote, and what does James need on the page to sign in that meeting?",
+         "reply": "The June committee. James signs if payback is inside twelve months and Helen confirms the exam evidence.",
+         "evidence": {
+          "key": "economic_buyer",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Shall we make sure James has everything he needs well before the vote?",
+         "reply": "Which is what?"
+        },
+        {
+         "kind": "weak",
+         "failure": "bury_the_answer",
+         "text": "I'll send a full pack with all the pilot data so he can review it in his own time.",
+         "reply": "He won't read a full pack."
+        },
+        {
+         "kind": "trap",
+         "failure": "fake_urgency",
+         "text": "If James can sign before June, we can lock in this year's pricing for you.",
+         "reply": "James doesn't buy deadlines."
+        }
+       ],
+       "goal": "Pin the signer's conditions",
+       "signal": "economic_buyer",
+       "id": "t4-d1-5"
+      }
+     ]
+    },
+    {
+     "id": "d2",
+     "title": "Build the CFO business case",
+     "setting": "James Moreau, the CFO, has the business case on his desk. Grace from FinOps sits in.",
+     "beats": [
+      {
+       "speaker": "james",
+       "line": "Give me the case in one line.",
+       "skill": "business_case",
+       "why": "Investment, return, payback and NPV in one sentence lets a CFO check the case before he reads a page of it.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "$310K in year one unlocks $3M of benefit this year, pays back in month five, and returns an NPV of $11M over three years.",
+         "reply": "One line I can check. Go on."
+        },
+        {
+         "kind": "weak",
+         "failure": "bury_the_answer",
+         "text": "The case has three sections: pilot results, the deployment plan and then the financials.",
+         "reply": "I asked for one line."
+        },
+        {
+         "kind": "weak",
+         "failure": "generic_value",
+         "text": "It's a strong case. The value is clear across risk, operations and technology.",
+         "reply": "Clear to whom?"
+        },
+        {
+         "kind": "trap",
+         "failure": "vanity_metric",
+         "text": "Usage grew 40 percent a week in the pilot, which shows the value is real.",
+         "reply": "Usage isn't a return.",
+         "flag": "buries_financial_thesis"
+        }
+       ],
+       "goal": "State the financial thesis",
+       "id": "t4-d2-1"
+      },
+      {
+       "speaker": "james",
+       "line": "Our hurdle rate is 9 percent. Show me the assumptions.",
+       "skill": "metrics",
+       "why": "Naming the two assumptions that move the result, and inviting finance to stress them, shows you know where the case is weak.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "The two that matter are agents live by quarter and analyst hours released. Grace, which of those would you stress first?",
+         "reply": "Agents live by quarter. If it slips a quarter, payback moves.",
+         "reply_by": "grace",
+         "evidence": {
+          "key": "metrics",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "over_promise",
+         "text": "We've been conservative on every assumption, so the numbers can only go up.",
+         "reply": "Everyone says conservative."
+        },
+        {
+         "kind": "weak",
+         "failure": "benchmark",
+         "text": "Our customers see an average return of four times, so 9 percent is very safe.",
+         "reply": "Average isn't us."
+        },
+        {
+         "kind": "trap",
+         "failure": "leading_question",
+         "text": "Do we really need the assumptions, given the pilot has already proved the value?",
+         "reply": "I sign assumptions, not pilots."
+        }
+       ],
+       "goal": "Open the drivers",
+       "signal": "metrics",
+       "id": "t4-d2-2"
+      },
+      {
+       "speaker": "james",
+       "line": "So what if it slips a quarter?",
+       "skill": "metrics",
+       "why": "A downside that still clears the hurdle is what lets a CFO sign. It proves the case does not depend on everything going right.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Then payback moves to month eight and NPV falls to $8M, still well over your 9 percent hurdle. Would you sign on that downside?",
+         "reply": "If the downside clears 9 percent, yes. That's the number I'll present.",
+         "evidence": {
+          "key": "metrics",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Do we need to plan for slippage? The team is very confident in the timeline.",
+         "reply": "Confidence isn't a scenario."
+        },
+        {
+         "kind": "weak",
+         "failure": "defensive",
+         "text": "A slip is unlikely, given how well the pilot went for everyone involved on your side.",
+         "reply": "Unlikely isn't a number."
+        },
+        {
+         "kind": "trap",
+         "failure": "over_promise",
+         "text": "We'll guarantee the timeline with service credits, so slippage isn't your risk.",
+         "reply": "Credits don't cover $2M of contractors."
+        }
+       ],
+       "goal": "Pin the downside case",
+       "signal": "metrics",
+       "id": "t4-d2-3"
+      },
+      {
+       "speaker": "james",
+       "line": "Assume I like it. What has to happen between now and signature?",
+       "skill": "decision_process",
+       "why": "Working back from the signature date surfaces every approval on a multi-year deal, including the ones that only meet quarterly.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Let's work back from the date you want it signed. Which approvals sit between the June committee and that date?",
+         "reply": "Committee in June, then audit committee in September for anything multi-year. Legal runs alongside.",
+         "evidence": {
+          "key": "decision_process",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "premature_close",
+         "text": "If the committee approves in June, we could sign that very same week.",
+         "reply": "Audit committee will want a look."
+        },
+        {
+         "kind": "weak",
+         "failure": "hand_over_control",
+         "text": "Whatever process you normally follow is fine with us. Just let us know.",
+         "reply": "You should know it by now."
+        },
+        {
+         "kind": "trap",
+         "failure": "fake_urgency",
+         "text": "Could we sign before the committee meets, so that the price holds?",
+         "reply": "That's not how a CFO works."
+        }
+       ],
+       "goal": "Open the decision process",
+       "signal": "decision_process",
+       "id": "t4-d2-4"
+      },
+      {
+       "speaker": "james",
+       "line": "Audit committee meets on September 10th.",
+       "skill": "decision_process",
+       "why": "A signature date with the step before it finished in time means the last approver votes on final terms, not a draft.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Then could we target signature by October 1st, with redlines done before audit committee so it votes on final terms?",
+         "reply": "October 1st works if legal finishes redlines by the end of August. I'll put it in the plan.",
+         "evidence": {
+          "key": "decision_process",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Sounds good. Could we aim for the autumn and see how things go from there?",
+         "reply": "Aim isn't a date."
+        },
+        {
+         "kind": "weak",
+         "failure": "single_threading",
+         "text": "I'll work out the dates with Tom in procurement, so you don't need to worry.",
+         "reply": "Tom doesn't set the audit calendar."
+        },
+        {
+         "kind": "trap",
+         "failure": "deferral",
+         "text": "Let's leave signature open and agree the dates after the audit committee.",
+         "reply": "Then it slips to next year."
+        }
+       ],
+       "goal": "Pin the signature date",
+       "signal": "decision_process",
+       "id": "t4-d2-5"
+      }
+     ]
+    },
+    {
+     "id": "d3",
+     "title": "Adoption and the paper critical path",
+     "setting": "James is in. Victoria wants proof the frontline will use it, and Nina Ford, Deputy General Counsel, owns the contract.",
+     "beats": [
+      {
+       "speaker": "victoria",
+       "line": "My worry is that we buy it and nobody uses it.",
+       "skill": "adoption_plan",
+       "why": "Owners, targets and a review rhythm make adoption something the business runs. Training alone never does.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Fair. Each agent gets a business owner, a 30-day usage target and a weekly review with Priya. Who in operations should own the first three?",
+         "reply": "Owen in retail ops. He's been pushing for the KYC agent since spring."
+        },
+        {
+         "kind": "weak",
+         "failure": "skip_adoption",
+         "text": "Doesn't adoption take care of itself once the agents are live? Users tend to love it.",
+         "reply": "That's what the last vendor said."
+        },
+        {
+         "kind": "weak",
+         "failure": "generic_value",
+         "text": "We have a world-class customer success team who'll handle all the training for your staff.",
+         "reply": "Training isn't adoption."
+        },
+        {
+         "kind": "trap",
+         "failure": "hand_over_control",
+         "text": "That's really an internal change management question for your own team and HR to own.",
+         "reply": "Then we have a problem.",
+         "flag": "ignores_change_management"
+        }
+       ],
+       "goal": "Plan adoption with owners",
+       "id": "t4-d3-1"
+      },
+      {
+       "speaker": "priya",
+       "line": "Owen is keen, but he's never sponsored a platform before.",
+       "skill": "champion",
+       "why": "Asking the new sponsor to make the case in his own words, to his own peers, tests whether he can sell when you are not there.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Would Owen share his KYC numbers at the next ops leadership meeting, in his own words, before we're ever in the room?",
+         "reply": "He'd do that. He presents to Victoria's leadership team on the 3rd.",
+         "evidence": {
+          "key": "champion",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "single_threading",
+         "text": "Great. We'll keep working through you and bring Owen in at launch.",
+         "reply": "He'll feel left out."
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Let's keep Owen in the loop and see how involved he wants to be.",
+         "reply": "Loops don't sell anything."
+        },
+        {
+         "kind": "trap",
+         "failure": "coach_as_champion",
+         "text": "Perfect, so Owen is our champion now. Can he sign off on the rollout?",
+         "reply": "Owen doesn't sign anything."
+        }
+       ],
+       "goal": "Test the new champion",
+       "signal": "champion",
+       "id": "t4-d3-2"
+      },
+      {
+       "speaker": "victoria",
+       "line": "Owen presented. Two other ops heads have asked for agents.",
+       "skill": "champion",
+       "why": "Turning pull from peers into named owners builds a champion network, so the deal no longer rests on one person.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "That's the network. Would Owen sponsor the first three agents and bring those two heads into the rollout plan as owners?",
+         "reply": "Yes. Owen sponsors the first three, and the other two each take one. I'll confirm it at leadership.",
+         "evidence": {
+          "key": "champion",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Brilliant news. Let's enjoy the momentum and plan next steps soon.",
+         "reply": "Soon when?"
+        },
+        {
+         "kind": "weak",
+         "failure": "over_promise",
+         "text": "Then we can roll out all twelve agents across operations next month.",
+         "reply": "Slow down."
+        },
+        {
+         "kind": "trap",
+         "failure": "go_around",
+         "text": "Could I reach out to the other two heads directly and set up demos?",
+         "reply": "Let Owen do that."
+        }
+       ],
+       "goal": "Pin the champion network",
+       "signal": "champion",
+       "id": "t4-d3-3"
+      },
+      {
+       "speaker": "nina",
+       "line": "Our master services agreement usually takes four months.",
+       "skill": "paper_process",
+       "why": "Asking which terms take longest, working back from the date, lets you start the slow ones now instead of finding them in August.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Working back from October 1st, which terms usually take longest, and what can we agree now to get ahead of them?",
+         "reply": "Liability caps and exit terms. Everything else is standard.",
+         "evidence": {
+          "key": "paper_process",
+          "level": "partial"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "defensive",
+         "text": "Our standard terms are very fair. Could it be a lot quicker than that this time?",
+         "reply": "Hope isn't a timeline."
+        },
+        {
+         "kind": "weak",
+         "failure": "sequential_paper",
+         "text": "We'll send our paper over once the committee has approved the business case.",
+         "reply": "Then you'll miss October."
+        },
+        {
+         "kind": "trap",
+         "failure": "over_promise",
+         "text": "We'll sign your paper as is, so legal won't need anything like four months.",
+         "reply": "You haven't seen the liability clause."
+        }
+       ],
+       "goal": "Open the paper critical path",
+       "signal": "paper_process",
+       "id": "t4-d3-4"
+      },
+      {
+       "speaker": "nina",
+       "line": "Liability and exit always come last.",
+       "skill": "paper_process",
+       "why": "A date for each hard term, all landing before the last approval, is a critical path legal can hold you and themselves to.",
+       "options": [
+        {
+         "kind": "elite",
+         "text": "Could we date each one: redlines by June 15, liability by August 15, exit terms by September 1, so audit committee sees final paper?",
+         "reply": "June 15, August 15, September 1. If you hit those, audit committee gets final terms. I'll hold my team to it.",
+         "evidence": {
+          "key": "paper_process",
+          "level": "verbatim"
+         }
+        },
+        {
+         "kind": "weak",
+         "failure": "accept_vague",
+         "text": "Let's get started and see where the redlines land before we set any dates.",
+         "reply": "That's how contracts take a year."
+        },
+        {
+         "kind": "weak",
+         "failure": "hand_over_control",
+         "text": "We'll follow your timeline. Could you tell us when your team is ready to start?",
+         "reply": "I'm asking you to propose one."
+        },
+        {
+         "kind": "trap",
+         "failure": "dodge_governance",
+         "text": "Could we leave the liability cap out of the first draft and add it later?",
+         "reply": "No."
+        }
+       ],
+       "goal": "Pin a date on every term",
+       "signal": "paper_process",
+       "id": "t4-d3-5"
+      }
+     ]
+    }
+   ],
+   "capstone": {
+    "title": "The executive committee",
+    "setting": "June executive committee. Victoria, James and Helen are in the room. Rachel Stone, Head of Payments, was not on the invite but has joined.",
+    "curveball": "A business head the deal never touched asks why payments goes last, and procurement wants 15 percent off.",
+    "beats": [
+     {
+      "speaker": "james",
+      "line": "Thirty seconds. Why should we sign?",
+      "skill": "answer_first",
+      "why": "The answer and three reasons, including the downside, in the time the CFO gave you. That is the whole skill of this pillar.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "Sign the three-year platform. Twelve agents this year, payback by month eight even if it slips, and replayable evidence for Helen's exam.",
+        "reply": "Clear. With Helen's co-sign and Victoria's support, I'll sign.",
+        "evidence": {
+         "key": "economic_buyer",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "bury_the_answer",
+        "text": "Could I recap the pilot first, then the business case, then the rollout plan?",
+        "reply": "Thirty seconds."
+       },
+       {
+        "kind": "weak",
+        "failure": "generic_value",
+        "text": "Because it's a transformational platform for the whole bank and its future.",
+        "reply": "Transformational is a word."
+       },
+       {
+        "kind": "trap",
+        "failure": "feature_dump",
+        "text": "Because no other platform gives you tracing, evals, replay and guardrails in one place.",
+        "reply": "That's a feature list, not a reason.",
+        "flag": "buries_financial_thesis"
+       }
+      ],
+      "signal": "economic_buyer",
+      "core": true,
+      "id": "t4-capstone-1"
+     },
+     {
+      "speaker": "rachel",
+      "line": "Payments wasn't consulted. Why are we last in the rollout?",
+      "skill": "adoption_plan",
+      "why": "Explaining the order honestly, then inviting the new voice to own an agent, turns a late objector into a second champion.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "We went first where an owner was asking. What would payments need to see to own the fourth agent, alongside Owen?",
+        "reply": "Fraud review times. If the fourth agent cuts them, I'll co-own it with Owen and back it here.",
+        "evidence": {
+         "key": "champion",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "defensive",
+        "text": "The rollout order was agreed with Victoria's team a few months ago. Was that not shared?",
+        "reply": "Not with me."
+       },
+       {
+        "kind": "weak",
+        "failure": "over_promise",
+        "text": "We can move payments to the front of the queue, that's no problem at all for us.",
+        "reply": "And bump Owen? No."
+       },
+       {
+        "kind": "trap",
+        "failure": "skip_adoption",
+        "text": "Payments can join later, once the platform is proven elsewhere in the bank.",
+        "reply": "Then payments votes no.",
+        "flag": "ignores_change_management"
+       }
+      ],
+      "signal": "champion",
+      "core": true,
+      "id": "t4-capstone-2"
+     },
+     {
+      "speaker": "helen",
+      "line": "Tom says he won't recommend it without 15 percent off.",
+      "skill": "cost_to_serve",
+      "why": "Trading price for something of equal value, here term and scope, keeps the value case intact. A free discount says the price was padded.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "We can trade: 15 percent off if the term is three years and payments joins in year one. Does that still clear $3M?",
+        "reply": "With payments in year one it clears $3M with room. Tom can live with that trade.",
+        "evidence": {
+         "key": "metrics",
+         "level": "verbatim"
+        }
+       },
+       {
+        "kind": "weak",
+        "failure": "negotiate_against_self",
+        "text": "Would 10 percent work instead, if that helps get it over the line today?",
+        "reply": "Tom asked for fifteen."
+       },
+       {
+        "kind": "weak",
+        "failure": "defensive",
+        "text": "Our price already reflects a big discount from list, so there's not much room.",
+        "reply": "Everyone's price does."
+       },
+       {
+        "kind": "trap",
+        "failure": "discount_before_value",
+        "text": "Fine, 15 percent off the whole term, as long as everyone here signs today.",
+        "reply": "So the first price was padding."
+       }
+      ],
+      "signal": "metrics",
+      "core": true,
+      "id": "t4-capstone-3"
+     },
+     {
+      "speaker": "victoria",
+      "line": "Who runs this day to day once it's signed?",
+      "skill": "adoption_plan",
+      "why": "Owners by name and a scorecard the executive already cares about make the vote safe for the person who will be asked about it.",
+      "options": [
+       {
+        "kind": "elite",
+        "text": "Priya runs the platform, Owen and Rachel own the agents, and you get a monthly scorecard: cycle time, agents live, contractor hours.",
+        "reply": "That I can take to the board. You have my vote."
+       },
+       {
+        "kind": "weak",
+        "failure": "skip_adoption",
+        "text": "Shall our team run it all for you, so nobody on your side has to worry about it?",
+        "reply": "We're not outsourcing ownership."
+       },
+       {
+        "kind": "weak",
+        "failure": "accept_vague",
+        "text": "We'll work that out together at kickoff, once everything has been signed off.",
+        "reply": "That's too late."
+       },
+       {
+        "kind": "trap",
+        "failure": "hand_over_control",
+        "text": "That's really for your teams to decide between themselves after signature.",
+        "reply": "Then I can't vote for it.",
+        "flag": "ignores_change_management"
+       }
+      ],
+      "id": "t4-capstone-4"
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,185 @@
+{
+  "id": "failure_modes",
+  "modes": [
+    {
+      "id": "early_pitch",
+      "label": "Pitching too early",
+      "lesson": "You described the product before the buyer described the problem, so you learned nothing you can use."
+    },
+    {
+      "id": "leading_question",
+      "label": "Leading question",
+      "lesson": "You put the answer in the question. The buyer agreed politely and you still have no evidence."
+    },
+    {
+      "id": "benchmark",
+      "label": "Our number, not theirs",
+      "lesson": "A benchmark from other customers is not evidence. Only the buyer's own number survives a business case."
+    },
+    {
+      "id": "accept_vague",
+      "label": "Accepting a vague answer",
+      "lesson": "The buyer gave you a direction, not a number, name or date. Push once more before you move on."
+    },
+    {
+      "id": "single_threading",
+      "label": "Single-threading",
+      "lesson": "You moved the deal forward through one person without testing whether they have power."
+    },
+    {
+      "id": "coach_as_champion",
+      "label": "Coach treated as champion",
+      "lesson": "Enthusiasm is not authority. A champion shows access, influence and a personal stake before you lean on them."
+    },
+    {
+      "id": "wrong_person",
+      "label": "Right question, wrong person",
+      "lesson": "The question is good, but this buyer cannot answer it. Ask the person who owns it."
+    },
+    {
+      "id": "premature_close",
+      "label": "Closing too early",
+      "lesson": "You asked for commitment before the buyer agreed the problem, the value or the path. It cools the room."
+    },
+    {
+      "id": "feature_dump",
+      "label": "Feature dump",
+      "lesson": "Features answer a question the buyer did not ask. Tie every capability to their outcome or leave it out."
+    },
+    {
+      "id": "discount_before_value",
+      "label": "Discounting before value",
+      "lesson": "A price move before the value is agreed tells the buyer your first number was not real."
+    },
+    {
+      "id": "unbounded_pilot",
+      "label": "Unbounded pilot",
+      "lesson": "A pilot with no end date or exit gates becomes a free trial nobody finishes."
+    },
+    {
+      "id": "trash_competitor",
+      "label": "Trashing the alternative",
+      "lesson": "Attacking the alternative makes you sound defensive. Ask what it would take for them to choose it instead."
+    },
+    {
+      "id": "sequential_paper",
+      "label": "Paper process left to the end",
+      "lesson": "Legal, security and procurement run in parallel with the evaluation or they add months after it."
+    },
+    {
+      "id": "over_promise",
+      "label": "Over-promising",
+      "lesson": "A guarantee you cannot control costs credibility the moment the buyer tests it."
+    },
+    {
+      "id": "vanity_metric",
+      "label": "Vanity metric",
+      "lesson": "Usage and satisfaction are not outcomes. The buyer needs a number their executive already tracks."
+    },
+    {
+      "id": "hand_over_control",
+      "label": "Handing over control",
+      "lesson": "An open question to a busy executive wastes their time. Lead with a point of view and let them correct it."
+    },
+    {
+      "id": "not_listening",
+      "label": "Not listening",
+      "lesson": "The buyer just told you what matters to them, and you moved past it."
+    },
+    {
+      "id": "go_around",
+      "label": "Going around your contact",
+      "lesson": "Contacting their boss behind them burns the relationship you need most."
+    },
+    {
+      "id": "work_around_veto",
+      "label": "Working around the veto",
+      "lesson": "A veto holder you avoid becomes a veto holder you meet at the end, angry."
+    },
+    {
+      "id": "assumed_authority",
+      "label": "Assuming authority",
+      "lesson": "You assumed who signs instead of asking. Assumptions about authority are where forecasts break."
+    },
+    {
+      "id": "vendor_template",
+      "label": "Vendor template, not their plan",
+      "lesson": "A plan the buyer did not build is a plan the buyer will not follow."
+    },
+    {
+      "id": "lower_the_bar",
+      "label": "Lowering the bar",
+      "lesson": "Negotiating the buyer's standard down signals you cannot meet it."
+    },
+    {
+      "id": "fake_urgency",
+      "label": "Fake urgency",
+      "lesson": "A deadline you invented gives the buyer a reason to distrust everything else you said."
+    },
+    {
+      "id": "rate_card",
+      "label": "Rate card instead of their cost",
+      "lesson": "A rate card makes the buyer do your work. Translate the unit into cost per piece of their work."
+    },
+    {
+      "id": "average_customer",
+      "label": "Average customer, not this one",
+      "lesson": "Their volume, growth and peaks are the forecast. An average customer is a guess."
+    },
+    {
+      "id": "max_commit",
+      "label": "Oversized commit",
+      "lesson": "A commit above proven usage looks like a discount and lands as shelfware."
+    },
+    {
+      "id": "bury_the_answer",
+      "label": "Burying the answer",
+      "lesson": "Executives decide in minutes. Lead with the recommendation, then the reasons."
+    },
+    {
+      "id": "no_recommendation",
+      "label": "No recommendation",
+      "lesson": "Options without a recommendation hand your job back to the executive."
+    },
+    {
+      "id": "fear_without_numbers",
+      "label": "Fear without numbers",
+      "lesson": "Risk with no number attached sounds like every vendor. Quantify it in their terms."
+    },
+    {
+      "id": "dodge_governance",
+      "label": "Dodging governance",
+      "lesson": "Structuring a deal to avoid the buyer's controls tells them you will cut corners elsewhere too."
+    },
+    {
+      "id": "skip_adoption",
+      "label": "Signature as the finish line",
+      "lesson": "In a consumption deal, signature is halftime. Name the first users and their first week."
+    },
+    {
+      "id": "generic_value",
+      "label": "Generic value claim",
+      "lesson": "Best in class means nothing to a buyer. Name the before, the after and the proof."
+    },
+    {
+      "id": "defensive",
+      "label": "Getting defensive",
+      "lesson": "Defending the product before you understand the concern makes the concern bigger."
+    },
+    {
+      "id": "deferral",
+      "label": "Deferring the hard part",
+      "lesson": "Pushing the hard question past the next milestone guarantees it surfaces at the worst time."
+    },
+    {
+      "id": "negotiate_against_self",
+      "label": "Negotiating against yourself",
+      "lesson": "Offering to come back with a better number before they ask for one invites a lower price."
+    },
+    {
+      "id": "commit_without_forecast",
+      "label": "Commit without a forecast",
+      "lesson": "A commit that is not built from the buyer's own volumes is a guess. Finance will cut it, or the buyer will pay for usage they never reach."
+    }
+  ]
+}

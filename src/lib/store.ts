@@ -17,6 +17,28 @@ export interface SessionRecord {
   /** Buyer evidence for consumption skills. Missing on sessions saved before skills existed. */
   skillEvidence?: Record<string, SkillEvidence>;
   hintsUsed?: number;
+  /** Authored scenes only: beats not answered with the elite move first time. */
+  misses?: SessionMiss[];
+  /** Authored capstones only: the full capstone, the fast track or a targeted retry. */
+  variant?: 'full' | 'fast' | 'retry';
+}
+
+export interface SessionMiss {
+  beatId: string;
+  skillId: string;
+  failure?: string;
+}
+
+/** A missed move scheduled for spaced retrieval in daily reps. */
+export interface SharpenItem {
+  trajectoryId: string;
+  beatId: string;
+  skillId: string;
+  failure?: string;
+  /** Day (YYYY-MM-DD) the move is next due. */
+  due: string;
+  /** Clean recalls in a row. Three graduate the move. */
+  reviews: number;
 }
 
 export interface DrillProgress {
@@ -66,6 +88,10 @@ export interface AppState {
   engagement?: Engagement;
   /** Clusters whose market lesson the learner has finished. */
   lessonsDone?: ClusterId[];
+  /** Pillar concept cards finished, as "<trajectoryId>:<tier>". */
+  conceptsDone?: string[];
+  /** Missed moves waiting for spaced retrieval. */
+  sharpen?: SharpenItem[];
 }
 
 export function drillKey(tier: Tier, drillId: string): string {
@@ -190,4 +216,14 @@ export function weakestTier(trajectory: Trajectory): Tier {
     if (stageIndex(pillarStage(trajectory, tier)) < stageIndex(pillarStage(trajectory, worst))) worst = tier;
   }
   return worst;
+}
+
+/**
+ * True when every drill in the tier has a session with no missed move. Such a learner has
+ * shown the pillar's skills already, so the capstone offers a three-move fast track.
+ */
+export function drillsCleared(trajectory: Trajectory, tier: Tier, drillIds: string[]): boolean {
+  return drillIds.every((drillId) =>
+    trajectory.sessions.some((session) => session.tier === tier && session.mode === 'drill' && session.drillId === drillId && session.misses !== undefined && session.misses.length === 0)
+  );
 }

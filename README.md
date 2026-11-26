@@ -42,6 +42,8 @@ All domain content lives in `curriculum/`, not in React components:
 | `curriculum/skills/` | 24 skills in 4 families (fundamentals, MEDDPICC, consumption, executive), each with a talk track, proof rule and 2-minute rep |
 | `curriculum/scenarios/` | 20 cluster x vertical scenarios, each with a consumption profile (unit, volume, growth, forecast and ramp reveals) |
 | `curriculum/diagnostic.json` | the 12-item starting diagnostic, 3 per skill family |
+| `curriculum/arcs/` | authored deal arcs: one account through all four pillars, with a cast, concept cards, drills and short capstones. Agentic Harness x Banking (Northbridge) is the reference arc |
+| `curriculum/failure_modes.json` | named ways a seller loses a buyer; every wrong option in an arc points at one |
 
 To fork the academy for your own market, edit or add JSON, then run `pnpm curriculum:validate`. The validator checks every file against the Zod schemas in `src/lib/curriculum/schema.ts` and cross-checks references.
 
@@ -52,6 +54,7 @@ To fork the academy for your own market, edit or add JSON, then run `pnpm curric
 - Consumption skills (usage forecast, ramp commit) follow the same rule: the buyer must reveal the numbers.
 - Proof points are earned only from verified buyer proof.
 - Boss fights also check auto-fail red flags. A pass needs the boss gate score and zero flags.
+- Authored arcs end each pillar with a short capstone instead of a boss fight: pass by landing the core moves first time with zero red flags. A failed capstone can replay just the missed moves, and missed moves come back in daily reps on a 1, 3, 7 day schedule.
 
 ## Project layout
 

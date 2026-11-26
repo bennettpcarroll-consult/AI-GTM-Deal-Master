@@ -22,6 +22,8 @@ import skillsConsumption from '../../../curriculum/skills/consumption.json';
 import skillsExecutive from '../../../curriculum/skills/executive.json';
 import diagnostic from '../../../curriculum/diagnostic.json';
 import room from '../../../curriculum/room.json';
+import failureModes from '../../../curriculum/failure_modes.json';
+import arcAgenticharnessBankingfsi from '../../../curriculum/arcs/agentic_harness__banking_fsi.json';
 import scnComputeinfraBankingfsi from '../../../curriculum/scenarios/compute_infra__banking_fsi.json';
 import scnComputeinfraInsurance from '../../../curriculum/scenarios/compute_infra__insurance.json';
 import scnComputeinfraLawfirms from '../../../curriculum/scenarios/compute_infra__law_firms.json';
@@ -49,6 +51,8 @@ import {
   TIERS,
   VERTICAL_IDS,
   FAMILY_IDS,
+  arcSchema,
+  failureModesSchema,
   clusterSchema,
   diagnosticSchema,
   roomSchema,
@@ -57,7 +61,9 @@ import {
   skillFamilySchema,
   rubricSchema,
   verticalSchema,
+  type Arc,
   type Cluster,
+  type FailureMode,
   type ClusterId,
   type Diagnostic,
   type RoomRules,
@@ -83,6 +89,9 @@ export interface Curriculum {
   scenarios: Record<string, Scenario>;
   diagnostic: Diagnostic;
   room: RoomRules;
+  failureModes: Record<string, FailureMode>;
+  /** Authored deal arcs by trajectory id (<cluster>__<vertical>). Other trajectories use the generated room. */
+  arcs: Record<string, Arc>;
 }
 
 export interface CurriculumSource {
@@ -115,6 +124,8 @@ export const CURRICULUM_SOURCES: CurriculumSource[] = [
   { file: 'skills/executive.json', data: skillsExecutive },
   { file: 'diagnostic.json', data: diagnostic },
   { file: 'room.json', data: room },
+  { file: 'failure_modes.json', data: failureModes },
+  { file: 'arcs/agentic_harness__banking_fsi.json', data: arcAgenticharnessBankingfsi },
   { file: 'scenarios/compute_infra__banking_fsi.json', data: scnComputeinfraBankingfsi },
   { file: 'scenarios/compute_infra__insurance.json', data: scnComputeinfraInsurance },
   { file: 'scenarios/compute_infra__law_firms.json', data: scnComputeinfraLawfirms },
@@ -171,6 +182,8 @@ export function buildCurriculum(sources: CurriculumSource[] = CURRICULUM_SOURCES
   const scenarios: Record<string, Scenario> = {};
   let diagnosticPack: Diagnostic | null = null;
   let roomPack: RoomRules | null = null;
+  let failurePack: FailureMode[] | null = null;
+  const arcs: Record<string, Arc> = {};
 
   for (const source of sources) {
     const folder = source.file.split('/')[0];
@@ -218,6 +231,13 @@ export function buildCurriculum(sources: CurriculumSource[] = CURRICULUM_SOURCES
       diagnosticPack = parseSource(source, diagnosticSchema, issues);
     } else if (source.file === 'room.json') {
       roomPack = parseSource(source, roomSchema, issues);
+    } else if (source.file === 'failure_modes.json') {
+      failurePack = parseSource(source, failureModesSchema, issues)?.modes ?? null;
+    } else if (folder === 'arcs') {
+      const arc = parseSource(source, arcSchema, issues);
+      if (!arc) continue;
+      if (arc.id !== stem || arc.id !== `${arc.cluster}__${arc.vertical}`) issues.push(`${source.file}: id must be <cluster>__<vertical> and match the file name`);
+      arcs[arc.id] = arc;
     } else {
       issues.push(`${source.file}: unknown curriculum folder "${folder}"`);
     }
@@ -304,7 +324,11 @@ export function buildCurriculum(sources: CurriculumSource[] = CURRICULUM_SOURCES
     for (const skillId of Object.keys(verticals[id]?.rep_overrides ?? {})) requireSkill(skillId, `vertical ${id} rep_overrides`);
   }
 
-  if (issues.length > 0 || !diagnosticPack || !roomPack) throw new CurriculumError(issues);
+  const failureIds = new Set((failurePack ?? []).map((mode) => mode.id));
+  if (!failurePack) issues.push('missing failure_modes.json');
+  for (const arc of Object.values(arcs)) arcIssues(arc, { skillIds, failureIds, rubrics }).forEach((issue) => issues.push(`arc ${arc.id}: ${issue}`));
+
+  if (issues.length > 0 || !diagnosticPack || !roomPack || !failurePack) throw new CurriculumError(issues);
 
   return {
     clusters: clusters as Record<ClusterId, Cluster>,
@@ -315,8 +339,54 @@ export function buildCurriculum(sources: CurriculumSource[] = CURRICULUM_SOURCES
     skills,
     scenarios,
     diagnostic: diagnosticPack,
-    room: roomPack
+    room: roomPack,
+    failureModes: Object.fromEntries(failurePack.map((mode) => [mode.id, mode])),
+    arcs
   };
+}
+
+/**
+ * Structural rules for an authored arc. Content quality (no repeated lines, plausible
+ * distractors, length parity) is enforced by tests/rubric/arc-quality.test.ts.
+ */
+function arcIssues(arc: Arc, refs: { skillIds: Set<string>; failureIds: Set<string>; rubrics: Partial<Record<Tier, Rubric>> }): string[] {
+  const issues: string[] = [];
+  const signalIds = new Set<string>(SIGNAL_IDS);
+  const beatIds = new Set<string>();
+  TIERS.forEach((tier, index) => {
+    if (arc.pillars[index]?.tier !== tier) issues.push(`pillar ${index + 1} must be tier ${tier}`);
+  });
+  for (const pillar of arc.pillars) {
+    const cast = new Set(pillar.cast.map((member) => member.id));
+    const flags = new Set(refs.rubrics[pillar.tier]?.auto_fail_flags.map((flag) => flag.id) ?? []);
+    const scenes = [...pillar.drills, pillar.capstone];
+    if (pillar.capstone.beats.filter((beat) => beat.core).length < 3) issues.push(`tier ${pillar.tier} capstone needs at least 3 core beats for the fast track`);
+    for (const beat of scenes.flatMap((scene) => scene.beats)) {
+      const where = `beat ${beat.id}`;
+      if (beatIds.has(beat.id)) issues.push(`${where} is not unique`);
+      beatIds.add(beat.id);
+      if (!cast.has(beat.speaker)) issues.push(`${where} speaker "${beat.speaker}" is not in the tier ${pillar.tier} cast`);
+      if (!refs.skillIds.has(beat.skill)) issues.push(`${where} references unknown skill "${beat.skill}"`);
+      const need = pillar.tier >= 3 ? 4 : 3;
+      if (beat.options.length !== need) issues.push(`${where} needs ${need} options at tier ${pillar.tier}`);
+      const elites = beat.options.filter((option) => option.kind === 'elite');
+      if (elites.length !== 1) issues.push(`${where} needs exactly one elite option`);
+      if (!beat.options.some((option) => option.kind === 'trap')) issues.push(`${where} needs a trap option`);
+      for (const option of beat.options) {
+        if (option.reply_by && !cast.has(option.reply_by)) issues.push(`${where} reply_by "${option.reply_by}" is not in the cast`);
+        if (option.kind === 'elite') {
+          if (option.failure || option.flag) issues.push(`${where} elite option cannot carry a failure or flag`);
+          const key = option.evidence?.key;
+          if (key && !signalIds.has(key) && !refs.skillIds.has(key)) issues.push(`${where} evidence key "${key}" is not a signal or skill`);
+        } else {
+          if (!option.failure || !refs.failureIds.has(option.failure)) issues.push(`${where} ${option.kind} option needs a known failure mode (got "${option.failure}")`);
+          if (option.evidence) issues.push(`${where} wrong options never earn evidence`);
+          if (option.flag && !flags.has(option.flag)) issues.push(`${where} flag "${option.flag}" is not a tier ${pillar.tier} red flag`);
+        }
+      }
+    }
+  }
+  return issues;
 }
 
 let cached: Curriculum | undefined;

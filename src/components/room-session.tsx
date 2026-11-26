@@ -2,17 +2,18 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { Building2, Check, ChevronDown, Crown, MessageSquareWarning, ShieldAlert, Target, Users, X } from 'lucide-react';
+import { Building2, Check, ChevronDown, Crown, MessageSquareWarning, Repeat, ShieldAlert, Sparkles, Target, Users, X, Zap } from 'lucide-react';
 import { IconTile, SignalIcon } from './glyph';
 import { BRAND, PILLAR_TINT } from '@/lib/brand';
 import { loadCurriculum, scenarioFor, signalDefinitions } from '@/lib/curriculum/load';
 import { SIGNAL_IDS, type SignalId, type Skill, type Tier } from '@/lib/curriculum/schema';
-import { chooseMove, currentBeat, roomDone, roomProgress, setUpRoom, trustLabel, type Beat, type Outcome, type Pick, type RoomState } from '@/lib/deal-room';
-import { recordActivity } from '@/lib/engagement';
+import { chooseMove, currentBeat, roomDone, roomProgress, setUpRoom, trustLabel, type ArcScene, type Beat, type Outcome, type Pick, type RoomState } from '@/lib/deal-room';
+import { dayKey, recordActivity } from '@/lib/engagement';
+import { queueMisses } from '@/lib/sharpen';
 import { gradeSession, type GradeResult } from '@/lib/grader';
 import type { Turn } from '@/lib/simulator';
 import { drillSkillIds, proofCount, skillMastery, tierSkillIds } from '@/lib/skills';
-import { recordSession, type SessionRecord, type Trajectory } from '@/lib/store';
+import { recordSession, type SessionMiss, type SessionRecord, type Trajectory } from '@/lib/store';
 import { useAppState, type UpdateAppState } from '@/lib/use-app-state';
 import { FocusScreen, MasteryBadge, ProgressBar, SignalState } from './ui';
 
@@ -23,13 +24,21 @@ interface RoomSessionProps {
   drillIndex: number;
   update: UpdateAppState;
   onRetake: () => void;
+  /** Authored capstones: replay only these beats. */
+  beatIds?: string[];
+  /** Authored capstones: play the core beats only. */
+  fastTrack?: boolean;
+  /** Authored capstones: start a targeted retry of the missed beats. */
+  onRetry?: (beatIds: string[]) => void;
+  /** Authored capstones on the fast track: switch to the full capstone. */
+  onFullCapstone?: () => void;
 }
 
 type Phase = 'brief' | 'room' | 'debrief';
 
 const EARLIER_VISIBLE = 6;
 
-export function RoomSession({ trajectory, tier, mode, drillIndex, update, onRetake }: RoomSessionProps) {
+export function RoomSession({ trajectory, tier, mode, drillIndex, update, onRetake, beatIds, fastTrack, onRetry, onFullCapstone }: RoomSessionProps) {
   const curriculum = loadCurriculum();
   const cluster = curriculum.clusters[trajectory.clusterId];
   const vertical = curriculum.verticals[trajectory.verticalId];
@@ -41,10 +50,12 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
   const tint = PILLAR_TINT[tier];
 
   const setup = useMemo(
-    () => setUpRoom(curriculum, { clusterId: cluster.id, verticalId: vertical.id, tier, mode, drillIndex }),
-    [curriculum, cluster.id, vertical.id, tier, mode, drillIndex]
+    () => setUpRoom(curriculum, { clusterId: cluster.id, verticalId: vertical.id, tier, mode, drillIndex, beatIds, fastTrack }),
+    // beatIds is a fresh array per retry, so the memo keys on its contents.
+    [curriculum, cluster.id, vertical.id, tier, mode, drillIndex, fastTrack, beatIds?.join(',')]
   );
   const { payload, rc } = setup;
+  const scene = rc.arc;
   const skillIds = useMemo(
     () => (isBoss ? tierSkillIds(curriculum, rubric) : drillSkillIds(curriculum, rubric, drillIndex)),
     [curriculum, rubric, drillIndex, isBoss]
@@ -66,8 +77,9 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
   const done = roomDone(room);
   const progress = roomProgress(room);
   const drill = rubric.drills[drillIndex];
-  const title = isBoss ? rubric.boss_fight.title.replace(/^Boss fight · /, '') : (drill?.title ?? '');
-  const kicker = `Pillar ${rubric.pillar} · ${isBoss ? 'Boss fight' : `Drill ${drillIndex + 1} of 3`}`;
+  const title = scene ? scene.title : isBoss ? rubric.boss_fight.title.replace(/^Boss fight · /, '') : (drill?.title ?? '');
+  const bossLabel = scene ? (scene.variant === 'retry' ? 'Capstone retry' : scene.variant === 'fast' ? 'Capstone fast track' : 'Capstone') : 'Boss fight';
+  const kicker = `Pillar ${rubric.pillar} · ${isBoss ? bossLabel : `Drill ${drillIndex + 1} of 3`}`;
 
   const lastLearnerIndex = sim.turns.map((turn) => turn.speaker).lastIndexOf('learner');
   const latest = sim.turns.slice(lastLearnerIndex + 1).filter((turn) => turn.speaker === 'buyer');
@@ -103,10 +115,15 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
       transcript: room.sim.turns,
       createdAt: new Date().toISOString(),
       skillEvidence: room.sim.skillEvidence,
-      hintsUsed: 0
+      hintsUsed: 0,
+      ...(scene ? { misses: sessionMisses(room.picks), variant: scene.variant } : {})
     };
     const points = proofCount(record);
-    update((current) => recordActivity(recordSession(current, trajectory.id, record), { reps: 1, proofs: points }));
+    const today = dayKey();
+    update((current) => {
+      const recorded = recordActivity(recordSession(current, trajectory.id, record), { reps: 1, proofs: points });
+      return record.misses ? queueMisses(recorded, trajectory.id, record.misses, today) : recorded;
+    });
     setDebrief({ grade: result, record, points, room });
     setPhase('debrief');
     window.scrollTo({ top: 0 });
@@ -151,7 +168,11 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
         footer={
           <>
             <p className="t-small mb-3 text-center">
-              Pass at {isBoss ? rubric.boss_pass_min : rubric.core_gate_pass_min}%. {isBoss ? 'No coaching, zero red flags.' : 'Tap your move. A signal only counts when the buyer says it.'}
+              {scene
+                ? isBoss
+                  ? 'No coaching. Land the core moves first time, with zero red flags.'
+                  : 'Tap your move. A missed move comes back until you land it.'
+                : `Pass at ${isBoss ? rubric.boss_pass_min : rubric.core_gate_pass_min}%. ${isBoss ? 'No coaching, zero red flags.' : 'Tap your move. A signal only counts when the buyer says it.'}`}
             </p>
             <button type="button" className="btn-lit" onClick={() => setPhase('room')}>
               Enter the room
@@ -164,10 +185,12 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
             {isBoss ? <Crown className="h-8 w-8" strokeWidth={1.75} /> : <Target className="h-8 w-8" strokeWidth={1.75} />}
           </IconTile>
           <h1 className="t-title mt-1">{title}</h1>
-          <p className="t-lede">{isBoss ? rubric.boss_fight.learner_brief : drill?.prompt}</p>
+          <p className="t-lede">{scene ? scene.setting : isBoss ? rubric.boss_fight.learner_brief : drill?.prompt}</p>
         </div>
 
-        <section className="card mt-6 flex flex-col gap-4 p-5" aria-label="Your mission">
+        {scene && <ArcBrief scene={scene} color={color} tint={tint} onFullCapstone={onFullCapstone} />}
+
+        {sim.targetSignals.length > 0 && <section className="card mt-6 flex flex-col gap-4 p-5" aria-label="Your mission">
           <p className="t-label" style={{ color }}>
             Your mission: get the buyer to say
           </p>
@@ -184,20 +207,20 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
               </li>
             ))}
           </ul>
-        </section>
+        </section>}
 
         <section className="mt-5 flex flex-col gap-4 pb-2">
           <div className="flex items-start gap-3">
             <IconTile tint="#f4f5f7" color="#5e6672" size="sm">
               <Building2 className="h-[18px] w-[18px]" strokeWidth={1.75} />
             </IconTile>
-            <p className="t-body flex-1 text-charcoal">{scenario.situation}</p>
+            <p className="t-body flex-1 text-charcoal">{scene ? `${scene.arc.account.name}. ${scene.pillar.problem}` : scenario.situation}</p>
           </div>
           <div className="flex items-start gap-3">
             <IconTile tint="#f4f5f7" color="#5e6672" size="sm">
               <Users className="h-[18px] w-[18px]" strokeWidth={1.75} />
             </IconTile>
-            <p className="t-body flex-1 text-charcoal">{meetLine(payload.personas.map((persona) => persona.role))}</p>
+            <p className="t-body flex-1 text-charcoal">{scene ? castLine(scene) : meetLine(payload.personas.map((persona) => persona.role))}</p>
           </div>
         </section>
       </FocusScreen>
@@ -220,6 +243,8 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
         signalLabel={signalLabel}
         color={color}
         onRetake={onRetake}
+        scene={scene}
+        onRetry={onRetry}
       />
     );
   }
@@ -312,8 +337,8 @@ function MoveHeading({
   signalLabel: (signal: SignalId) => string;
   skillLabel: (id: string) => string;
 }) {
-  if (isBoss) return <p className="t-label">Your move</p>;
-  const goal =
+  if (isBoss || (beat.speaker && !beat.goal)) return <p className="t-label">Your move{retry && !isBoss ? ' · Try again' : ''}</p>;
+  const goal = beat.goal ??
     beat.kind === 'objection'
       ? 'Handle the objection'
       : beat.signal
@@ -349,8 +374,9 @@ function FeedbackDrawer({ outcome, onContinue }: { outcome: Outcome; onContinue:
         <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full text-white ${good ? 'bg-profit-ink' : 'bg-leak-ink'}`}>
           {good ? <Check className="h-5 w-5" aria-hidden="true" /> : <X className="h-5 w-5" aria-hidden="true" />}
         </span>
-        <p className={`text-[17px] font-bold leading-snug ${good ? 'text-profit-ink' : 'text-leak-ink'}`}>{outcome.verdict}</p>
+        <p className={`text-[17px] font-bold leading-snug ${good ? 'text-profit-ink' : 'text-leak-ink'}`}>{outcome.failure ? outcome.failure.label : outcome.verdict}</p>
       </div>
+      {outcome.failure && <p className="t-body mb-3 text-charcoal">{outcome.failure.lesson}</p>}
       <div className="mb-4 flex flex-col divide-y divide-rule rounded-panel bg-paper/70">
         {!good && <Disclosure label="Elite move">“{outcome.elite}”</Disclosure>}
         <Disclosure label="Why it works">{outcome.why}</Disclosure>
@@ -503,7 +529,9 @@ function Debrief({
   trajectoryId,
   signalLabel,
   color,
-  onRetake
+  onRetake,
+  scene,
+  onRetry
 }: {
   grade: GradeResult;
   record: SessionRecord;
@@ -518,8 +546,12 @@ function Debrief({
   signalLabel: (signal: SignalId) => string;
   color: string;
   onRetake: () => void;
+  scene: ArcScene | null;
+  onRetry?: (beatIds: string[]) => void;
 }) {
   const curriculum = loadCurriculum();
+  const missedBeats = [...new Set((record.misses ?? []).map((miss) => miss.beatId))];
+  const canRetry = Boolean(scene && isBoss && !grade.passed && missedBeats.length > 0 && onRetry && !room.walkedOut);
   const consumption = Object.values(grade.skillEvidence);
   // Misses worth replaying: the last miss on each beat, newest first. Drills repeat a missed beat, so one beat can hold several.
   const misses = [...new Map(room.picks.filter((pick) => pick.kind !== 'elite').map((pick) => [pick.beatId, pick] as const)).values()].reverse();
@@ -530,23 +562,31 @@ function Debrief({
       top={<span />}
       footer={
         <div className="flex flex-col gap-2">
-          <Link href="/path" className="btn-lit">
-            {grade.passed ? 'Continue' : 'Back to my path'}
-          </Link>
+          {canRetry ? (
+            <button type="button" onClick={() => onRetry?.(missedBeats)} className="btn-lit">
+              <Repeat className="h-5 w-5" aria-hidden="true" /> Retry the {missedBeats.length === 1 ? 'missed move' : `${missedBeats.length} missed moves`}
+            </button>
+          ) : (
+            <Link href="/path" className="btn-lit">
+              {grade.passed ? 'Continue' : 'Back to my path'}
+            </Link>
+          )}
           <button type="button" onClick={onRetake} className="btn-quiet w-full">
-            {grade.passed ? 'Practice again' : 'Try again'}
+            {grade.passed ? 'Practice again' : canRetry ? 'Replay the whole capstone' : 'Try again'}
           </button>
         </div>
       }
     >
       <div className="flex animate-rise flex-col items-center gap-2 pt-6 text-center">
         <p className="t-label">{kicker} · {title}</p>
-        <h1 className="t-display">{grade.passed ? (isBoss ? 'Boss defeated.' : 'Drill passed.') : 'Not yet.'}</h1>
+        <h1 className="t-display">{grade.passed ? (isBoss ? (scene ? 'Capstone cleared.' : 'Boss defeated.') : 'Drill passed.') : 'Not yet.'}</h1>
         <p className="t-stat animate-pop" style={{ color: grade.passed ? BRAND.profitInk : color }}>
           {grade.score}%
         </p>
         <p className="t-small">
-          Gate {grade.gate}% · {grade.verifiedCount} of {grade.targetSignals.length} signals proven by the buyer
+          {scene
+            ? `${room.sim.authored?.clean ?? 0} of ${room.sim.authored?.beats ?? 0} moves right first time · ${grade.verifiedCount} of ${grade.targetSignals.length} signals proven by the buyer`
+            : `Gate ${grade.gate}% · ${grade.verifiedCount} of ${grade.targetSignals.length} signals proven by the buyer`}
         </p>
         {isBoss && grade.passed && tier < 4 && <p className="t-item text-profit-ink">Pillar 0{tier + 1} is now unlocked.</p>}
       </div>
@@ -625,6 +665,8 @@ function Debrief({
         </ul>
       </section>
 
+      {scene && <Recap room={room} record={record} />}
+
       {misses.length > 0 && <MovesToSharpen misses={misses} />}
 
       {/* Signal skills already appear under buyer proof, so list only the other skills this drill built. */}
@@ -644,6 +686,7 @@ function MovesToSharpen({ misses }: { misses: Pick[] }) {
       <ul className="flex flex-col divide-y divide-rule border-t border-hairline">
         {misses.map((pick) => (
           <li key={pick.beatId} className="flex flex-col gap-2 px-4 py-3">
+            {pick.failure && <p className="t-label text-leak-ink">{loadCurriculum().failureModes[pick.failure]?.label}</p>}
             <p className="t-small italic">“{pick.prompt}”</p>
             <p className="flex items-start gap-2 text-[14px] text-leak-ink">
               <X className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
@@ -682,6 +725,116 @@ function SkillsBuilt({ skills, trajectoryId }: { skills: Skill[]; trajectoryId: 
           );
         })}
       </ul>
+    </section>
+  );
+}
+
+/** The missed beats of a session, once each, with the failure mode of the last wrong pick. */
+function sessionMisses(picks: Pick[]): SessionMiss[] {
+  const misses = new Map<string, SessionMiss>();
+  for (const pick of picks) {
+    if (pick.kind === 'elite' || !pick.skillId) continue;
+    misses.set(pick.beatId, { beatId: pick.beatId, skillId: pick.skillId, ...(pick.failure ? { failure: pick.failure } : {}) });
+  }
+  return [...misses.values()];
+}
+
+/** "You will meet Priya Shah, Head of AI Platform, and Daniel Okafor, Head of Model Risk." */
+function castLine(scene: ArcScene): string {
+  const ids = [...new Set(scene.beats.flatMap((beat) => [beat.speaker, ...beat.options.map((option) => option.reply_by).filter((id): id is string => Boolean(id))]))];
+  const people = ids.map((id) => scene.cast[id]).filter((member): member is NonNullable<typeof member> => Boolean(member)).map((member) => `${member.name}, ${member.role}`);
+  if (people.length === 1) return `You will meet ${people[0]}.`;
+  return `You will meet ${people.slice(0, -1).join('; ')} and ${people.at(-1)}.`;
+}
+
+/** The pillar idea for a drill, or the curveball and variant for a capstone. */
+function ArcBrief({ scene, color, tint, onFullCapstone }: { scene: ArcScene; color: string; tint: string; onFullCapstone?: () => void }) {
+  if (scene.kind === 'drill') {
+    return (
+      <section className="mt-5 flex items-start gap-3 rounded-panel p-4" style={{ background: tint }} aria-label="Pillar idea">
+        <Sparkles className="mt-0.5 h-5 w-5 shrink-0" style={{ color }} aria-hidden="true" />
+        <p className="flex flex-col gap-0.5">
+          <span className="t-label" style={{ color }}>
+            The idea this pillar trains
+          </span>
+          <span className="t-item">{scene.pillar.concept.title}</span>
+        </p>
+      </section>
+    );
+  }
+  return (
+    <section className="mt-5 flex flex-col gap-3" aria-label="Capstone">
+      {scene.curveball && scene.variant !== 'retry' && (
+        <div className="flex items-start gap-3 rounded-panel bg-leak-soft p-4">
+          <MessageSquareWarning className="mt-0.5 h-5 w-5 shrink-0 text-leak-ink" aria-hidden="true" />
+          <p className="flex flex-col gap-0.5">
+            <span className="t-label text-leak-ink">Curveball</span>
+            <span className="t-body text-charcoal">{scene.curveball}</span>
+          </p>
+        </div>
+      )}
+      {scene.variant === 'fast' && (
+        <div className="flex items-start gap-3 rounded-panel p-4" style={{ background: tint }}>
+          <Zap className="mt-0.5 h-5 w-5 shrink-0" style={{ color }} aria-hidden="true" />
+          <p className="flex flex-1 flex-col gap-1">
+            <span className="t-item">Fast track: {scene.beats.length} moves</span>
+            <span className="t-small">You landed every drill move first time, so you only play the core moves.</span>
+            {onFullCapstone && (
+              <button type="button" onClick={onFullCapstone} className="mt-1 self-start text-[14px] font-semibold underline" style={{ color }}>
+                Play the full capstone instead
+              </button>
+            )}
+          </p>
+        </div>
+      )}
+      {scene.variant === 'retry' && (
+        <div className="flex items-start gap-3 rounded-panel p-4" style={{ background: tint }}>
+          <Repeat className="mt-0.5 h-5 w-5 shrink-0" style={{ color }} aria-hidden="true" />
+          <p className="flex flex-col gap-0.5">
+            <span className="t-item">Only the {scene.beats.length === 1 ? 'move' : `${scene.beats.length} moves`} you missed</span>
+            <span className="t-small">Land {scene.beats.length === 1 ? 'it' : 'them'} first time to clear the capstone.</span>
+          </p>
+        </div>
+      )}
+    </section>
+  );
+}
+
+/** The recap card: what the buyer said, the one habit to fix, and what comes back in daily reps. */
+function Recap({ room, record }: { room: RoomState; record: SessionRecord }) {
+  const curriculum = loadCurriculum();
+  const proof = record.transcript.filter((turn) => turn.speaker === 'buyer' && turn.reveal === 'verbatim').slice(-4);
+  const counts = new Map<string, number>();
+  for (const pick of room.picks) if (pick.failure) counts.set(pick.failure, (counts.get(pick.failure) ?? 0) + 1);
+  const top = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+  const habit = top ? curriculum.failureModes[top] : undefined;
+  const queued = record.misses?.length ?? 0;
+  return (
+    <section className="card mt-6 flex flex-col gap-4 p-5" aria-label="Recap">
+      <p className="t-label">Recap</p>
+      {proof.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <p className="t-item">What the buyer told you</p>
+          <ul className="flex flex-col gap-2.5">
+            {proof.map((turn) => (
+              <li key={turn.id} className="flex flex-col gap-0.5 border-l-[3px] pl-3" style={{ borderColor: BRAND.profit }}>
+                <span className="t-quote text-[15px]">“{turn.content}”</span>
+                <span className="t-small">{turn.speakerRole}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <div className="flex flex-col gap-1">
+        <p className="t-item">One thing to sharpen</p>
+        <p className="t-body text-charcoal">{habit ? `${habit.label}. ${habit.lesson}` : 'Nothing this time. Every move landed first time.'}</p>
+      </div>
+      {queued > 0 && (
+        <p className="flex items-center gap-2 rounded-panel bg-value-soft px-3 py-2.5 text-[14px] font-semibold text-value-ink">
+          <Repeat className="h-4 w-4 shrink-0" aria-hidden="true" />
+          {queued === 1 ? 'This move comes back' : `These ${queued} moves come back`} in tomorrow&apos;s reps, then again a few days later.
+        </p>
+      )}
     </section>
   );
 }

@@ -292,3 +292,67 @@ export const roomSchema = z.object({
   })
 });
 export type RoomRules = z.infer<typeof roomSchema>;
+
+/** Named ways a seller loses a buyer. Every wrong option in an authored arc points at one. */
+export const failureModesSchema = z.object({
+  id: z.literal('failure_modes'),
+  modes: z.array(z.object({ id: skillIdSchema, label: nonEmpty, lesson: nonEmpty })).min(1)
+});
+export type FailureMode = z.infer<typeof failureModesSchema>['modes'][number];
+
+const arcOptionSchema = z.object({
+  kind: z.enum(['elite', 'weak', 'trap']),
+  text: nonEmpty,
+  /** What the buyer says back. Spoken by the beat's speaker unless reply_by names another cast member. */
+  reply: nonEmpty,
+  reply_by: z.string().optional(),
+  /** Elite options only: the buyer proof this reply earns. key is a signal id or a skill id. */
+  evidence: z.object({ key: skillIdSchema, level: z.enum(['partial', 'verbatim']) }).optional(),
+  /** Wrong options only: the named failure mode. */
+  failure: skillIdSchema.optional(),
+  /** A rubric red flag this option trips in a capstone. */
+  flag: z.string().optional()
+});
+
+const arcBeatSchema = z.object({
+  id: nonEmpty,
+  speaker: nonEmpty,
+  line: nonEmpty,
+  /** The move's goal, shown as a label while the scaffold is on. */
+  goal: z.string().optional(),
+  skill: skillIdSchema,
+  signal: signalIdSchema.optional(),
+  /** Capstone beats on the fast track. */
+  core: z.boolean().optional(),
+  why: nonEmpty,
+  options: z.array(arcOptionSchema).min(3).max(4)
+});
+export type ArcBeat = z.infer<typeof arcBeatSchema>;
+
+const arcSceneSchema = z.object({
+  title: nonEmpty,
+  setting: nonEmpty,
+  beats: z.array(arcBeatSchema).min(3)
+});
+
+export const arcSchema = z.object({
+  id: nonEmpty,
+  cluster: z.enum(CLUSTER_IDS),
+  vertical: z.enum(VERTICAL_IDS),
+  account: z.object({ name: nonEmpty, summary: nonEmpty }),
+  pillars: z
+    .array(
+      z.object({
+        tier: tierSchema,
+        stage: nonEmpty,
+        problem: nonEmpty,
+        concept: z.object({ title: nonEmpty, body: nonEmpty, weak: nonEmpty, strong: nonEmpty }),
+        cast: z.array(z.object({ id: nonEmpty, name: nonEmpty, role: nonEmpty })).min(3),
+        drills: z.array(arcSceneSchema.extend({ id: z.enum(['d1', 'd2', 'd3']) })).length(3),
+        capstone: arcSceneSchema.extend({ curveball: nonEmpty })
+      })
+    )
+    .length(4)
+});
+export type Arc = z.infer<typeof arcSchema>;
+export type ArcPillar = Arc['pillars'][number];

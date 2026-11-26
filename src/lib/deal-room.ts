@@ -1,5 +1,5 @@
 import { scenarioFor, signalDefinitions, type Curriculum } from './curriculum/load';
-import type { ClusterId, RoomRules, Rubric, SignalId, Skill, Tier, Vertical, VerticalId } from './curriculum/schema';
+import { SIGNAL_IDS, type Arc, type ArcBeat, type ArcPillar, type ClusterId, type RoomRules, type Rubric, type SignalId, type Skill, type Tier, type Vertical, type VerticalId } from './curriculum/schema';
 import { composeScenario, type ScenarioPayload, type SessionMode } from './composer';
 import { sendLearnerMessage, startSimulation, type SimContext, type SimState, type Turn } from './simulator';
 import { buildSkillProbes } from './skills';
@@ -20,6 +20,12 @@ export interface Move {
   text: string;
 }
 
+export interface CastMember {
+  id: string;
+  name: string;
+  role: string;
+}
+
 export interface Beat {
   id: string;
   kind: BeatKind;
@@ -27,6 +33,9 @@ export interface Beat {
   signal: SignalId | null;
   /** Already shuffled, so the elite move is not always first. */
   moves: Move[];
+  /** Authored beats only: who speaks, and the move's goal while the coaching scaffold is on. */
+  speaker?: CastMember;
+  goal?: string;
 }
 
 export type PlanItem =
@@ -50,6 +59,8 @@ export interface Pick {
   elite: string;
   /** What the buyer had just said when the learner chose. */
   prompt: string;
+  /** Authored beats only: the named failure mode of a wrong pick. */
+  failure?: string;
 }
 
 export interface RoomState {
@@ -62,6 +73,8 @@ export interface RoomState {
   objectionIndex: number;
   picks: Pick[];
   walkedOut: boolean;
+  /** Authored scenes only: how many beats are in play. */
+  arcLength?: number;
 }
 
 export interface RoomContext {
@@ -73,6 +86,23 @@ export interface RoomContext {
   objections: string[];
   roles: string[];
   labelFor: (key: string) => string;
+  /** Set when the trajectory has an authored arc. The room then plays these beats instead of the generated plan. */
+  arc: ArcScene | null;
+}
+
+/** One authored scene: a drill, a capstone, a fast-track capstone or a targeted retry. */
+export interface ArcScene {
+  arc: Arc;
+  pillar: ArcPillar;
+  kind: 'drill' | 'capstone';
+  variant: 'full' | 'fast' | 'retry';
+  title: string;
+  setting: string;
+  curveball: string | null;
+  beats: ArcBeat[];
+  cast: Record<string, CastMember>;
+  /** Goal labels show in tier 1 and 2 drills only. The scaffold fades as the learner climbs. */
+  scaffold: boolean;
 }
 
 export interface Outcome {
@@ -84,6 +114,9 @@ export interface Outcome {
   /** The buyer turn that counts as evidence from this move, if any. */
   evidence: { turnId: string; quote: string; level: 'partial' | 'verbatim'; label: string } | null;
   trust: 'up' | 'down';
+  /** Authored beats only: the failure mode behind a wrong pick, and what the buyer said back. */
+  failure?: { id: string; label: string; lesson: string };
+  reply?: string;
 }
 
 /** Openers set up the meeting and closers lock the next step. Everything else sits between signals. */
@@ -152,6 +185,7 @@ function repLines(rc: RoomContext, skillId: string): { buyer: string; strong: st
 
 /** Skips finished items, then has the buyer set up the next rep beat with its own line. */
 function settle(rc: RoomContext, rs: RoomState): RoomState {
+  if (rc.arc) return settleArc(rc, rc.arc, rs);
   let next = rs;
   while (next.cursor < next.plan.length && itemDone(next, next.plan[next.cursor]!)) {
     next = { ...next, cursor: next.cursor + 1, attempts: 0 };
@@ -183,7 +217,7 @@ export function startRoom(rc: RoomContext, sim: SimState, plan: PlanItem[]): Roo
 }
 
 export function roomDone(rs: RoomState): boolean {
-  return rs.walkedOut || (rs.cursor >= rs.plan.length && !rs.objection);
+  return rs.walkedOut || (rs.cursor >= (rs.arcLength ?? rs.plan.length) && !rs.objection);
 }
 
 function shuffle(moves: Move[], seed: string): Move[] {
@@ -193,6 +227,7 @@ function shuffle(moves: Move[], seed: string): Move[] {
 
 export function currentBeat(rc: RoomContext, rs: RoomState): Beat | null {
   if (roomDone(rs)) return null;
+  if (rc.arc) return arcBeat(rc.arc, rs);
   if (rs.objection) {
     const id = `objection-${rs.objectionIndex}`;
     const lines = rc.rules.objection_moves;
@@ -247,6 +282,7 @@ const clamp = (value: number) => Math.max(0, Math.min(100, value));
 
 /** Progress in beats: a rep is one beat, a signal or a consumption number is two (open, then pin). */
 export function roomProgress(rs: RoomState): { value: number; max: number } {
+  if (rs.arcLength !== undefined) return { value: rs.walkedOut ? rs.arcLength : Math.min(rs.cursor, rs.arcLength), max: rs.arcLength };
   const units = (item: PlanItem) => (item.kind === 'rep' ? 1 : 2);
   const max = rs.plan.reduce((sum, item) => sum + units(item), 0);
   let value = rs.plan.slice(0, rs.cursor).reduce((sum, item) => sum + units(item), 0);
@@ -264,6 +300,7 @@ export function chooseMove(rc: RoomContext, rs: RoomState, index: number): { sta
   const beat = currentBeat(rc, rs);
   const move = beat?.moves[index];
   if (!beat || !move) throw new Error('No move to choose');
+  if (rc.arc) return chooseArcMove(rc, rc.arc, rs, beat, move);
   const elite = beat.moves.find((candidate) => candidate.kind === 'elite')!.text;
   const rules = rc.rules;
   const reactions = rules.reactions[move.kind];
@@ -373,10 +410,19 @@ export function trustLabel(mood: Mood, walkedOut: boolean): string {
 }
 
 /** Everything a session needs: the composed scenario, the room context and the opening state. */
-export function setUpRoom(
-  curriculum: Curriculum,
-  input: { clusterId: ClusterId; verticalId: VerticalId; tier: Tier; mode: SessionMode; drillIndex: number }
-): { payload: ScenarioPayload; rc: RoomContext; state: RoomState } {
+export interface RoomInput {
+  clusterId: ClusterId;
+  verticalId: VerticalId;
+  tier: Tier;
+  mode: SessionMode;
+  drillIndex: number;
+  /** Authored capstones only: replay just these beats (a targeted retry). */
+  beatIds?: string[];
+  /** Authored capstones only: play the core beats, for a learner who cleared every drill cleanly. */
+  fastTrack?: boolean;
+}
+
+export function setUpRoom(curriculum: Curriculum, input: RoomInput): { payload: ScenarioPayload; rc: RoomContext; state: RoomState } {
   const cluster = curriculum.clusters[input.clusterId];
   const vertical = curriculum.verticals[input.verticalId];
   const rubric = curriculum.rubrics[input.tier];
@@ -396,7 +442,235 @@ export function setUpRoom(
   };
   const labelFor = (key: string) =>
     signals.find((signal) => signal.id === key)?.label ?? curriculum.skills.find((skill) => skill.id === key)?.label ?? key;
-  const rc: RoomContext = { sim, rules: curriculum.room, curriculum, vertical, mode: input.mode, objections: payload.objection_queue, roles, labelFor };
+  const arcScene = arcSceneFor(curriculum, input);
+  const rc: RoomContext = { sim, rules: curriculum.room, curriculum, vertical, mode: input.mode, objections: payload.objection_queue, roles, labelFor, arc: arcScene };
+  if (arcScene) return { payload, rc, state: startArcRoom(rc, arcScene, input.mode) };
   const state = startRoom(rc, startSimulation(sim, { mode: input.mode, targetSignals: payload.target_signals }), plan);
   return { payload, rc, state };
+}
+
+// ---------------------------------------------------------------------------
+// Authored arcs. One account runs through all four pillars, each beat is written
+// by hand, and every wrong option is tied to a named failure mode with its own
+// buyer reply. Proof still comes only from buyer turns.
+// ---------------------------------------------------------------------------
+
+export function arcFor(curriculum: Curriculum, clusterId: ClusterId, verticalId: VerticalId): Arc | null {
+  return curriculum.arcs[`${clusterId}__${verticalId}`] ?? null;
+}
+
+export function arcPillar(curriculum: Curriculum, clusterId: ClusterId, verticalId: VerticalId, tier: Tier): ArcPillar | null {
+  return arcFor(curriculum, clusterId, verticalId)?.pillars.find((pillar) => pillar.tier === tier) ?? null;
+}
+
+function arcSceneFor(curriculum: Curriculum, input: RoomInput): ArcScene | null {
+  const arc = arcFor(curriculum, input.clusterId, input.verticalId);
+  if (!arc) return null;
+  const pillar = arc.pillars.find((candidate) => candidate.tier === input.tier);
+  if (!pillar) throw new Error(`Arc ${arc.id} has no tier ${input.tier}`);
+  const cast = Object.fromEntries(pillar.cast.map((member) => [member.id, member]));
+  if (input.mode === 'drill') {
+    const drill = pillar.drills[input.drillIndex];
+    if (!drill) throw new Error(`Arc ${arc.id} tier ${input.tier} has no drill ${input.drillIndex + 1}`);
+    return { arc, pillar, kind: 'drill', variant: 'full', title: drill.title, setting: drill.setting, curveball: null, beats: drill.beats, cast, scaffold: pillar.tier <= 2 };
+  }
+  const all = pillar.capstone.beats;
+  const variant: ArcScene['variant'] = input.beatIds?.length ? 'retry' : input.fastTrack ? 'fast' : 'full';
+  const beats = variant === 'retry' ? all.filter((beat) => input.beatIds!.includes(beat.id)) : variant === 'fast' ? all.filter((beat) => beat.core) : all;
+  if (beats.length === 0) throw new Error(`Arc ${arc.id} tier ${input.tier} capstone has no beats to play`);
+  return {
+    arc,
+    pillar,
+    kind: 'capstone',
+    variant,
+    title: pillar.capstone.title,
+    setting: pillar.capstone.setting,
+    curveball: pillar.capstone.curveball,
+    beats,
+    cast,
+    scaffold: false
+  };
+}
+
+/** The beats a session must get right first time to pass: core beats in a capstone, every beat in a retry. */
+export function requiredBeats(scene: ArcScene): ArcBeat[] {
+  return scene.kind === 'capstone' && scene.variant !== 'retry' ? scene.beats.filter((beat) => beat.core) : scene.beats;
+}
+
+function eliteOf(beat: ArcBeat) {
+  return beat.options.find((option) => option.kind === 'elite')!;
+}
+
+function signalKey(key: string | undefined): SignalId | null {
+  return key && (SIGNAL_IDS as readonly string[]).includes(key) ? (key as SignalId) : null;
+}
+
+function castLabel(member: CastMember | undefined): string {
+  return member ? `${member.name}, ${member.role}` : 'Buyer';
+}
+
+function startArcRoom(rc: RoomContext, scene: ArcScene, mode: SessionMode): RoomState {
+  const graded = scene.kind === 'drill' ? scene.beats : requiredBeats(scene);
+  const targetSignals = [...new Set(graded.map((beat) => signalKey(eliteOf(beat).evidence?.key)).filter((signal): signal is SignalId => Boolean(signal)))];
+  const base = startSimulation(rc.sim, { mode, targetSignals });
+  const required = requiredBeats(scene).length;
+  const sim: SimState = { ...base, turns: [], authored: { flags: [], beats: scene.beats.length, clean: 0, required, requiredClean: 0 } };
+  return settleArc(rc, scene, {
+    sim,
+    mood: { ...rc.rules.mood.start },
+    plan: [],
+    cursor: 0,
+    attempts: 0,
+    objection: null,
+    objectionIndex: 0,
+    picks: [],
+    walkedOut: false,
+    arcLength: scene.beats.length
+  });
+}
+
+/** Has the speaker of the next beat say their line, once. Lines are unique across an arc, so content identifies them. */
+function settleArc(rc: RoomContext, scene: ArcScene, rs: RoomState): RoomState {
+  if (rs.walkedOut) return rs;
+  const beat = scene.beats[rs.cursor];
+  if (!beat || rs.sim.turns.some((turn) => turn.speaker === 'buyer' && turn.content === beat.line)) return rs;
+  return { ...rs, sim: addBuyerTurn(rs.sim, { speakerRole: castLabel(scene.cast[beat.speaker]), content: beat.line }) };
+}
+
+function arcBeat(scene: ArcScene, rs: RoomState): Beat | null {
+  const beat = scene.beats[rs.cursor];
+  if (!beat) return null;
+  const level = eliteOf(beat).evidence?.level;
+  const kind: BeatKind = level === 'partial' ? 'open' : level === 'verbatim' ? 'pin' : 'rep';
+  return {
+    id: beat.id,
+    kind,
+    skillId: beat.skill,
+    signal: beat.signal ?? null,
+    moves: shuffle(beat.options.map((option) => ({ kind: option.kind, text: option.text })), `${beat.id}:${rs.attempts}`),
+    speaker: scene.cast[beat.speaker],
+    goal: scene.scaffold ? beat.goal : undefined
+  };
+}
+
+function chooseArcMove(rc: RoomContext, scene: ArcScene, rs: RoomState, beat: Beat, move: Move): { state: RoomState; outcome: Outcome } {
+  const authored = scene.beats[rs.cursor]!;
+  const option = authored.options.find((candidate) => candidate.text === move.text)!;
+  const elite = eliteOf(authored);
+  const rules = rc.rules;
+  const before = rs.sim;
+
+  let sim: SimState = {
+    ...before,
+    turns: [...before.turns, { id: `turn-${before.turns.length + 1}`, speaker: 'learner', speakerRole: 'You', content: move.text }],
+    learnerMessages: [...before.learnerMessages, move.text]
+  };
+  const evidenceKey = option.evidence?.key;
+  const signal = signalKey(evidenceKey);
+  const reply: Turn = {
+    id: `turn-${sim.turns.length + 1}`,
+    speaker: 'buyer',
+    speakerRole: castLabel(scene.cast[option.reply_by ?? authored.speaker]),
+    content: option.reply,
+    ...(option.evidence ? { reveal: option.evidence.level } : {}),
+    ...(signal ? { signal } : evidenceKey ? { skill: evidenceKey } : {})
+  };
+  sim = { ...sim, turns: [...sim.turns, reply] };
+  if (authored.signal && !sim.probed.includes(authored.signal)) sim = { ...sim, probed: [...sim.probed, authored.signal] };
+
+  let evidence: Outcome['evidence'] = null;
+  if (option.evidence && evidenceKey) {
+    const { level } = option.evidence;
+    if (signal) {
+      sim = {
+        ...sim,
+        bindings: {
+          ...sim.bindings,
+          [signal]: {
+            signal,
+            bars: level === 'verbatim' ? 4 : Math.max(3, sim.bindings[signal].bars) as 3 | 4,
+            transcript_turn_id: reply.id,
+            judge_rationale: level === 'verbatim' ? `Buyer stated the signal in their own words (${reply.id}).` : `Buyer acknowledged the issue without a metric or authority (${reply.id}).`
+          }
+        }
+      };
+    } else {
+      sim = { ...sim, skillEvidence: { ...sim.skillEvidence, [evidenceKey]: { skill: evidenceKey, level, transcript_turn_id: reply.id } } };
+    }
+    evidence = { turnId: reply.id, quote: reply.content, level, label: rc.labelFor(evidenceKey) };
+  }
+
+  const firstTry = rs.attempts === 0;
+  const clean = firstTry && option.kind === 'elite';
+  const isRequired = requiredBeats(scene).some((candidate) => candidate.id === authored.id);
+  const counts = sim.authored!;
+  sim = {
+    ...sim,
+    authored: {
+      ...counts,
+      clean: counts.clean + (clean ? 1 : 0),
+      requiredClean: counts.requiredClean + (clean && isRequired ? 1 : 0),
+      flags: option.flag && !counts.flags.includes(option.flag) ? [...counts.flags, option.flag] : counts.flags
+    }
+  };
+
+  const effect = rules.effects[option.kind];
+  const mood: Mood = {
+    trust: clamp(rs.mood.trust + effect.trust),
+    risk: clamp(rs.mood.risk + effect.risk),
+    urgency: clamp(rs.mood.urgency + effect.urgency)
+  };
+  const prompt = lastBuyerLine(before);
+  const pick: Pick = {
+    beatId: authored.id,
+    beatKind: beat.kind,
+    skillId: authored.skill,
+    signal: authored.signal ?? null,
+    kind: option.kind,
+    text: option.text,
+    elite: elite.text,
+    prompt,
+    ...(option.failure ? { failure: option.failure } : {})
+  };
+
+  const advance = option.kind === 'elite' || scene.kind === 'capstone';
+  let next: RoomState = {
+    ...rs,
+    sim,
+    mood,
+    picks: [...rs.picks, pick],
+    cursor: advance ? rs.cursor + 1 : rs.cursor,
+    attempts: advance ? 0 : rs.attempts + 1
+  };
+  if (scene.kind === 'capstone' && mood.trust <= rules.mood.walkout_trust) {
+    const role = castLabel(scene.cast[authored.speaker]);
+    next = { ...next, walkedOut: true, sim: addBuyerTurn(next.sim, { speakerRole: role, content: rules.walkout }) };
+  }
+  next = settleArc(rc, scene, next);
+
+  const mode = option.failure ? rc.curriculum.failureModes[option.failure] : undefined;
+  const verdict =
+    option.kind === 'weak'
+      ? rules.verdicts.weak
+      : option.kind === 'trap'
+        ? rules.verdicts.trap
+        : evidence?.level === 'verbatim'
+          ? `${evidence.label} ${rules.verdicts.proven}`
+          : evidence
+            ? rules.verdicts.partial
+            : rules.verdicts.rep;
+  return {
+    state: next,
+    outcome: {
+      kind: option.kind,
+      beatKind: beat.kind,
+      verdict,
+      why: authored.why,
+      elite: elite.text,
+      evidence,
+      trust: effect.trust >= 0 ? 'up' : 'down',
+      reply: option.reply,
+      ...(mode ? { failure: mode } : {})
+    }
+  };
 }

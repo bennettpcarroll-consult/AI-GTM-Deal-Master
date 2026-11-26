@@ -58,6 +58,18 @@ export interface SimState {
   neutralIndex: number;
   hintsUsed: number;
   skillEvidence: Record<string, SkillEvidence>;
+  /** Authored scenes only. Grading reads first-try accuracy and the red flags tripped by authored options. */
+  authored?: AuthoredTally;
+}
+
+export interface AuthoredTally {
+  flags: string[];
+  beats: number;
+  /** Beats answered with the elite move on the first try. */
+  clean: number;
+  /** Beats that must be clean to pass: core beats in a capstone, every beat in a retry. */
+  required: number;
+  requiredClean: number;
 }
 
 export const MAX_REVEALS_PER_TURN = 2;

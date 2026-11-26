@@ -67,6 +67,10 @@ export function detectorFires(detector: Detector, learnerMessages: string[], pro
 /** Auto-fail flags apply to boss fights only. Drills target specific signals, so they never trip them. */
 export function evaluateAutoFails(rubric: Rubric, state: SimState): AutoFailHit[] {
   if (state.mode !== 'boss') return [];
+  if (state.authored) {
+    const tripped = state.authored.flags;
+    return rubric.auto_fail_flags.filter((flag) => tripped.includes(flag.id)).map(({ id, label, description }) => ({ id, label, description }));
+  }
   return rubric.auto_fail_flags
     .filter((flag) => detectorFires(flag.detector, state.learnerMessages, state.probed))
     .map(({ id, label, description }) => ({ id, label, description }));
@@ -79,11 +83,18 @@ export function evaluateAutoFails(rubric: Rubric, state: SimState): AutoFailHit[
 export function gradeSession(rubric: Rubric, state: SimState): GradeResult {
   assertEvidenceInvariant(state.bindings, state.turns);
   assertSkillEvidenceInvariant(state.skillEvidence, state.turns);
-  const score = scoreSignals(state.bindings, state.targetSignals);
+  const authored = state.authored;
+  // Authored scenes score first-try accuracy, so the number reflects judgement, not persistence.
+  const score = authored ? Math.round((100 * authored.clean) / Math.max(1, authored.beats)) : scoreSignals(state.bindings, state.targetSignals);
   const gate = state.mode === 'boss' ? rubric.boss_pass_min : rubric.core_gate_pass_min;
   const autoFails = evaluateAutoFails(rubric, state);
   const verifiedCount = state.targetSignals.filter((signal) => state.bindings[signal].bars === 4).length;
   const fullyVerified = state.mode === 'boss' || verifiedCount === state.targetSignals.length;
+  if (authored) {
+    // A drill passes once every target is proven (missed beats repeat until they are). A capstone needs every required beat right first time and no red flags.
+    const passed = state.mode === 'boss' ? authored.requiredClean === authored.required && autoFails.length === 0 && verifiedCount === state.targetSignals.length : fullyVerified && verifiedCount === state.targetSignals.length;
+    return { bindings: state.bindings, targetSignals: state.targetSignals, score, gate, passed, autoFails, verifiedCount, skillEvidence: state.skillEvidence };
+  }
   return {
     bindings: state.bindings,
     targetSignals: state.targetSignals,

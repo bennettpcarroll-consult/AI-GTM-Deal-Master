@@ -1,5 +1,5 @@
 import type { FlowQuestion } from '@/components/question-flow';
-import type { Lesson } from './curriculum/schema';
+import type { ArcBeat, ArcPillar, Lesson } from './curriculum/schema';
 import type { RepQuestion } from './skills';
 
 /** A skill rep as a flow question: the buyer line, three replies, and why the strong one works. */
@@ -24,4 +24,29 @@ export function lessonQuizQuestions(lesson: Lesson, clusterName: string): FlowQu
     answer: item.answer,
     why: item.why
   }));
+}
+
+/** A missed move from the deal room, asked again in daily reps: same buyer line, options reshuffled. */
+export function sharpenQuestion(found: { beat: ArcBeat; pillar: ArcPillar; scene: string }, seed: string, lesson?: string): FlowQuestion {
+  const { beat, pillar, scene } = found;
+  const order = beat.options.map((_, index) => index).sort((a, b) => seedHash(`${seed}:${beat.id}:${a}`) - seedHash(`${seed}:${beat.id}:${b}`));
+  const speaker = pillar.cast.find((member) => member.id === beat.speaker);
+  return {
+    id: `beat:${beat.id}`,
+    kicker: `Sharpen · ${scene}`,
+    prompt: beat.line,
+    speaker: speaker ? `${speaker.name}, ${speaker.role}` : 'The buyer',
+    options: order.map((index) => beat.options[index]!.text),
+    answer: order.indexOf(beat.options.findIndex((option) => option.kind === 'elite')),
+    why: lesson ? `${beat.why} Last time: ${lesson}` : beat.why
+  };
+}
+
+function seedHash(text: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i += 1) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
 }
