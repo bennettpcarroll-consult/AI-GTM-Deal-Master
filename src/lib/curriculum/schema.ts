@@ -75,6 +75,8 @@ export type Cluster = z.infer<typeof clusterSchema>;
 
 const buyerRevealSchema = z.object({
   speaker: nonEmpty,
+  /** The speaker raises the topic first, naming every term the seller's opening question then uses. */
+  setup: nonEmpty,
   partial: nonEmpty,
   verbatim: nonEmpty
 });
@@ -223,7 +225,24 @@ export const skillSchema = z.object({
     /** Trap follow-up: assumes the answer instead of asking. */
     assume: nonEmpty.optional()
   }),
-  rep: z.object({ buyer_line: nonEmpty, off_move: nonEmpty }),
+  rep: z.object({
+    buyer_line: nonEmpty,
+    off_move: nonEmpty,
+    /**
+     * What the buyer says back to each move, written to answer that exact line (see docs/dialogue-style.md).
+     * Elite is optional for skills where the strong move always earns a buyer reveal instead.
+     */
+    replies: z.object({
+      elite: nonEmpty.optional(),
+      weak: nonEmpty,
+      trap: nonEmpty,
+      /** Answers to the follow-up moves on a pin beat (talk_track.settle and talk_track.assume). */
+      settle: nonEmpty.optional(),
+      assume: nonEmpty.optional()
+    }),
+    /** The seller drives this beat, so the buyer does not set it up mid-meeting. */
+    seller_led: z.boolean().optional()
+  }),
   signal: signalIdSchema.optional(),
   probes: probesSchema.optional(),
   scenario_reveal: z.enum(SCENARIO_REVEAL_IDS).optional()
@@ -268,7 +287,7 @@ export type Diagnostic = z.infer<typeof diagnosticSchema>;
 const effectSchema = z.object({ trust: z.number(), risk: z.number(), urgency: z.number() });
 const moveKindRecord = <T extends z.ZodTypeAny>(item: T) => z.object({ elite: item, weak: item, trap: item });
 
-/** Deal-room rules: the hidden buyer state, buyer reactions and the generic objection moves. */
+/** Deal-room rules: the hidden buyer state and the generic objection moves with their replies. */
 export const roomSchema = z.object({
   id: z.literal('room'),
   mood: z.object({
@@ -278,7 +297,8 @@ export const roomSchema = z.object({
     boss_objection_every: z.number().int().min(2)
   }),
   effects: moveKindRecord(effectSchema),
-  reactions: moveKindRecord(z.array(nonEmpty).min(2)),
+  /** The buyer's answer to each generic objection move. */
+  objection_replies: moveKindRecord(nonEmpty),
   objection_moves: moveKindRecord(nonEmpty),
   objection_why: nonEmpty,
   walkout: nonEmpty,

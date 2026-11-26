@@ -12,13 +12,18 @@
       "evidence": "The buyer restates the cost in their own workload terms.",
       "talk_track": {
         "move": "Translate the unit into cost per piece of the buyer’s work.",
-        "strong": "At your volume, that is about this much per review and this much per month.",
+        "strong": "At your volume, that is about this much per case and this much per month.",
         "weak": "Here is our rate card per million tokens.",
         "proof": "Buyer restates the cost in workload terms"
       },
       "rep": {
         "buyer_line": "I do not understand how tokens turn into a monthly bill.",
-        "off_move": "It depends. Here is the full rate card so you can work it out."
+        "off_move": "It depends. Here is the full rate card so you can work it out.",
+        "replies": {
+          "elite": "That I can take to finance. Per case is how we budget anyway.",
+          "weak": "I cannot take a rate card to finance. I need it in terms of our work.",
+          "trap": "If I have to work it out myself, it will not get approved."
+        }
       }
     },
     {
@@ -35,7 +40,12 @@
       },
       "rep": {
         "buyer_line": "Can we just pilot it for a while and see how it goes?",
-        "off_move": "Sure, take as long as you need. It is free."
+        "off_move": "Sure, take as long as you need. It is free.",
+        "replies": {
+          "elite": "Agreed. A fixed end date makes it easier to get the team's time.",
+          "weak": "Open-ended pilots tend to drift here. We still have two running from last year.",
+          "trap": "Without an end date, this will sit behind everything else on the team's list."
+        }
       }
     },
     {
@@ -54,8 +64,14 @@
         "assume": "Let us lock the biggest commit we can for the best discount."
       },
       "rep": {
-        "buyer_line": "We will not sign a big commit before we see real usage.",
-        "off_move": "Then you will pay full list price. The discount needs a big upfront deal."
+        "buyer_line": "Procurement will want to know exactly what we are signing up for in year one.",
+        "off_move": "Then you will pay full list price. The discount needs a big upfront deal.",
+        "replies": {
+          "weak": "I need the commit sized to what we will actually use, not to the discount.",
+          "trap": "That reads like pressure. I will not sign for volume we have not seen yet.",
+          "settle": "Later is how we end up overcommitted. I would rather size it now.",
+          "assume": "We have been burned by that before. Shelfware is hard to explain."
+        }
       },
       "probes": {
         "partial": [
@@ -80,7 +96,7 @@
       "evidence": "The buyer supplies current volume, growth and seasonality.",
       "talk_track": {
         "move": "Ask for today’s volume, next year’s growth and the peaks.",
-        "strong": "How many reviews a day today, and what volume do you expect next year?",
+        "strong": "How much volume do you handle a month today, and what do you expect next year?",
         "weak": "Most customers your size use about this much.",
         "proof": "Buyer supplies the volume numbers",
         "pin": "What does peak-season volume look like versus a normal month?",
@@ -88,8 +104,14 @@
         "assume": "I will assume you look like our average customer."
       },
       "rep": {
-        "buyer_line": "We have a lot of volume, and it is growing.",
-        "off_move": "Great, I will assume about the same as our average customer."
+        "buyer_line": "Before we talk price, you should know our volumes are not small.",
+        "off_move": "Great, I will assume about the same as our average customer.",
+        "replies": {
+          "weak": "I would not plan on an average. Our volume swings a lot through the year.",
+          "trap": "If you size this on a guess, the bill will surprise both of us.",
+          "settle": "Lots is not a forecast. I can get you real numbers if you ask for them.",
+          "assume": "We are not average. Our peaks would break that assumption."
+        }
       },
       "probes": {
         "partial": [
@@ -120,7 +142,12 @@
       },
       "rep": {
         "buyer_line": "Usage is at 30 percent of what we forecast. What now?",
-        "off_move": "That is fine, the commit is already paid for."
+        "off_move": "That is fine, the commit is already paid for.",
+        "replies": {
+          "elite": "The senior team leads would go first. Week one is a stretch, but we can name them.",
+          "weak": "Signing is not the problem. People are not using it.",
+          "trap": "Paid for and unused is exactly what I have to explain upstairs."
+        }
       }
     },
     {
@@ -137,7 +164,12 @@
       },
       "rep": {
         "buyer_line": "Your price is 20 percent higher than the other vendor.",
-        "off_move": "No problem, I will match it."
+        "off_move": "No problem, I will match it.",
+        "replies": {
+          "elite": "That is reasonable. Show me the narrower scope and I will compare like for like.",
+          "weak": "That was quick. It makes me wonder what the original price was based on.",
+          "trap": "If you can match it that easily, I am not sure what I was paying for."
+        }
       }
     }
   ]

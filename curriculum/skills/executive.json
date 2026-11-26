@@ -18,7 +18,12 @@
       },
       "rep": {
         "buyer_line": "We think our process is pretty good already.",
-        "off_move": "Our product has 40 features. Let me show you the top ten."
+        "off_move": "Our product has 40 features. Let me show you the top ten.",
+        "replies": {
+          "elite": "That is not how we have looked at it. Show me the number.",
+          "weak": "I have sat through a lot of feature walkthroughs. Tell me something about us I do not already know.",
+          "trap": "Ten features is a long list. I still do not know why we should change anything."
+        }
       }
     },
     {
@@ -35,7 +40,12 @@
       },
       "rep": {
         "buyer_line": "Why should I care about another AI tool?",
-        "off_move": "Because our platform is best in class and fully AI powered."
+        "off_move": "Because our platform is best in class and fully AI powered.",
+        "replies": {
+          "elite": "If that holds up on our data, it is worth a closer look.",
+          "weak": "Every vendor in my inbox says that. What changes for my team?",
+          "trap": "That is a slogan, not a reason."
+        }
       }
     },
     {
@@ -52,7 +62,12 @@
       },
       "rep": {
         "buyer_line": "I have five minutes. What should I do?",
-        "off_move": "Let me start with some background on our company history."
+        "off_move": "Let me start with some background on our company history.",
+        "replies": {
+          "elite": "Go ahead. Give me the three.",
+          "weak": "Skip the background. What do you recommend?",
+          "trap": "I do not have time for the history. What is your recommendation?"
+        }
       }
     },
     {
@@ -69,7 +84,12 @@
       },
       "rep": {
         "buyer_line": "Finance will ask why we should spend this now.",
-        "off_move": "Because the price goes up next quarter."
+        "off_move": "Because the price goes up next quarter.",
+        "replies": {
+          "elite": "The cost of waiting is the line finance will react to. Send me the model behind it.",
+          "weak": "Finance will not take that on trust. They need the numbers.",
+          "trap": "A price increase is your problem, not a reason for us to buy."
+        }
       }
     }
   ]

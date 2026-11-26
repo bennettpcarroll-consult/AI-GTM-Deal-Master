@@ -61,43 +61,51 @@
   "buyer_reveals": {
     "metrics": {
       "speaker": "VP Digital / E-Commerce",
-      "partial": "We watch conversion every week, but the agent's impact is not separated out yet.",
-      "verbatim": "We need the agent to lift conversion by at least 1.5 points on assisted sessions and cut cost per resolution by a third before the holiday peak."
+      "setup": "The board wants to see assisted conversion move before the holiday peak.",
+      "partial": "We watch conversion every week, but the agent's impact is not separated out yet, and cost per resolution matters just as much.",
+      "verbatim": "Cost per resolution down by a third before the holiday peak, and assisted conversion up at least 1.5 points."
     },
     "economic_buyer": {
       "speaker": "CMO",
-      "partial": "The digital budget is mine, but finance has a say on anything variable.",
-      "verbatim": "I own the digital budget and can sign a pilot up to the cap. The CFO must approve any seasonal commitment above it."
+      "setup": "If this works, I can find the money in the digital budget.",
+      "partial": "I sign for digital up to a cap. Seasonal spend is where finance gets involved.",
+      "verbatim": "Up to the cap, I sign the pilot myself. Any seasonal commitment above it needs the CFO's approval."
     },
     "decision_criteria": {
       "speaker": "CMO",
-      "partial": "Brand safety matters more to me than anything else on this list.",
-      "verbatim": "Any agent that can offer a discount must follow a published policy with hard limits, and it has to pass our brand-safety test suite."
+      "setup": "We are comparing a few vendors, and brand safety is my first question for all of them.",
+      "partial": "Brand safety outweighs everything else. The tie-breaker is how an agent handles discounts.",
+      "verbatim": "An agent that offers discounts outside a published policy with hard limits, or fails our brand-safety test suite. Either one rules you out."
     },
     "decision_process": {
       "speaker": "CMO",
-      "partial": "Brand review comes first, then the budget cycle, and the timing is tight before November.",
-      "verbatim": "Brand review, then privacy review, then the CFO on seasonal spend. We need the budget locked by the end of September for the holiday season."
+      "setup": "Anything we launch for the holidays has to be live before November.",
+      "partial": "Brand review comes first, then seasonal spend goes through the budget cycle. It is tight before November.",
+      "verbatim": "Brand review, then privacy review, then the CFO signs off on seasonal spend. The budget has to be locked by the end of September."
     },
     "paper_process": {
       "speaker": "CFO",
-      "partial": "Payment-adjacent flows get a PCI scope review, and we are sensitive about that.",
-      "verbatim": "Anything touching the payment flow goes through PCI scope review first, and that review alone takes about six weeks."
+      "setup": "Anything near checkout gets extra scrutiny from security, including a PCI scope review.",
+      "partial": "They can start, but PCI scope reviews on anything that touches the payment flow are never quick.",
+      "verbatim": "About six weeks, and nothing touches the payment flow until it is done."
     },
     "identify_pain": {
       "speaker": "VP Digital / E-Commerce",
-      "partial": "Holiday volume overwhelms the contact center every year, and we pay for it.",
-      "verbatim": "Last holiday we paid for an emergency BPO surge at double rate and still missed our CSAT target by eight points."
+      "setup": "Last holiday, the contact center surge was painful.",
+      "partial": "More than it should. Volume overwhelms the contact center every year, and we pay for it.",
+      "verbatim": "The same as last year: an emergency BPO surge at double rate, and we still missed our CSAT target by eight points."
     },
     "champion": {
       "speaker": "VP Digital / E-Commerce",
-      "partial": "I like the conversion angle, and I will back it internally.",
-      "verbatim": "I will champion this in the Monday growth review myself, and I need a pilot scoped to the holiday peak with clear exit gates."
+      "setup": "Anything like this gets argued out in our Monday growth review.",
+      "partial": "I would lead with conversion and back it myself. The CFO will be the harder audience.",
+      "verbatim": "A pilot scoped to the holiday peak with clear exit gates. With that, I will champion it in the growth review myself."
     },
     "competition": {
       "speaker": "CFO",
-      "partial": "Our commerce platform has its own assistant that we already pay for.",
-      "verbatim": "The commerce platform's bundled assistant comes with our renewal, so you must prove incremental lift over what we already have."
+      "setup": "I should say we are not short of options here.",
+      "partial": "We would not build it. Our commerce platform already bundles an assistant we pay for.",
+      "verbatim": "That bundled assistant comes with our renewal, so you have to prove incremental lift over what we already have."
     }
   },
   "veto_holder": {
@@ -140,14 +148,14 @@
   },
   "rep_overrides": {
     "account_research": {
-      "buyer_line": "Before we start, what do you already know about how we run digital here?",
+      "buyer_line": "What do you already know about how we run digital here?",
       "strong": "I saw you moved the contact center under digital before last holiday. What prompted that?"
     },
     "discovery_questioning": {
-      "strong": "Walk me through how a customer question gets answered today, from chat to resolution."
+      "strong": "Walk me through how a customer question gets handled today, start to finish."
     },
     "listening_summarizing": {
-      "buyer_line": "Honestly the bigger issue is the holiday surge, not the everyday volume.",
+      "buyer_line": "One thing before we go on. The bigger issue for us is the holiday surge, not the everyday volume.",
       "strong": "So the real cost is the holiday surge, not the everyday volume. Did I get that right?"
     },
     "commercial_insight": {

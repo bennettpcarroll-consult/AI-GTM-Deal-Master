@@ -149,7 +149,8 @@ export function buildPlan(curriculum: Curriculum, rubric: Rubric, mode: SessionM
     (id) => !curriculum.skills.find((skill) => skill.id === id)?.signal
   );
   const toItem = (id: string): PlanItem => (skillOf(curriculum, id).probes ? { kind: 'evidence', skillId: id } : { kind: 'rep', skillId: id });
-  const openers = practiced.filter((id) => OPENERS.includes(id)).map(toItem);
+  // Openers run in meeting order: the up-front contract, then research, then the point of view.
+  const openers = practiced.filter((id) => OPENERS.includes(id)).sort((a, b) => OPENERS.indexOf(a) - OPENERS.indexOf(b)).map(toItem);
   const closers = practiced.filter((id) => CLOSERS.includes(id)).map(toItem);
   const middle = practiced.filter((id) => !OPENERS.includes(id) && !CLOSERS.includes(id)).map(toItem);
   const signalItems: PlanItem[] = signals.map((signal) => {
@@ -171,6 +172,19 @@ function addBuyerTurn(sim: SimState, turn: Omit<Turn, 'id' | 'speaker'>): SimSta
   return { ...sim, turns: [...sim.turns, full] };
 }
 
+/** The buyer's written answer to a move. Pin beats answer the settle and assume follow-ups. */
+function replyTo(skill: Skill, beatKind: BeatKind, kind: MoveKind): string | undefined {
+  const replies = skill.rep.replies;
+  if (beatKind === 'pin' && kind === 'weak') return replies.settle ?? replies.weak;
+  if (beatKind === 'pin' && kind === 'trap') return replies.assume ?? replies.trap;
+  return kind === 'elite' ? replies.elite : replies[kind];
+}
+
+/** True once any buyer has said this exact line in the meeting. */
+function said(sim: SimState, content: string): boolean {
+  return sim.turns.some((turn) => turn.speaker === 'buyer' && turn.content === content);
+}
+
 function itemDone(rs: RoomState, item: PlanItem): boolean {
   if (item.kind === 'signal') return rs.sim.bindings[item.signal].bars === 4;
   if (item.kind === 'evidence') return rs.sim.skillEvidence[item.skillId]?.level === 'verbatim';
@@ -183,7 +197,14 @@ function repLines(rc: RoomContext, skillId: string): { buyer: string; strong: st
   return { buyer: override?.buyer_line ?? skill.rep.buyer_line, strong: override?.strong ?? skill.talk_track.strong };
 }
 
-/** Skips finished items, then has the buyer set up the next rep beat with its own line. */
+/** The buyer who raises a beat is the one who will answer it, so the thread stays with one person. */
+function setupSpeaker(rc: RoomContext, item: PlanItem, cursor: number): string {
+  if (item.kind === 'signal') return rc.vertical.buyer_reveals[item.signal].speaker;
+  const probe = item.kind === 'evidence' ? rc.sim.skillProbes?.find((candidate) => candidate.skill === item.skillId) : undefined;
+  return probe?.reveal.speaker ?? rc.roles[cursor % rc.roles.length] ?? 'Buyer';
+}
+
+/** Skips finished items, then has the buyer set up the next beat with its own line. */
 function settle(rc: RoomContext, rs: RoomState): RoomState {
   if (rc.arc) return settleArc(rc, rc.arc, rs);
   let next = rs;
@@ -191,12 +212,14 @@ function settle(rc: RoomContext, rs: RoomState): RoomState {
     next = { ...next, cursor: next.cursor + 1, attempts: 0 };
   }
   const item = next.plan[next.cursor];
-  if (!next.objection && !next.walkedOut && item?.kind === 'rep') {
-    const { buyer } = repLines(rc, item.skillId);
-    const lastBuyer = [...next.sim.turns].reverse().find((turn) => turn.speaker === 'buyer');
-    if (lastBuyer?.content !== buyer) {
-      const role = rc.roles[next.sim.turns.length % rc.roles.length] ?? 'Buyer';
-      next = { ...next, sim: addBuyerTurn(next.sim, { speakerRole: role, content: buyer }) };
+  // Every beat opens on a buyer line: the skill's own setup for a rep or a fresh signal, the partial answer for a pin.
+  const fresh = item && (item.kind === 'rep' || (item.kind === 'signal' ? next.sim.bindings[item.signal].bars === 1 : !next.sim.skillEvidence[item.skillId]));
+  if (!next.objection && !next.walkedOut && item && fresh) {
+    const buyer = item.kind === 'signal' ? rc.vertical.buyer_reveals[item.signal].setup : repLines(rc, item.skillId).buyer;
+    // Seller-led beats need no setup once the meeting is under way, and no buyer line is ever said twice.
+    const sellerLed = skillOf(rc.curriculum, item.skillId).rep.seller_led && next.sim.turns.length > 0;
+    if (!sellerLed && !said(next.sim, buyer)) {
+      next = { ...next, sim: addBuyerTurn(next.sim, { speakerRole: setupSpeaker(rc, item, next.cursor), content: buyer }) };
     }
   }
   return next;
@@ -225,7 +248,15 @@ function shuffle(moves: Move[], seed: string): Move[] {
   return order.map((index) => moves[index]!);
 }
 
+/** The beat in play. A move the learner already tried on this beat is taken off the table, so no line is said twice. */
 export function currentBeat(rc: RoomContext, rs: RoomState): Beat | null {
+  const beat = beatInPlay(rc, rs);
+  if (!beat) return null;
+  const tried = new Set(rs.picks.filter((pick) => pick.beatId === beat.id).map((pick) => pick.text));
+  return { ...beat, moves: beat.moves.filter((move) => !tried.has(move.text)) };
+}
+
+function beatInPlay(rc: RoomContext, rs: RoomState): Beat | null {
   if (roomDone(rs)) return null;
   if (rc.arc) return arcBeat(rc.arc, rs);
   if (rs.objection) {
@@ -303,10 +334,15 @@ export function chooseMove(rc: RoomContext, rs: RoomState, index: number): { sta
   if (rc.arc) return chooseArcMove(rc, rc.arc, rs, beat, move);
   const elite = beat.moves.find((candidate) => candidate.kind === 'elite')!.text;
   const rules = rc.rules;
-  const reactions = rules.reactions[move.kind];
-  const reaction = reactions[rs.picks.length % reactions.length];
   const before = rs.sim;
-  const sim = sendLearnerMessage(rc.sim, before, move.text, { reaction });
+  // The buyer answers the exact line the learner chose, and the person who was just speaking answers it.
+  const written = beat.kind === 'objection' ? rules.objection_replies[move.kind] : beat.skillId ? replyTo(skillOf(rc.curriculum, beat.skillId), beat.kind, move.kind) : undefined;
+  const reaction = written && !said(before, written) ? written : '';
+  const reactionRole = [...before.turns].reverse().find((turn) => turn.speaker === 'buyer')?.speakerRole;
+  const planned = rs.plan[rs.cursor];
+  // Only the beat's own target can be revealed, so a question never draws an answer to a different one.
+  const focus = beat.kind === 'objection' || beat.kind === 'rep' || !planned ? {} : planned.kind === 'signal' ? { signal: planned.signal } : { skill: planned.skillId };
+  const sim = sendLearnerMessage(rc.sim, before, move.text, { reaction, focus, ...(reactionRole ? { reactionRole } : {}) });
 
   const effect = rules.effects[move.kind];
   const handled = beat.kind === 'objection' && move.kind === 'elite';
@@ -362,9 +398,11 @@ export function chooseMove(rc: RoomContext, rs: RoomState, index: number): { sta
   }
 
   // The hidden buyer state talks back: a raised risk alarm becomes an objection, and boss fights add pressure on a beat.
+  // An objection is raised once: the next one nobody has voiced yet, and a drill never stacks a second.
   const cadence = boss && next.picks.length % rules.mood.boss_objection_every === 0;
-  if (!next.objection && beat.kind !== 'objection' && (mood.risk >= rules.mood.objection_risk || cadence) && rc.objections.length > 0) {
-    const text = rc.objections[next.objectionIndex % rc.objections.length]!;
+  const raised = next.sim.turns.some((turn) => turn.objection);
+  const text = rc.objections.find((candidate) => !said(next.sim, candidate));
+  if (!next.objection && beat.kind !== 'objection' && (mood.risk >= rules.mood.objection_risk || cadence) && text && (boss || !raised)) {
     const role = rc.roles[next.objectionIndex % rc.roles.length] ?? 'Buyer';
     next = { ...next, objection: text, sim: addBuyerTurn(next.sim, { speakerRole: role, content: text, objection: true }) };
   }
@@ -445,7 +483,9 @@ export function setUpRoom(curriculum: Curriculum, input: RoomInput): { payload: 
   const arcScene = arcSceneFor(curriculum, input);
   const rc: RoomContext = { sim, rules: curriculum.room, curriculum, vertical, mode: input.mode, objections: payload.objection_queue, roles, labelFor, arc: arcScene };
   if (arcScene) return { payload, rc, state: startArcRoom(rc, arcScene, input.mode) };
-  const state = startRoom(rc, startSimulation(sim, { mode: input.mode, targetSignals: payload.target_signals }), plan);
+  // The first beat's buyer line opens the meeting, so the generic simulator opener is dropped.
+  const opened = startSimulation(sim, { mode: input.mode, targetSignals: payload.target_signals });
+  const state = startRoom(rc, { ...opened, turns: [] }, plan);
   return { payload, rc, state };
 }
 

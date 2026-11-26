@@ -13,15 +13,21 @@
       "talk_track": {
         "move": "Ask for the number that has to move, and by when.",
         "strong": "What number has to move for this to be worth it, and by when?",
-        "weak": "We typically cut alerts by 40 percent.",
+        "weak": "We typically cut handling time by 40 percent.",
         "proof": "Buyer states a target, such as false positives below 2 percent",
         "pin": "How much do you need to cut this quarter, and how will you measure it?",
         "settle": "Great, so faster is the goal. Let us move on.",
         "assume": "I will put down 40 percent. That is what most customers see."
       },
       "rep": {
-        "buyer_line": "We want the agent to make the review queue better.",
-        "off_move": "Great, most customers see about 40 percent improvement."
+        "buyer_line": "The brief from leadership is to make the operation more efficient.",
+        "off_move": "Great, most customers see about 40 percent improvement.",
+        "replies": {
+          "weak": "That is your benchmark. We have not agreed what good looks like for us yet.",
+          "trap": "Please do not put a number in our mouth. Ours could be very different.",
+          "settle": "Faster is not a target. Without a number, this will not get funded.",
+          "assume": "Do not write that down. Our number has not been agreed, and it will not be yours."
+        }
       },
       "signal": "metrics"
     },
@@ -42,7 +48,13 @@
       },
       "rep": {
         "buyer_line": "I am excited about this and I can get it moving internally.",
-        "off_move": "Perfect, so you are the decision maker. Let us talk pricing."
+        "off_move": "Perfect, so you are the decision maker. Let us talk pricing.",
+        "replies": {
+          "weak": "A few people, depending on what you need. What are you trying to find out?",
+          "trap": "Slow down. I said I could get it moving, not that I sign for it.",
+          "settle": "Up to a point. Above our threshold it is not my call alone.",
+          "assume": "Not above the threshold. You would be forecasting the wrong signature."
+        }
       },
       "signal": "economic_buyer"
     },
@@ -63,7 +75,13 @@
       },
       "rep": {
         "buyer_line": "We are looking at three vendors right now.",
-        "off_move": "We are better than all three. Here is why."
+        "off_move": "We are better than all three. Here is why.",
+        "replies": {
+          "weak": "Feature lists all look the same at this stage. That is not how we will decide.",
+          "trap": "The other two said the same thing about you.",
+          "settle": "Everyone ticks most of the boxes. The weighting is what matters.",
+          "assume": "Matching the list gets you on the shortlist. It does not win it."
+        }
       },
       "signal": "decision_criteria"
     },
@@ -84,7 +102,13 @@
       },
       "rep": {
         "buyer_line": "If the pilot goes well we will move forward.",
-        "off_move": "Great, so we can expect a contract next month."
+        "off_move": "Great, so we can expect a contract next month.",
+        "replies": {
+          "weak": "Hard to say. There are steps after the pilot I have not mapped out yet.",
+          "trap": "Next month is not realistic. A good pilot is only the first step here.",
+          "settle": "I would not pencil anything in until you know who else has to approve it.",
+          "assume": "Please do not forecast that. There are several approvals between a pilot and a signature."
+        }
       },
       "signal": "decision_process"
     },
@@ -105,7 +129,13 @@
       },
       "rep": {
         "buyer_line": "Legal usually gets involved once we pick a vendor.",
-        "off_move": "Sounds good, we can sort the paperwork out at the end."
+        "off_move": "Sounds good, we can sort the paperwork out at the end.",
+        "replies": {
+          "weak": "In my experience, leaving legal until the end is how these slip by a quarter.",
+          "trap": "The end is where deals like this stall. Our review is not quick.",
+          "settle": "Someone has to worry about it. Our reviews do not move quickly.",
+          "assume": "That is what the last vendor said. Their contract sat with legal for a quarter."
+        }
       },
       "signal": "paper_process"
     },
@@ -125,8 +155,14 @@
         "assume": "Our tool makes that a non-issue, so let us move on."
       },
       "rep": {
-        "buyer_line": "The review queue is a headache for the team.",
-        "off_move": "Our tool makes queues much less of a headache."
+        "buyer_line": "The current process is a real headache for the team.",
+        "off_move": "Our tool makes queues much less of a headache.",
+        "replies": {
+          "weak": "It is. But a headache does not get a budget. The cost behind it does.",
+          "trap": "You do not know enough about our process to say that yet.",
+          "settle": "Before you show me anything, I want to know you understand what this is costing us.",
+          "assume": "It is not a non-issue. It is the reason we agreed to this meeting."
+        }
       },
       "signal": "identify_pain"
     },
@@ -147,7 +183,13 @@
       },
       "rep": {
         "buyer_line": "I really like what you showed us. I am on your side.",
-        "off_move": "Fantastic, then you are our champion. Can you get us the contract?"
+        "off_move": "Fantastic, then you are our champion. Can you get us the contract?",
+        "replies": {
+          "weak": "I am on your side, but I am one voice. I will need help making the case.",
+          "trap": "I can open doors. I cannot get you a contract on my own.",
+          "settle": "On board is one thing. Making the case to the committee is another.",
+          "assume": "I can advocate for it. I cannot sell it for you."
+        }
       },
       "signal": "champion"
     },
@@ -168,7 +210,13 @@
       },
       "rep": {
         "buyer_line": "We are talking to a couple of other vendors.",
-        "off_move": "They are behind us on every feature, so do not worry about them."
+        "off_move": "They are behind us on every feature, so do not worry about them.",
+        "replies": {
+          "weak": "I have heard that from everyone we have met this quarter.",
+          "trap": "I would not dismiss them. They know our environment well.",
+          "settle": "Features are close across the board. That is not where this will be decided.",
+          "assume": "Do not assume that. Building it ourselves is a real option."
+        }
       },
       "signal": "competition"
     }

@@ -18,6 +18,7 @@ This repo follows the spec in the PRD. Read the PRD section that matches your ch
    - The spectrum gradient (`.btn-lit`) appears once per view, on the primary action only.
    - One decision per screen: `FocusScreen` with a sticky footer for flows, `AppShell` with the bottom nav for hubs. Feedback arrives as a profit or leak sheet with a short "why".
    - Say each thing once. A buyer quote appears once, in the conversation. A feedback drawer on a pass shows a short verdict ("Economic buyer verified"), one line on why, and Continue, with no disclosures: the buyer's proof is already marked in the conversation. A miss names the failure in one line and folds the elite move into a single disclosure. Secondary state such as the MEDDPICC tracker is a collapsed pill, never a permanent row.
+   - The deal room reads as one dialogue (Benney, 2026-11-26). Follow `docs/dialogue-style.md`: every buyer reply answers the exact move, comes from the person addressed, and is never generic or reused. The buyer raises a topic before the seller asks about it, and no line is said twice. `tests/rubric/dialogue.test.ts` plays every session on every path in CI to enforce this.
    - Symbols over codes. Markets, verticals and skill families carry a `glyph` in their JSON, rendered by `src/components/glyph.tsx` inside an `IconTile`. Never show internal codes (F1, M2) to learners. Show mastery as a `MasteryBadge` (word plus symbol), not a bar meter.
    - Thin-stroke lucide icons, four-bar mastery and signal indicators, dashed borders for unverified or locked states.
    - Gamification stays performance based: streak, daily goal of 5 reps and proof points. Keep it enterprise in tone: no confetti, mascots or cartoon copy.
@@ -63,6 +64,8 @@ Every CI run feeds the next change:
 ## Lessons from CI
 
 - 2026-11-26: a change to the learner journey must apply to every trajectory, not only the reference arc, and the old route must be retired with a test. Testers often keep a tab open across deploys; `src/components/fresh-build.tsx` reloads a tab when `version.json` shows a newer build, so QA always sees the latest release.
+
+- 2026-11-26: a generic stock reaction pool made buyers answer moves they had not heard ("Good. Nobody has asked us that yet."). Write the buyer's reply next to the move it answers (`rep.replies`), and let `tests/rubric/dialogue.test.ts` catch repeats, echoes and facts used before they are introduced.
 
 - Every deal-room line is gradable. `tests/rubric/deal-room.test.ts` plays all 320 sessions on the elite path (they must pass with zero red flags) and checks that no weak or trap line earns buyer evidence. When a weak line leaks a partial answer, reword the line rather than the probe.
 - A talk track the coach teaches must be gradable. When you edit a skill's `talk_track.strong` or a signal's probes, keep `tests/rubric/skills.test.ts` ("talk tracks the coach teaches") green.

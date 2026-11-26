@@ -117,7 +117,19 @@ export function startSimulation(ctx: SimContext, options: { mode: SessionMode; t
  * The first verbatim probe earns only a partial answer. Full proof needs a
  * different verbatim probe, so repeating one question cannot earn full credit.
  */
-export function sendLearnerMessage(ctx: SimContext, state: SimState, text: string, options: { reaction?: string } = {}): SimState {
+export interface SendOptions {
+  /** The buyer's answer when the message earns no reveal. An empty string adds no turn. */
+  reaction?: string;
+  /** Who gives that answer. Defaults to the next persona in turn. */
+  reactionRole?: string;
+  /**
+   * The only evidence this message can earn. The deal room sets it to the beat's own target so a question
+   * never draws an answer to a different one; an empty object allows no reveal at all.
+   */
+  focus?: { signal?: SignalId; skill?: string };
+}
+
+export function sendLearnerMessage(ctx: SimContext, state: SimState, text: string, options: SendOptions = {}): SimState {
   const message = text.trim();
   if (message.length === 0) return state;
 
@@ -136,7 +148,9 @@ export function sendLearnerMessage(ctx: SimContext, state: SimState, text: strin
   const verbatimHits: { signal: SignalId; indices: number[] }[] = [];
   const partialHits: SignalId[] = [];
 
+  const focus = options.focus;
   for (const definition of ctx.signals) {
+    if (focus && focus.signal !== definition.id) continue;
     const indices = matchingIndices(definition.probes.verbatim, message);
     if (indices.length > 0) {
       probed.add(definition.id);
@@ -175,6 +189,7 @@ export function sendLearnerMessage(ctx: SimContext, state: SimState, text: strin
   const skillEvidence: Record<string, SkillEvidence> = { ...state.skillEvidence };
   for (const probe of ctx.skillProbes ?? []) {
     if (reveals >= MAX_REVEALS_PER_TURN) break;
+    if (focus && focus.skill !== probe.skill) continue;
     const current = skillEvidence[probe.skill];
     if (current?.level === 'verbatim') continue;
     const verbatim = matchesAny(probe.probes.verbatim, message);
@@ -195,10 +210,11 @@ export function sendLearnerMessage(ctx: SimContext, state: SimState, text: strin
 
   const roles = ctx.personaRoles.length > 0 ? ctx.personaRoles : ['Buyer'];
   let neutralIndex = state.neutralIndex;
-  if (reveals === 0) {
+  // An empty reaction means the buyer has nothing new to say, so the room adds no turn rather than repeat one.
+  if (reveals === 0 && options.reaction !== '') {
     addTurn({
       speaker: 'buyer',
-      speakerRole: roles[learnerMessages.length % roles.length] ?? 'Buyer',
+      speakerRole: options.reactionRole ?? roles[learnerMessages.length % roles.length] ?? 'Buyer',
       content: options.reaction ?? NEUTRAL_LINES[neutralIndex % NEUTRAL_LINES.length] ?? 'Go on.'
     });
     neutralIndex += 1;
