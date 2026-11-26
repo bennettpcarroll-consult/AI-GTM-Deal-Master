@@ -6,6 +6,7 @@ import { sendLearnerMessage, startSimulation, type SimContext } from '../../src/
 import { gradeSession } from '../../src/lib/grader';
 import { addOrActivateTrajectory, emptyAppState, recordSession, type SessionRecord } from '../../src/lib/store';
 import { currentEngagement, DAILY_GOAL, POINTS_PER_PROOF, recordActivity } from '../../src/lib/engagement';
+import { lessonQuizQuestions } from '../../src/lib/questions';
 import {
   buildRep,
   buildSkillProbes,
@@ -13,6 +14,7 @@ import {
   diagnosticQuestions,
   drillSkillIds,
   masteryMap,
+  pathDrillSkillIds,
   proofCount,
   skillMastery,
   whereTaught
@@ -181,5 +183,37 @@ describe('talk tracks the coach teaches', () => {
     state = sendLearnerMessage(ctx, state, 'What number has to move for this to be worth it, and by when?');
     state = sendLearnerMessage(ctx, state, 'How much do you need to cut this quarter?');
     expect(state.bindings.metrics.bars).toBe(4);
+  });
+});
+
+describe('credit follows what the learner played', () => {
+  const northbridge = { clusterId: 'agentic_harness', verticalId: 'banking_fsi' } as const;
+
+  it('credits an authored drill with the skills its scenes play, never a rubric skill it skips', () => {
+    const arcDrill = curriculum.arcs.agentic_harness__banking_fsi!.pillars[0]!.drills[0]!;
+    expect(pathDrillSkillIds(curriculum, northbridge, 1, 0)).toEqual([...new Set(arcDrill.beats.map((beat) => beat.skill))]);
+    // The rubric's drill 1 lists economic buyer and up-front contract; the Northbridge first meeting plays neither.
+    expect(pathDrillSkillIds(curriculum, northbridge, 1, 0)).not.toContain('economic_buyer');
+    expect(pathDrillSkillIds(curriculum, northbridge, 1, 0)).not.toContain('upfront_contract');
+  });
+
+  it('marks a skill proven only after a drill that played it', () => {
+    const base = addOrActivateTrajectory(emptyAppState(), 'agentic_harness', 'banking_fsi', [], '2026-11-25T00:00:00Z');
+    const passed: SessionRecord = { id: 's-1', tier: 1, mode: 'drill', drillId: curriculum.rubrics[1].drills[0]!.id, score: 100, passed: true, autoFailIds: [], bindings: {} as SessionRecord['bindings'], transcript: [], createdAt: '2026-11-25T00:00:00Z' };
+    const after = recordSession(base, base.trajectories[0]!.id, passed);
+    expect(skillMastery(curriculum, after, after.trajectories[0], 'account_research')).toBe(3);
+    expect(skillMastery(curriculum, after, after.trajectories[0], 'economic_buyer')).toBeLessThan(3);
+  });
+
+  it('keeps generated paths on the rubric', () => {
+    expect(pathDrillSkillIds(curriculum, { clusterId: 'data_context', verticalId: 'insurance' }, 1, 0)).toEqual(drillSkillIds(curriculum, curriculum.rubrics[1], 0));
+  });
+
+  it('moves the right briefing answer to a different slot on each question', () => {
+    for (const cluster of Object.values(curriculum.clusters)) {
+      const questions = lessonQuizQuestions(cluster.lesson, cluster.display_name);
+      questions.forEach((question, index) => expect(question.options[question.answer]).toBe(cluster.lesson.quiz[index]!.options[cluster.lesson.quiz[index]!.answer]));
+      expect(new Set(questions.map((question) => question.answer)).size, cluster.id).toBe(Math.min(questions.length, 3));
+    }
   });
 });

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { ArrowRight, Check, Lightbulb, X } from 'lucide-react';
 import { IconTile } from '@/components/glyph';
 import { QuestionFlow } from '@/components/question-flow';
-import { FocusScreen, Loading, StepBar } from '@/components/ui';
+import { FocusScreen, Loading, PeopleGrid, StepBar } from '@/components/ui';
 import { PILLAR_TINT } from '@/lib/brand';
 import { loadCurriculum } from '@/lib/curriculum/load';
 import { TIERS, type Tier } from '@/lib/curriculum/schema';
@@ -43,6 +43,14 @@ export function ConceptPage() {
   const color = rubric.text_color;
   const tint = PILLAR_TINT[tier];
   const { concept } = pillar;
+  const arc = curriculum.arcs[trajectory.id];
+  // Everyone who speaks in this pillar's drills, in order. Anyone who spoke in an earlier pillar is marked as back.
+  const speaksIn = (drills: typeof pillar.drills) => new Set(drills.flatMap((drill) => drill.beats.flatMap((beat) => [beat.speaker, ...beat.options.map((option) => option.reply_by).filter((id): id is string => Boolean(id))])));
+  const earlier = speaksIn((arc?.pillars ?? []).filter((candidate) => candidate.tier < tier).flatMap((candidate) => candidate.drills));
+  const people = [...speaksIn(pillar.drills)]
+    .map((id) => pillar.cast.find((member) => member.id === id))
+    .filter((member): member is NonNullable<typeof member> => Boolean(member))
+    .map((member) => ({ name: member.name, role: member.role, back: earlier.has(member.id) }));
 
   const finish = () => {
     update((current) =>
@@ -63,7 +71,10 @@ export function ConceptPage() {
             ask: 'Which line puts this idea to work?',
             options: tier % 2 === 1 ? [concept.strong, concept.weak] : [concept.weak, concept.strong],
             answer: tier % 2 === 1 ? 0 : 1,
-            why: concept.body
+            kind: 'move',
+            // The idea is on the card the learner just read. A pass needs one line; a miss gets the idea again.
+            why: 'The other line sounds fine and earns nothing.',
+            missWhy: concept.body
           }
         ]}
         onBack={() => setStep('card')}
@@ -105,10 +116,16 @@ export function ConceptPage() {
           </p>
           <p className="t-quote mt-1.5 text-[16px]">“{concept.strong}”</p>
         </div>
-        <p className="t-small">
-          At {curriculum.arcs[trajectory.id]?.account.name ?? 'the account'}, you will meet {pillar.cast.filter((member) => pillar.drills.some((drill) => drill.beats.some((beat) => beat.speaker === member.id))).map((member) => member.name.split(' ')[0]).join(', ')} in this pillar.
-        </p>
       </section>
+      <div className="mt-4 flex flex-col gap-3 border-t border-rule pb-2 pt-5">
+        {/* The account is introduced once, on the first pillar. Later pillars only add new faces. */}
+        {tier === 1 && arc && (
+          <p className="t-body text-charcoal">
+            <span className="font-semibold text-ink">Your account: {arc.account.name}.</span> {arc.account.summary}
+          </p>
+        )}
+        <PeopleGrid people={people} color={color} tint={tint} label={tier === 1 ? 'Who you will meet' : `Who you will meet at ${arc?.account.name ?? 'the account'}`} />
+      </div>
     </FocusScreen>
   );
 }

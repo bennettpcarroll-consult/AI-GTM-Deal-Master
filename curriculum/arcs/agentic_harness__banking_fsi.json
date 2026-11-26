@@ -4,7 +4,7 @@
  "vertical": "banking_fsi",
  "account": {
   "name": "Northbridge",
-  "summary": "A tier-one retail and commercial bank with 41 agent prototypes and three in production. Model risk validation is where agents stall."
+  "summary": "A tier-one retail and commercial bank with dozens of AI agents built and only a handful in production."
  },
  "pillars": [
   {

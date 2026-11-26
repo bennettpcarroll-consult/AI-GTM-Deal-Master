@@ -14,7 +14,12 @@ export interface FlowQuestion {
   ask?: string;
   options: string[];
   answer: number;
+  /** One line on why the answer is right. Leave empty when the screen already said it. */
   why: string;
+  /** Shown instead of `why` after a wrong pick, when the learner needs the full idea again. */
+  missWhy?: string;
+  /** A move is a line the seller would say ("Strong move."). A fact is knowledge ("Correct."). Defaults to move when a buyer speaks. */
+  kind?: 'move' | 'fact';
 }
 
 /**
@@ -46,6 +51,8 @@ export function QuestionFlow({
   const [results, setResults] = useState<Record<string, boolean>>({});
   const question = questions[index];
   const correct = question !== undefined && picked === question.answer;
+  const isMove = (question?.kind ?? (question?.speaker ? 'move' : 'fact')) === 'move';
+  const explanation = question && !correct && question.missWhy ? question.missWhy : question?.why;
 
   const check = () => {
     if (picked === null || !question) return;
@@ -117,14 +124,14 @@ export function QuestionFlow({
               <span className={`grid h-9 w-9 place-items-center rounded-full text-white ${correct ? 'bg-profit-ink' : 'bg-leak-ink'}`}>
                 {correct ? <Check className="h-5 w-5" aria-hidden="true" /> : <X className="h-5 w-5" aria-hidden="true" />}
               </span>
-              <p className={`t-heading ${correct ? 'text-profit-ink' : 'text-leak-ink'}`}>{correct ? 'Strong move.' : 'Not quite.'}</p>
+              <p className={`t-heading ${correct ? 'text-profit-ink' : 'text-leak-ink'}`}>{correct ? (isMove ? 'Strong move.' : 'Correct.') : 'Not quite.'}</p>
             </div>
             {!correct && (
               <p className="t-body mb-2">
-                <span className="font-bold">Strongest reply:</span> {question.options[question.answer]}
+                <span className="font-bold">{isMove ? 'Strongest reply:' : 'Answer:'}</span> {question.options[question.answer]}
               </p>
             )}
-            <p className="t-body mb-4 text-charcoal">{question.why}</p>
+            {explanation ? <p className="t-body mb-4 text-charcoal">{explanation}</p> : <div className="mb-2" />}
             <button type="button" onClick={next} className={correct ? 'btn-profit' : 'btn-leak'} autoFocus>
               Continue
             </button>
@@ -152,7 +159,10 @@ export function QuestionFlow({
             <p className="t-item">{question.ask ?? 'What is your strongest reply?'}</p>
           </div>
         ) : (
-          <h1 className="t-title">{question.prompt}</h1>
+          <div className="flex flex-col gap-2">
+            <h1 className="t-title">{question.prompt}</h1>
+            {question.ask && <p className="t-item">{question.ask}</p>}
+          </div>
         )}
         <div className="flex flex-col gap-2.5" role="group" aria-label="Replies">
           {question.options.map((option, optionIndex) => {

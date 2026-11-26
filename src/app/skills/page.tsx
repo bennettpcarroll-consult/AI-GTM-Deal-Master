@@ -52,7 +52,7 @@ export default function SkillsPage() {
             <ul className="mt-4 flex flex-col gap-2">
               {family.skills.map((skill) => {
                 const level = mastery[skill.id] ?? 1;
-                const places = whereTaught(curriculum, skill.id);
+                const places = whereTaught(curriculum, skill.id, trajectory);
                 return (
                   <li key={skill.id}>
                     <details className="group rounded-panel border border-hairline bg-paper open:shadow-lift">

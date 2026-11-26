@@ -11,7 +11,7 @@ import { loadCurriculum } from '@/lib/curriculum/load';
 import { SIGNAL_IDS, TIERS, type Tier } from '@/lib/curriculum/schema';
 import { arcPillar } from '@/lib/deal-room';
 import { queuedSharpen } from '@/lib/sharpen';
-import { drillSkillIds } from '@/lib/skills';
+import { pathTierSkillIds } from '@/lib/skills';
 import { completePillar, drillsPassed, type SessionRecord } from '@/lib/store';
 import { useAppState } from '@/lib/use-app-state';
 
@@ -59,17 +59,35 @@ export function RecapPage() {
   const proven = SIGNAL_IDS.filter((signal) => sessions.some((session) => session.bindings[signal]?.bars === 4)).length;
   const scores = rubric.drills.map((drill) => trajectory.drills[`${tier}:${drill.id}`]?.bestScore ?? 0);
   const average = Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
-  const skillIds = [...new Set(rubric.drills.flatMap((_, index) => drillSkillIds(curriculum, rubric, index)))];
+  const skillIds = pathTierSkillIds(curriculum, trajectory, tier);
   const skills = skillIds.map((id) => curriculum.skills.find((skill) => skill.id === id)?.label).filter((label): label is string => Boolean(label));
   const queued = queuedSharpen(state, trajectory.id).filter((item) => item.beatId.startsWith(`t${tier}-`)).length;
   const last = tier === 4;
+  const nextTier = (tier + 1) as Tier;
+  const nextPillar = last ? null : arcPillar(curriculum, trajectory.clusterId, trajectory.verticalId, nextTier);
+  const nextRubric = last ? null : curriculum.rubrics[nextTier];
+  // Start means start: an authored pillar opens on its big idea, so the learner does not land on the path and tap again.
+  const nextHref = last ? '/review' : nextPillar ? `/concept/${nextTier}` : '/path';
 
   return (
     <FocusScreen
       top={<span />}
       footer={
         <div className="flex flex-col gap-2">
-          <Link href={last ? '/review' : '/path'} className="btn-lit">
+          {nextRubric && (
+            <p className="t-small mb-1 text-center">
+              {nextPillar ? (
+                <>
+                  <span className="font-semibold text-ink">Next · {nextPillar.stage}.</span> {nextPillar.problem}
+                </>
+              ) : (
+                <>
+                  <span className="font-semibold text-ink">Next · {nextRubric.transition_banner.title}</span> {nextRubric.transition_banner.body}
+                </>
+              )}
+            </p>
+          )}
+          <Link href={nextHref} className="btn-lit">
             {last ? 'Take the final review' : `Start Pillar 0${tier + 1}`} <ArrowRight className="h-5 w-5" aria-hidden="true" />
           </Link>
           {last && (

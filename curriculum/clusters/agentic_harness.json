@@ -81,20 +81,20 @@
         "options": [
           "The platform team building it themselves",
           "A hyperscaler",
-          "A BPO"
+          "The incumbent RPA vendor"
         ],
         "answer": 0,
         "why": "In-house frameworks are the most common alternative."
       },
       {
-        "prompt": "What is shadow-AI sprawl?",
+        "prompt": "Why does shadow-AI sprawl matter to your deal?",
         "options": [
-          "Unsanctioned AI tools across business units",
-          "A pricing model",
-          "A security certification"
+          "It splits the buying decision across business units",
+          "It means security has already approved AI tools",
+          "It lets you go around the platform team"
         ],
         "answer": 0,
-        "why": "Teams adopt tools on their own, which fragments the buying decision."
+        "why": "Teams adopt tools on their own, which fragments the buying decision. Consolidating it is your opening."
       }
     ]
   }

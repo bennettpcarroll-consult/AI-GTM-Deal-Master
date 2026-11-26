@@ -67,6 +67,7 @@ Every CI run feeds the next change:
 
 - 2026-11-26: a generic stock reaction pool made buyers answer moves they had not heard ("Good. Nobody has asked us that yet."). Write the buyer's reply next to the move it answers (`rep.replies`), and let `tests/rubric/dialogue.test.ts` catch repeats, echoes and facts used before they are introduced.
 
+- 2026-11-27: on an authored arc, skill credit follows the scenes played (`pathDrillSkillIds`), not the rubric's drill list, or a debrief credits skills the learner never practised ("Economic buyer, proven" after a pain drill). Briefing checks rotate the right answer's slot.
 - Every deal-room line is gradable. `tests/rubric/deal-room.test.ts` plays all 320 sessions on the elite path (they must pass with zero red flags) and checks that no weak or trap line earns buyer evidence. When a weak line leaks a partial answer, reword the line rather than the probe.
 - A talk track the coach teaches must be gradable. When you edit a skill's `talk_track.strong` or a signal's probes, keep `tests/rubric/skills.test.ts` ("talk tracks the coach teaches") green.
 - Playwright `text=Check` also matches labels such as "CHECK 1 OF 3". Use `getByRole('button', { name, exact: true })`.

@@ -98,6 +98,39 @@ export function FocusScreen({ top, children, footer }: { top: ReactNode; childre
   );
 }
 
+/**
+ * Who is in the room: initials, name and role, two to a row. Replaces a sentence that listed the
+ * same names the setting already used. A returning buyer is marked, so "meet" only means new faces.
+ */
+export function PeopleGrid({ people, color, tint, label }: { people: { name: string; role: string; back?: boolean }[]; color: string; tint: string; label: string }) {
+  if (people.length === 0) return null;
+  return (
+    <section className="flex flex-col gap-2.5" aria-label={label}>
+      <p className="t-label">{label}</p>
+      <ul className="grid grid-cols-2 gap-x-3 gap-y-3">
+        {people.map((person) => (
+          <li key={person.name} className="flex min-w-0 items-center gap-2.5">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-[13px] font-bold" style={{ background: tint, color }} aria-hidden="true">
+              {person.name
+                .split(' ')
+                .map((part) => part[0])
+                .join('')
+                .slice(0, 2)}
+            </span>
+            <span className="flex min-w-0 flex-col">
+              <span className="truncate text-[14px] font-semibold leading-tight text-ink">
+                {person.name}
+                {person.back && <span className="font-normal text-slate"> · back</span>}
+              </span>
+              <span className="text-[12px] leading-tight text-slate">{person.role}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 export function Loading({ text = 'Loading…' }: { text?: string }) {
   return (
     <div className="mx-auto grid min-h-dvh max-w-[560px] place-items-center px-5">
