@@ -17,7 +17,7 @@ type Step = 'cluster' | 'vertical';
 /**
  * Two-step onboarding: what you sell, then who you sell to. Each choice opens a small preview
  * (the market map, or what you will face), and the learner lands on the path. The market
- * briefing and the placement check live on the path, so nothing stands between sign-up and the first rep.
+ * briefing lives on the path, so nothing stands between sign-up and the first rep.
  */
 export default function StartPage() {
   const router = useRouter();

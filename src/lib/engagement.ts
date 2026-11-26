@@ -1,7 +1,5 @@
 import type { AppState, Engagement } from './store';
 
-/** Reps a learner aims for each day. A drill or boss fight counts as one rep. */
-export const DAILY_GOAL = 5;
 /** Points per piece of verified buyer proof. */
 export const POINTS_PER_PROOF = 10;
 

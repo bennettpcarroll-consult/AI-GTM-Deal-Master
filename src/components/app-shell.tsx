@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { BarChart3, Check, ChevronDown, Dumbbell, Flame, Home, Plus, Settings, Target } from 'lucide-react';
-import { currentEngagement, DAILY_GOAL } from '@/lib/engagement';
+import { currentEngagement } from '@/lib/engagement';
 import { setActiveTrajectory, type AppState, type Trajectory } from '@/lib/store';
 import { useAppState } from '@/lib/use-app-state';
 import { trajectoryLabel } from '@/lib/views';
@@ -23,7 +23,6 @@ export function AppShell({ state, trajectory, children }: { state: AppState; tra
   const pathname = usePathname();
   const { update } = useAppState();
   const engagement = currentEngagement(state);
-  const goalMet = engagement.repsToday >= DAILY_GOAL;
   const [open, setOpen] = useState<Panel>(null);
   const headerRef = useRef<HTMLElement>(null);
 
@@ -70,7 +69,7 @@ export function AppShell({ state, trajectory, children }: { state: AppState; tra
               className="flex min-h-[44px] items-center gap-1.5 rounded-full px-2.5 text-[15px] font-bold tabular-nums hover:bg-deep"
               style={{ color: engagement.streak > 0 ? '#b85a24' : '#5e6672' }}
             >
-              <Flame className="h-[18px] w-[18px]" aria-hidden="true" fill={goalMet ? 'currentColor' : 'none'} />
+              <Flame className="h-[18px] w-[18px]" aria-hidden="true" fill={engagement.lastActiveDay === engagement.today ? 'currentColor' : 'none'} />
               {engagement.streak}
             </button>
             <button
@@ -121,7 +120,7 @@ export function AppShell({ state, trajectory, children }: { state: AppState; tra
                 <p className="t-item flex items-center gap-2 text-value-ink">
                   <Flame className="h-4 w-4" aria-hidden="true" /> {engagement.streak}-day streak
                 </p>
-                <p className="t-small mt-1">Practice on consecutive days to keep it. Today: {Math.min(engagement.repsToday, DAILY_GOAL)} of {DAILY_GOAL} reps.</p>
+                <p className="t-small mt-1">Practice on consecutive days to keep it.</p>
               </>
             ) : (
               <>
