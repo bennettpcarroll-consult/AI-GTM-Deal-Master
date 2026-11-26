@@ -365,30 +365,34 @@ function MoveHeading({
   );
 }
 
-/** The Duolingo reveal: one verdict line, detail folded away, one way forward. */
+/**
+ * The Duolingo reveal, kept lean. A pass shows one verdict, one line on why, and Continue: the
+ * buyer's proof is already marked verified in the conversation above. A miss names the mistake
+ * in one line and folds the elite move away for the learner who wants it.
+ */
 function FeedbackDrawer({ outcome, onContinue }: { outcome: Outcome; onContinue: () => void }) {
   const good = outcome.kind === 'elite';
+  const headline = !good && outcome.failure ? outcome.failure.label : outcome.verdict;
+  const line = good ? outcome.why : (outcome.failure?.lesson ?? outcome.why);
   return (
     <div className={`-mx-5 max-h-[70dvh] animate-rise overflow-y-auto rounded-t-card px-5 pb-2 pt-5 ${good ? 'bg-profit-soft' : 'bg-leak-soft'}`} role="status">
-      <div className="mb-3 flex items-center gap-3">
+      <div className="mb-2 flex items-center gap-3">
         <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full text-white ${good ? 'bg-profit-ink' : 'bg-leak-ink'}`}>
           {good ? <Check className="h-5 w-5" aria-hidden="true" /> : <X className="h-5 w-5" aria-hidden="true" />}
         </span>
-        <p className={`text-[17px] font-bold leading-snug ${good ? 'text-profit-ink' : 'text-leak-ink'}`}>{outcome.failure ? outcome.failure.label : outcome.verdict}</p>
+        <p className={`text-[17px] font-bold leading-snug ${good ? 'text-profit-ink' : 'text-leak-ink'}`}>{headline}</p>
       </div>
-      {outcome.failure && <p className="t-body mb-3 text-charcoal">{outcome.failure.lesson}</p>}
-      <div className="mb-4 flex flex-col divide-y divide-rule rounded-panel bg-paper/70">
-        {!good && <Disclosure label="Elite move">“{outcome.elite}”</Disclosure>}
-        <Disclosure label="Why it works">{outcome.why}</Disclosure>
-        {outcome.evidence && (
-          <Disclosure label="Buyer evidence">
-            <span className="flex flex-col gap-1">
-              <span className="t-quote text-[15px]">“{outcome.evidence.quote}”</span>
-              <span className="t-small">{outcome.evidence.level === 'verbatim' ? `Counts as proof for ${outcome.evidence.label}.` : 'Acknowledged, but no number, name or date yet.'}</span>
+      {line && <p className="t-small mb-4 text-charcoal">{line}</p>}
+      {!good && (
+        <div className="mb-4 rounded-panel bg-paper/70">
+          <Disclosure label="See the elite move">
+            <span className="flex flex-col gap-1.5">
+              <span>“{outcome.elite}”</span>
+              {outcome.failure && <span className="t-small">{outcome.why}</span>}
             </span>
           </Disclosure>
-        )}
-      </div>
+        </div>
+      )}
       <button type="button" onClick={onContinue} className={good ? 'btn-profit' : 'btn-leak'} autoFocus>
         {good ? 'Continue' : 'Try again'}
       </button>
