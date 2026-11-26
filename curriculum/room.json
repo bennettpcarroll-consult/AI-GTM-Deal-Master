@@ -52,11 +52,11 @@
   "objection_why": "Acknowledge it, isolate it, then answer it. A discount or a dismissal tells the buyer the concern was real.",
   "walkout": "I think we will leave it there for today. Send me something in writing.",
   "verdicts": {
-    "proven": "verified. The buyer said it in their own words.",
-    "partial": "Good opening. The buyer acknowledged it, so now pin it down.",
+    "proven": "verified",
+    "partial": "Opened. Now pin it down.",
     "rep": "Strong move.",
-    "objection": "Handled. You isolated the concern before answering it.",
-    "weak": "Too soft. The buyer gave you nothing you can cite.",
-    "trap": "Red flag. That move cost you trust."
+    "objection": "Objection handled.",
+    "weak": "Too soft. Nothing to cite.",
+    "trap": "Red flag. That cost trust."
   }
 }
