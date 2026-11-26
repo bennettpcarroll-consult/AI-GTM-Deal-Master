@@ -34,7 +34,7 @@ export default function SettingsPage() {
                   {isActive && <span className="ml-2 rounded-full bg-profit-soft px-2 py-0.5 text-[12px] text-profit-ink">Active</span>}
                 </p>
                 <p className="t-small">
-                  {bossesPassed(trajectory)} of 4 boss fights passed · {trajectory.sessions.length} sessions
+                  {bossesPassed(trajectory)} of 4 pillars complete · {trajectory.sessions.length} sessions
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">

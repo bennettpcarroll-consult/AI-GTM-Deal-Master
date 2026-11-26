@@ -59,7 +59,13 @@ export interface Trajectory {
   createdAt: string;
   sessions: SessionRecord[];
   drills: Record<string, DrillProgress>;
+  /**
+   * Pillar completion by tier. The name is kept from the old boss fights so saved progress still
+   * reads: a pillar now completes when its three drills pass and the learner sees the recap.
+   */
   boss: Record<string, BossProgress>;
+  /** The one bigger review at the end of the course. */
+  finalReview?: BossProgress;
 }
 
 /** Result of the starting diagnostic: skill id to whether the learner picked the strongest reply. */
@@ -226,4 +232,30 @@ export function drillsCleared(trajectory: Trajectory, tier: Tier, drillIds: stri
   return drillIds.every((drillId) =>
     trajectory.sessions.some((session) => session.tier === tier && session.mode === 'drill' && session.drillId === drillId && session.misses !== undefined && session.misses.length === 0)
   );
+}
+
+/** Marks a pillar complete once all its drills pass. Unlocks the next pillar. No replay session is needed. */
+export function completePillar(state: AppState, trajectoryIdToUpdate: string, tier: Tier): AppState {
+  return {
+    ...state,
+    trajectories: state.trajectories.map((trajectory) => {
+      if (trajectory.id !== trajectoryIdToUpdate || trajectory.boss[String(tier)]?.passed) return trajectory;
+      if (drillsPassed(trajectory, tier) < DRILL_IDS.length) return trajectory;
+      const scores = DRILL_IDS.map((drillId) => trajectory.drills[drillKey(tier, drillId)]?.bestScore ?? 0);
+      const bestScore = Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
+      return { ...trajectory, boss: { ...trajectory.boss, [String(tier)]: { passed: true, bestScore } } };
+    })
+  };
+}
+
+/** Records a final review attempt. The best score and a pass are kept. */
+export function recordFinalReview(state: AppState, trajectoryIdToUpdate: string, score: number, passed: boolean): AppState {
+  return {
+    ...state,
+    trajectories: state.trajectories.map((trajectory) =>
+      trajectory.id === trajectoryIdToUpdate
+        ? { ...trajectory, finalReview: { passed: (trajectory.finalReview?.passed ?? false) || passed, bestScore: Math.max(trajectory.finalReview?.bestScore ?? 0, score) } }
+        : trajectory
+    )
+  };
 }
