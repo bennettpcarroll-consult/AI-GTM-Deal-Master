@@ -6,7 +6,7 @@ import { Flame } from 'lucide-react';
 import { QuestionFlow } from '@/components/question-flow';
 import { FocusScreen, Loading } from '@/components/ui';
 import { loadCurriculum } from '@/lib/curriculum/load';
-import { currentEngagement, dayKey, DAILY_GOAL, recordActivity } from '@/lib/engagement';
+import { currentEngagement, dayKey, recordActivity } from '@/lib/engagement';
 import { repToQuestion, sharpenQuestion } from '@/lib/questions';
 import { dueSharpen, findArcBeat, reviewSharpen } from '@/lib/sharpen';
 import { dailyReps, familyOf, masteryMap } from '@/lib/skills';
@@ -77,7 +77,7 @@ export default function RepsPage() {
           </h1>
           <p className="t-lede">strong moves picked</p>
           <p className="t-body">
-            {engagement.streak} day streak · {Math.min(engagement.repsToday, DAILY_GOAL)} of {DAILY_GOAL} reps today
+            {engagement.streak} day streak
           </p>
         </div>
       </FocusScreen>

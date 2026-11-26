@@ -5,7 +5,7 @@ import { composeScenario } from '../../src/lib/composer';
 import { sendLearnerMessage, startSimulation, type SimContext } from '../../src/lib/simulator';
 import { gradeSession } from '../../src/lib/grader';
 import { addOrActivateTrajectory, emptyAppState, recordSession, type SessionRecord } from '../../src/lib/store';
-import { currentEngagement, DAILY_GOAL, POINTS_PER_PROOF, recordActivity } from '../../src/lib/engagement';
+import { currentEngagement, POINTS_PER_PROOF, recordActivity } from '../../src/lib/engagement';
 import { lessonQuizQuestions } from '../../src/lib/questions';
 import {
   buildRep,
@@ -149,7 +149,6 @@ describe('mastery, reps and engagement', () => {
     const reps = recordActivity(state, { reps: 3, proofs: 0 }, '2026-11-25');
     expect(reps.engagement?.points).toBe(2 * POINTS_PER_PROOF);
     expect(reps.engagement?.repsToday).toBe(4);
-    expect(DAILY_GOAL).toBeGreaterThan(reps.engagement?.repsToday ?? 0);
   });
 
   it('grows the streak on consecutive days and resets it after a missed day', () => {

@@ -1,17 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Award, BookOpen, Check, ChevronDown, Dumbbell, Flag, GraduationCap, Lightbulb, Lock, Play, ScanSearch } from 'lucide-react';
+import { ArrowRight, Award, BookOpen, Check, ChevronDown, Flag, GraduationCap, Lightbulb, Lock, Play } from 'lucide-react';
 import { AppShell } from '@/components/app-shell';
 import { PillarIcon } from '@/components/pillar-icon';
-import { Loading, ProgressBar } from '@/components/ui';
+import { Loading } from '@/components/ui';
 import { PILLAR_TINT } from '@/lib/brand';
 import { loadCurriculum } from '@/lib/curriculum/load';
 import type { Tier } from '@/lib/curriculum/schema';
-import { currentEngagement, dayKey, DAILY_GOAL } from '@/lib/engagement';
 import { pathFor, type PathNode } from '@/lib/path';
 import { bossesPassed, tierUnlocked } from '@/lib/store';
-import { dueSharpen } from '@/lib/sharpen';
 import { useAppState } from '@/lib/use-app-state';
 
 /** Zig-zag offsets so the path reads as a trail, not a list. */
@@ -37,45 +35,11 @@ export default function PathPage() {
     );
   }
 
-  const engagement = currentEngagement(state);
   const allNodes = pathFor(curriculum, state, trajectory);
-  const goalMet = engagement.repsToday >= DAILY_GOAL;
-  const dueMoves = dueSharpen(state, trajectory.id, dayKey()).length;
-  // A brand-new learner has one job: start Pillar 01. The daily goal appears once they have practised.
-  const fresh = engagement.lastActiveDay === null && engagement.repsToday === 0;
-
   return (
     <AppShell state={state} trajectory={trajectory}>
-      {!fresh && <section className="card flex items-center gap-4 p-4" aria-label="Daily goal">
-        <div className="flex flex-1 flex-col gap-2">
-          <div className="flex items-baseline justify-between gap-2">
-            <p className="t-item">{goalMet ? 'Daily goal hit.' : 'Daily goal'}</p>
-            <p className="t-small font-semibold tabular-nums">
-              {Math.min(engagement.repsToday, DAILY_GOAL)} of {DAILY_GOAL} reps
-            </p>
-          </div>
-          {dueMoves > 0 && <p className="t-small text-value-ink">{dueMoves === 1 ? '1 missed move is' : `${dueMoves} missed moves are`} due for a second try.</p>}
-          <div className="flex w-full">
-            <ProgressBar value={engagement.repsToday} max={DAILY_GOAL} label="Daily goal" color={goalMet ? '#0b9f6e' : '#c77dff'} />
-          </div>
-        </div>
-        <Link href="/reps" className="btn-quiet shrink-0 px-4" aria-label="Do 2-minute reps">
-          <Dumbbell className="h-4 w-4" aria-hidden="true" /> 2 min
-        </Link>
-      </section>}
-
-      {!state.diagnostic && (
-        <Link href="/placement" className={`${fresh ? '' : 'mt-3 '}flex min-h-[56px] items-center gap-3 rounded-[20px] border border-hairline px-4 py-3 hover:bg-deep`}>
-          <ScanSearch className="h-5 w-5 shrink-0 text-people-ink" aria-hidden="true" />
-          <span className="flex flex-1 flex-col">
-            <span className="text-[15px] font-semibold">Take the 2-minute placement check</span>
-            <span className="t-small">Optional. Your daily reps start with your gaps.</span>
-          </span>
-          <ArrowRight className="h-4 w-4 text-slate" aria-hidden="true" />
-        </Link>
-      )}
-
-      {allNodes.map(({ tier, pillar, nodes }) => {
+      {/* The path opens straight on the pillars: no daily goal, no optional side quests. Reps live in their own tab. */}
+      {allNodes.map(({ tier, pillar, nodes }, pillarIndex) => {
         const rubric = curriculum.rubrics[tier];
         const unlocked = tierUnlocked(trajectory, tier);
         const passedSteps = nodes.filter((node) => node.state === 'done').length;
@@ -88,7 +52,7 @@ export default function PathPage() {
                 className="flex flex-col items-center gap-2"
                 style={{ transform: `translateX(${OFFSETS[index] ?? '0px'})` }}
               >
-                <PathButton node={node} color={rubric.text_color} tint={PILLAR_TINT[tier as Tier]} />
+                <PathButton node={node} />
                 <span
                   className={`max-w-[160px] text-center text-[13px] leading-tight ${
                     node.state === 'current' ? 'font-bold text-ink' : node.state === 'locked' ? 'font-semibold text-slate' : 'font-semibold text-charcoal'
@@ -104,7 +68,7 @@ export default function PathPage() {
         if (!unlocked) {
           // Locked pillars stay one line, so the path keeps its focus on the active pillar. Tap to peek.
           return (
-            <details key={tier} className="group mt-3 first-of-type:mt-8">
+            <details key={tier} className={`group ${pillarIndex === 0 ? '' : 'mt-3'}`}>
               <summary className="flex min-h-[64px] cursor-pointer list-none items-center gap-3 rounded-[20px] bg-deep px-4 py-3 [&::-webkit-details-marker]:hidden">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-paper text-slate" aria-hidden="true">
                   <Lock className="h-[18px] w-[18px]" />
@@ -123,7 +87,7 @@ export default function PathPage() {
         }
 
         return (
-          <section key={tier} className="mt-8" aria-labelledby={`pillar-${tier}`}>
+          <section key={tier} className={pillarIndex === 0 ? '' : 'mt-8'} aria-labelledby={`pillar-${tier}`}>
             <div className="flex items-center gap-4 rounded-[20px] p-4" style={{ background: PILLAR_TINT[tier as Tier] }}>
               <div className="flex flex-1 flex-col gap-1">
                 <p className="t-label" style={{ color: rubric.text_color }}>
@@ -172,7 +136,7 @@ function continueLabel(node: PathNode): string {
   return `Continue: ${node.title}`;
 }
 
-function PathButton({ node, color, tint }: { node: PathNode; color: string; tint: string }) {
+function PathButton({ node }: { node: PathNode }) {
   const size = node.kind === 'review' ? 'h-[88px] w-[88px] rounded-[28px]' : 'h-[76px] w-[76px] rounded-full';
   const kindLabel = { lesson: 'Lesson', concept: 'Concept', drill: 'Drill', recap: 'Recap', review: 'Final review' }[node.kind];
   const label = `${kindLabel}: ${node.title}, ${node.state === 'current' ? 'start here' : node.state === 'open' ? 'upcoming' : node.state}`;
@@ -198,13 +162,12 @@ function PathButton({ node, color, tint }: { node: PathNode; color: string; tint
   }
   const isCurrent = node.state === 'current';
   if (!isCurrent) {
-    // Upcoming: open to play, but visually quieter than the one drill the learner should do next.
+    // Upcoming: open to play, but neutral. Only the next step wears the action gradient.
     return (
       <Link
         href={node.href}
         aria-label={label}
-        className={`grid place-items-center border-[3px] bg-paper transition active:translate-y-[3px] ${size}`}
-        style={{ borderColor: color, color, boxShadow: `0 5px 0 ${tint}` }}
+        className={`grid place-items-center border-[3px] border-rule-strong bg-paper text-slate shadow-[0_5px_0_#e5e7eb] transition hover:text-ink active:translate-y-[3px] ${size}`}
       >
         <Icon className="h-7 w-7" aria-hidden="true" />
       </Link>
@@ -215,11 +178,8 @@ function PathButton({ node, color, tint }: { node: PathNode; color: string; tint
       <Link
         href={node.href}
         aria-label={label}
-        className={`grid place-items-center text-white transition active:translate-y-[3px] ${size}`}
-        style={{
-          background: color,
-          boxShadow: isCurrent ? `0 5px 0 rgb(14 17 22 / 0.25), 0 0 0 8px ${tint}` : '0 5px 0 rgb(14 17 22 / 0.25)'
-        }}
+        className={`action-lit grid place-items-center text-white transition active:translate-y-[3px] ${size}`}
+        style={{ boxShadow: '0 5px 0 rgb(14 17 22 / 0.22), 0 0 0 8px rgb(121 80 242 / 0.14)' }}
       >
         <Icon className="h-8 w-8" fill="currentColor" aria-hidden="true" />
       </Link>

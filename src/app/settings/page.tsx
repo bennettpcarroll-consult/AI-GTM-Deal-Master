@@ -79,7 +79,7 @@ export default function SettingsPage() {
           type="button"
           className="btn-quiet text-leak-ink"
           onClick={() => {
-            if (window.confirm('Delete all progress on this device, including your diagnostic and streak?')) update(() => emptyAppState());
+            if (window.confirm('Delete all progress on this device, including your streak?')) update(() => emptyAppState());
           }}
         >
           Clear all data

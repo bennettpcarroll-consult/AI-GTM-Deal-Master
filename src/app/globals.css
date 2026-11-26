@@ -32,11 +32,15 @@
   .card { @apply rounded-card border border-hairline bg-paper shadow-card; }
   .panel { @apply rounded-panel bg-deep; }
 
-  /* Actions. One lit CTA per view; everything else is quiet. */
+  /* Actions. One lit CTA per view; everything else is quiet. Every primary action, from a CTA to the next
+     node on the path, wears the same brand gradient. Pillar colours are identity only, never an action. */
+  .btn-lit, .btn-profit, .btn-leak, .action-lit {
+    background-image: linear-gradient(90deg, #e8590c, #d6336c, #7950f2, #1098ad);
+  }
+  .action-lit { background-image: linear-gradient(135deg, #e8590c, #d6336c 45%, #7950f2); }
   .btn-lit {
     @apply inline-flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full px-6 text-[17px] font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-40;
-    background-image: linear-gradient(90deg, #d9480f, #c2255c, #7048e8, #0c8599);
-    box-shadow: 0 10px 28px -10px rgb(194 37 92 / 0.55);
+    box-shadow: 0 10px 28px -10px rgb(214 51 108 / 0.55);
   }
   .btn-lit:disabled { background-image: none; background-color: #e5e7eb; color: #64748b; box-shadow: none; opacity: 1; }
   .btn-lit:hover:not(:disabled) { filter: brightness(1.06); }
@@ -45,10 +49,10 @@
     @apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-rule-strong bg-paper px-5 text-[15px] font-bold text-ink transition hover:bg-deep disabled:cursor-not-allowed disabled:opacity-40;
   }
   .btn-profit {
-    @apply inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-profit-ink px-6 text-[17px] font-bold text-white transition hover:brightness-110;
+    @apply inline-flex min-h-[56px] w-full items-center justify-center rounded-full px-6 text-[17px] font-bold text-white transition hover:brightness-110;
   }
   .btn-leak {
-    @apply inline-flex min-h-[56px] w-full items-center justify-center rounded-full bg-leak-ink px-6 text-[17px] font-bold text-white transition hover:brightness-110;
+    @apply inline-flex min-h-[56px] w-full items-center justify-center rounded-full px-6 text-[17px] font-bold text-white transition hover:brightness-110;
   }
 
   /* Choice rows used for one-question-per-screen steps. */
