@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource-variable/geist';
 import './globals.css';
+import { FreshBuild } from '@/components/fresh-build';
 
 export const metadata: Metadata = {
   title: 'Deal Master',
@@ -14,7 +15,10 @@ export const viewport: Viewport = { themeColor: '#ffffff', width: 'device-width'
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-dvh">{children}</body>
+      <body className="min-h-dvh">
+        <FreshBuild />
+        {children}
+      </body>
     </html>
   );
 }

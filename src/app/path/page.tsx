@@ -1,59 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Award, BookOpen, Check, ChevronDown, Crown, Dumbbell, Lightbulb, Lock, Play, ScanSearch } from 'lucide-react';
+import { ArrowRight, Award, BookOpen, Check, ChevronDown, Dumbbell, Flag, GraduationCap, Lightbulb, Lock, Play, ScanSearch } from 'lucide-react';
 import { AppShell } from '@/components/app-shell';
 import { PillarIcon } from '@/components/pillar-icon';
 import { Loading, ProgressBar } from '@/components/ui';
 import { PILLAR_TINT } from '@/lib/brand';
 import { loadCurriculum } from '@/lib/curriculum/load';
-import { TIERS, type ArcPillar, type Rubric, type Tier } from '@/lib/curriculum/schema';
-import { arcPillar } from '@/lib/deal-room';
+import type { Tier } from '@/lib/curriculum/schema';
 import { currentEngagement, dayKey, DAILY_GOAL } from '@/lib/engagement';
-import { bossesPassed, drillKey, drillsPassed, tierUnlocked, type Trajectory } from '@/lib/store';
+import { pathFor, type PathNode } from '@/lib/path';
+import { bossesPassed, tierUnlocked } from '@/lib/store';
 import { dueSharpen } from '@/lib/sharpen';
 import { useAppState } from '@/lib/use-app-state';
-
-type NodeState = 'done' | 'current' | 'open' | 'locked';
-
-interface PathNode {
-  key: string;
-  href: string;
-  title: string;
-  kind: 'lesson' | 'concept' | 'drill' | 'boss';
-  state: NodeState;
-  /** Authored arcs end each pillar with a short capstone instead of a boss fight. */
-  capstone?: boolean;
-}
-
-function nodesFor(trajectory: Trajectory, rubric: Rubric, briefingDone: boolean, pillar: ArcPillar | null, conceptDone: boolean): PathNode[] {
-  const tier = rubric.tier;
-  const unlocked = tierUnlocked(trajectory, tier);
-  const drills: PathNode[] = rubric.drills.map((drill, index) => ({
-    key: drill.id,
-    href: `/room/${tier}/drill-${index + 1}`,
-    title: pillar?.drills[index]?.title ?? drill.title,
-    kind: 'drill',
-    state: !unlocked ? 'locked' : trajectory.drills[drillKey(tier, drill.id)]?.passed ? 'done' : 'open'
-  }));
-  const allDrills = drillsPassed(trajectory, tier) === rubric.drills.length;
-  const boss: PathNode = {
-    key: 'boss',
-    href: `/room/${tier}/boss`,
-    title: pillar ? pillar.capstone.title : rubric.boss_fight.title.replace(/^Boss fight · /, ''),
-    kind: 'boss',
-    capstone: Boolean(pillar),
-    state: !unlocked ? 'locked' : trajectory.boss[String(tier)]?.passed ? 'done' : allDrills ? 'open' : 'locked'
-  };
-  // A worked example opens each authored pillar: the one idea, a weak line and a strong one.
-  const concept: PathNode[] = pillar
-    ? [{ key: 'concept', href: `/concept/${tier}`, title: 'The big idea', kind: 'concept', state: !unlocked ? 'locked' : conceptDone ? 'done' : 'open' }]
-    : [];
-  // Pillar 01 opens with the market briefing, so the learner sees the market before the first buyer.
-  const briefing: PathNode[] =
-    tier === 1 ? [{ key: 'briefing', href: '/briefing', title: 'Market briefing', kind: 'lesson', state: briefingDone ? 'done' : 'open' }] : [];
-  return [...briefing, ...concept, ...drills, boss];
-}
 
 /** Zig-zag offsets so the path reads as a trail, not a list. */
 const OFFSETS = ['0px', '64px', '-48px', '24px', '-24px'];
@@ -79,17 +38,9 @@ export default function PathPage() {
   }
 
   const engagement = currentEngagement(state);
-  const briefingDone = (state.lessonsDone ?? []).includes(trajectory.clusterId);
-  const conceptsDone = state.conceptsDone ?? [];
-  const allNodes = TIERS.map((tier) => {
-    const pillar = arcPillar(curriculum, trajectory.clusterId, trajectory.verticalId, tier);
-    return { tier, pillar, nodes: nodesFor(trajectory, curriculum.rubrics[tier], briefingDone, pillar, conceptsDone.includes(`${trajectory.id}:${tier}`)) };
-  });
-  const current = allNodes.flatMap(({ nodes }) => nodes).find((node) => node.state === 'open');
-  if (current) current.state = 'current';
+  const allNodes = pathFor(curriculum, state, trajectory);
   const goalMet = engagement.repsToday >= DAILY_GOAL;
   const dueMoves = dueSharpen(state, trajectory.id, dayKey()).length;
-  const finale = allNodes.some(({ pillar }) => pillar) ? 'capstone' : 'boss fight';
 
   return (
     <AppShell state={state} trajectory={trajectory}>
@@ -163,7 +114,7 @@ export default function PathPage() {
                 <span className="t-small hidden sm:inline">Pass Pillar 0{tier - 1} to unlock</span>
                 <ChevronDown className="h-4 w-4 text-slate transition group-open:rotate-180" aria-hidden="true" />
               </summary>
-              <p className="t-small mt-3 px-1 sm:hidden">Pass the Pillar 0{tier - 1} {finale} to unlock.</p>
+              <p className="t-small mt-3 px-1 sm:hidden">Finish the Pillar 0{tier - 1} drills to unlock.</p>
               {trail}
             </details>
           );
@@ -203,7 +154,7 @@ export default function PathPage() {
         <div className="flex flex-col gap-0.5">
           <p className="t-item">Deal playbook certificate</p>
           <p className="t-small">
-            {bossesPassed(trajectory) === 4 ? `Unlocked. Every ${finale} passed.` : `Unlocks after all 4 ${finale === 'capstone' ? 'capstones' : 'boss fights'}. ${bossesPassed(trajectory)} of 4 passed.`}
+            {trajectory.finalReview?.passed ? 'Unlocked. All 4 pillars and the final review complete.' : `Unlocks after all 4 pillars and the final review. ${bossesPassed(trajectory)} of 4 pillars complete.`}
           </p>
         </div>
       </section>
@@ -214,15 +165,16 @@ export default function PathPage() {
 function continueLabel(node: PathNode): string {
   if (node.kind === 'lesson') return 'Start the market briefing';
   if (node.kind === 'concept') return 'Learn the big idea';
-  if (node.kind === 'boss') return node.capstone ? 'Take on the capstone' : 'Take on the boss fight';
+  if (node.kind === 'recap') return 'See your pillar recap';
+  if (node.kind === 'review') return 'Take the final review';
   return `Continue: ${node.title}`;
 }
 
 function PathButton({ node, color, tint }: { node: PathNode; color: string; tint: string }) {
-  const size = node.kind === 'boss' ? 'h-[88px] w-[88px] rounded-[28px]' : 'h-[76px] w-[76px] rounded-full';
-  const kindLabel = node.kind === 'boss' ? (node.capstone ? 'Capstone' : 'Boss fight') : node.kind === 'lesson' ? 'Lesson' : node.kind === 'concept' ? 'Concept' : 'Drill';
+  const size = node.kind === 'review' ? 'h-[88px] w-[88px] rounded-[28px]' : 'h-[76px] w-[76px] rounded-full';
+  const kindLabel = { lesson: 'Lesson', concept: 'Concept', drill: 'Drill', recap: 'Recap', review: 'Final review' }[node.kind];
   const label = `${kindLabel}: ${node.title}, ${node.state === 'current' ? 'start here' : node.state === 'open' ? 'upcoming' : node.state}`;
-  const Icon = node.kind === 'boss' ? Crown : node.kind === 'lesson' ? BookOpen : node.kind === 'concept' ? Lightbulb : Play;
+  const Icon = { lesson: BookOpen, concept: Lightbulb, drill: Play, recap: Flag, review: GraduationCap }[node.kind];
 
   if (node.state === 'locked') {
     return (
