@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Award, Check, Crown, Dumbbell, Lock, Play } from 'lucide-react';
+import { Award, Check, ChevronDown, Crown, Dumbbell, Lock, Play } from 'lucide-react';
 import { AppShell } from '@/components/app-shell';
 import { PillarIcon } from '@/components/pillar-icon';
 import { Loading, ProgressBar } from '@/components/ui';
@@ -82,7 +82,9 @@ export default function PathPage() {
               {Math.min(engagement.repsToday, DAILY_GOAL)} of {DAILY_GOAL} reps
             </p>
           </div>
-          <ProgressBar value={engagement.repsToday} max={DAILY_GOAL} label="Daily goal" color={goalMet ? '#0b9f6e' : '#c77dff'} />
+          <div className="flex w-full">
+            <ProgressBar value={engagement.repsToday} max={DAILY_GOAL} label="Daily goal" color={goalMet ? '#0b9f6e' : '#c77dff'} />
+          </div>
         </div>
         <Link href="/reps" className="btn-quiet shrink-0 px-4" aria-label="Do 2-minute reps">
           <Dumbbell className="h-4 w-4" aria-hidden="true" /> 2 min
@@ -93,14 +95,53 @@ export default function PathPage() {
         const rubric = curriculum.rubrics[tier];
         const unlocked = tierUnlocked(trajectory, tier);
         const passedSteps = nodes.filter((node) => node.state === 'done').length;
+        const trail = (
+          <ol className="mt-6 flex flex-col items-center gap-5">
+            {nodes.map((node, index) => (
+              <li
+                key={node.key}
+                className={`flex flex-col items-center gap-2 ${node.state === 'current' ? 'pt-12' : ''}`}
+                style={{ transform: `translateX(${OFFSETS[index] ?? '0px'})` }}
+              >
+                <PathButton node={node} color={rubric.text_color} tint={PILLAR_TINT[tier as Tier]} />
+                <span
+                  className={`max-w-[160px] text-center text-[13px] leading-tight ${
+                    node.state === 'current' ? 'font-bold text-ink' : node.state === 'locked' ? 'font-semibold text-slate' : 'font-semibold text-charcoal'
+                  }`}
+                >
+                  {node.title}
+                </span>
+              </li>
+            ))}
+          </ol>
+        );
+
+        if (!unlocked) {
+          // Locked pillars stay one line, so the path keeps its focus on the active pillar. Tap to peek.
+          return (
+            <details key={tier} className="group mt-3 first-of-type:mt-8">
+              <summary className="flex min-h-[64px] cursor-pointer list-none items-center gap-3 rounded-[20px] bg-deep px-4 py-3 [&::-webkit-details-marker]:hidden">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-paper text-slate" aria-hidden="true">
+                  <Lock className="h-[18px] w-[18px]" />
+                </span>
+                <span className="flex flex-1 flex-col">
+                  <span className="t-label">Pillar {rubric.pillar} · {rubric.role_title}</span>
+                  <span className="text-[15px] font-bold">{rubric.transition_banner.title}</span>
+                </span>
+                <span className="t-small hidden sm:inline">Pass Pillar 0{tier - 1} to unlock</span>
+                <ChevronDown className="h-4 w-4 text-slate transition group-open:rotate-180" aria-hidden="true" />
+              </summary>
+              <p className="t-small mt-3 px-1 sm:hidden">Pass the Pillar 0{tier - 1} boss fight to unlock.</p>
+              {trail}
+            </details>
+          );
+        }
+
         return (
           <section key={tier} className="mt-8" aria-labelledby={`pillar-${tier}`}>
-            <div
-              className="flex items-center gap-4 rounded-[20px] p-4"
-              style={{ background: unlocked ? PILLAR_TINT[tier as Tier] : '#f4f5f7' }}
-            >
+            <div className="flex items-center gap-4 rounded-[20px] p-4" style={{ background: PILLAR_TINT[tier as Tier] }}>
               <div className="flex flex-1 flex-col gap-1">
-                <p className="t-label" style={{ color: unlocked ? rubric.text_color : undefined }}>
+                <p className="t-label" style={{ color: rubric.text_color }}>
                   Pillar {rubric.pillar} · {rubric.role_title}
                 </p>
                 <h2 id={`pillar-${tier}`} className="t-heading">
@@ -110,25 +151,11 @@ export default function PathPage() {
                   {rubric.acv_band} deals · {passedSteps} of {nodes.length} steps
                 </p>
               </div>
-              <span
-                className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-paper"
-                style={{ color: unlocked ? rubric.text_color : '#5e6672' }}
-                aria-hidden="true"
-              >
-                {unlocked ? <PillarIcon name={rubric.icon} className="h-6 w-6" /> : <Lock className="h-5 w-5" />}
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-paper" style={{ color: rubric.text_color }} aria-hidden="true">
+                <PillarIcon name={rubric.icon} className="h-6 w-6" />
               </span>
             </div>
-
-            <ol className="mt-6 flex flex-col items-center gap-5">
-              {nodes.map((node, index) => (
-                <li key={node.key} className={`flex flex-col items-center gap-2 ${node.state === 'current' ? 'pt-12' : ''}`} style={{ transform: `translateX(${OFFSETS[index] ?? '0px'})` }}>
-                  <PathButton node={node} color={rubric.text_color} tint={PILLAR_TINT[tier as Tier]} />
-                  <span className={`max-w-[160px] text-center text-[13px] font-semibold leading-tight ${node.state === 'locked' ? 'text-slate' : 'text-ink'}`}>
-                    {node.title}
-                  </span>
-                </li>
-              ))}
-            </ol>
+            {trail}
           </section>
         );
       })}
@@ -148,7 +175,7 @@ export default function PathPage() {
 
 function PathButton({ node, color, tint }: { node: PathNode; color: string; tint: string }) {
   const size = node.kind === 'boss' ? 'h-[88px] w-[88px] rounded-[28px]' : 'h-[76px] w-[76px] rounded-full';
-  const label = `${node.kind === 'boss' ? 'Boss fight' : 'Drill'}: ${node.title}, ${node.state === 'current' ? 'start' : node.state}`;
+  const label = `${node.kind === 'boss' ? 'Boss fight' : 'Drill'}: ${node.title}, ${node.state === 'current' ? 'start here' : node.state === 'open' ? 'upcoming' : node.state}`;
   const Icon = node.kind === 'boss' ? Crown : Play;
 
   if (node.state === 'locked') {
@@ -170,6 +197,19 @@ function PathButton({ node, color, tint }: { node: PathNode; color: string; tint
     );
   }
   const isCurrent = node.state === 'current';
+  if (!isCurrent) {
+    // Upcoming: open to play, but visually quieter than the one drill the learner should do next.
+    return (
+      <Link
+        href={node.href}
+        aria-label={label}
+        className={`grid place-items-center border-[3px] bg-paper transition active:translate-y-[3px] ${size}`}
+        style={{ borderColor: color, color, boxShadow: `0 5px 0 ${tint}` }}
+      >
+        <Icon className="h-7 w-7" aria-hidden="true" />
+      </Link>
+    );
+  }
   return (
     <span className="relative">
       {isCurrent && (

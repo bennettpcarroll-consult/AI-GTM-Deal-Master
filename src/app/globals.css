@@ -38,6 +38,7 @@
     background-image: linear-gradient(90deg, #d9480f, #c2255c, #7048e8, #0c8599);
     box-shadow: 0 10px 28px -10px rgb(194 37 92 / 0.55);
   }
+  .btn-lit:disabled { background-image: none; background-color: #e5e7eb; color: #64748b; box-shadow: none; opacity: 1; }
   .btn-lit:hover:not(:disabled) { filter: brightness(1.06); }
   .btn-lit:active:not(:disabled) { transform: translateY(1px); }
   .btn-quiet {

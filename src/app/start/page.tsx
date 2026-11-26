@@ -43,6 +43,14 @@ export default function StartPage() {
   const vertical = verticalId ? curriculum.verticals[verticalId] : null;
   const totalSteps = needsDiagnostic ? 6 : 4;
   const stepNumber = { cluster: 1, vertical: 2, lesson: 3, quiz: 4, 'diagnostic-intro': 5, diagnostic: 5, map: 6 }[step];
+  const stepName = { cluster: 'What you sell', vertical: 'Who you sell to', lesson: 'Market fundamentals', quiz: 'Lesson check', 'diagnostic-intro': 'Diagnostic', diagnostic: 'Diagnostic', map: 'Skill map' }[step];
+  const stepLabel = `Step ${stepNumber} of ${totalSteps} · ${stepName}`;
+  // One progress bar spans all of onboarding: every choice, card and question is one unit.
+  const cardCount = cluster?.lesson.cards.length ?? 4;
+  const quizCount = cluster?.lesson.quiz.length ?? 3;
+  const offsets = { cluster: 0, vertical: 1, lesson: 2, quiz: 2 + cardCount, 'diagnostic-intro': 2 + cardCount + quizCount, diagnostic: 3 + cardCount + quizCount, map: 3 + cardCount + quizCount + diagnostic.length };
+  const progressMax = needsDiagnostic ? offsets.map + 1 : offsets['diagnostic-intro'];
+  const journey = (at: Step, done = 0) => ({ value: offsets[at] + done, max: progressMax });
 
   const finish = (diagnosticAnswers: Record<string, boolean> | null) => {
     if (!clusterId || !verticalId) return;
@@ -74,8 +82,8 @@ export default function StartPage() {
           <StepBar
             exitHref={isCluster && state.trajectories.length > 0 ? '/path' : undefined}
             onBack={isCluster ? undefined : () => setStep('cluster')}
-            value={stepNumber - 1}
-            max={totalSteps}
+            value={journey(step).value}
+            max={progressMax}
             label="Setup progress"
           />
         }
@@ -97,7 +105,7 @@ export default function StartPage() {
         }
       >
         <div key={step} className="flex animate-rise flex-col gap-3 pt-7">
-          <p className="t-label">Step {stepNumber} of {totalSteps}</p>
+          <p className="t-label">{stepLabel}</p>
           <h1 className="t-title">{isCluster ? 'What do you sell?' : 'Who do you sell to?'}</h1>
           <p className="t-lede">{isCluster ? 'Pick the AI category you want to master.' : 'Your buyers, their objections and their paper process.'}</p>
         </div>
@@ -144,7 +152,7 @@ export default function StartPage() {
     const last = card === cards.length - 1;
     return (
       <FocusScreen
-        top={<StepBar onBack={() => (card === 0 ? setStep('vertical') : setCard(card - 1))} value={card + 1} max={cards.length} label="Market lesson progress" />}
+        top={<StepBar onBack={() => (card === 0 ? setStep('vertical') : setCard(card - 1))} value={journey('lesson', card).value} max={progressMax} label="Setup progress" />}
         footer={
           <button type="button" className="btn-lit" onClick={() => (last ? setStep('quiz') : setCard(card + 1))}>
             {last ? 'Check what you learned' : 'Next'} <ArrowRight className="h-5 w-5" aria-hidden="true" />
@@ -152,7 +160,7 @@ export default function StartPage() {
         }
       >
         <div key={card} className="animate-rise pt-6">
-          <MarketLessonCard curriculum={curriculum} cluster={cluster} index={card} />
+          <MarketLessonCard curriculum={curriculum} cluster={cluster} index={card} eyebrow={`Step ${stepNumber} of ${totalSteps} · Lesson ${card + 1} of ${cards.length}`} />
         </div>
       </FocusScreen>
     );
@@ -163,7 +171,9 @@ export default function StartPage() {
       <QuestionFlow
         key="quiz"
         questions={lessonQuizQuestions(cluster.lesson, cluster.display_name)}
-        progressLabel="Lesson check progress"
+        progressLabel="Setup progress"
+        stepLabel={stepLabel}
+        progress={(done) => journey('quiz', done)}
         onBack={() => {
           setCard(cluster.lesson.cards.length - 1);
           setStep('lesson');
@@ -176,18 +186,23 @@ export default function StartPage() {
   if (step === 'diagnostic-intro') {
     return (
       <FocusScreen
-        top={<StepBar onBack={() => setStep('quiz')} value={4} max={totalSteps} label="Setup progress" />}
+        top={<StepBar onBack={() => setStep('quiz')} value={journey('diagnostic-intro').value} max={progressMax} label="Setup progress" />}
         footer={
-          <button type="button" className="btn-lit" onClick={() => setStep('diagnostic')}>
-            Start the diagnostic
-          </button>
+          <div className="flex flex-col gap-2">
+            <button type="button" className="btn-lit" onClick={() => setStep('diagnostic')}>
+              Start the diagnostic
+            </button>
+            <button type="button" className="btn-quiet" onClick={() => finish(null)}>
+              Skip for now and go to my path
+            </button>
+          </div>
         }
       >
         <div className="flex animate-rise flex-col gap-3 pt-7">
           <IconTile tint="#f6ebff" color="#8a3cc7" size="lg">
             <ScanSearch className="h-8 w-8" strokeWidth={1.75} />
           </IconTile>
-          <p className="t-label mt-2">Step 5 of 6</p>
+          <p className="t-label mt-2">{stepLabel}</p>
           <h1 className="t-title">Find your starting point.</h1>
           <p className="t-lede">{curriculum.diagnostic.intro}</p>
         </div>
@@ -213,7 +228,9 @@ export default function StartPage() {
       <QuestionFlow
         key="diagnostic"
         questions={diagnostic}
-        progressLabel="Diagnostic progress"
+        progressLabel="Setup progress"
+        stepLabel={stepLabel}
+        progress={(done) => journey('diagnostic', done)}
         onBack={() => setStep('diagnostic-intro')}
         onDone={(results) => {
           setAnswers(results);
@@ -225,11 +242,17 @@ export default function StartPage() {
 
   if (step === 'map') {
     const byFamily = diagnosticByFamily(curriculum, answers);
-    const weakest = [...byFamily].sort((a, b) => a.correct / a.total - b.correct / b.total)[0];
+    const ratio = (family: (typeof byFamily)[number]) => family.correct / Math.max(family.total, 1);
+    const lowest = Math.min(...byFamily.map(ratio));
+    // Only a family that dropped a question is a gap. A perfect run has none, and ties are all named.
+    const gaps = lowest < 1 ? byFamily.filter((family) => ratio(family) === lowest) : [];
+    const gapIds = new Set(gaps.map((family) => family.familyId));
+    const gapNames = gaps.map((family) => family.label.toLowerCase());
+    const gapText = gapNames.length <= 1 ? gapNames[0] : `${gapNames.slice(0, -1).join(', ')} and ${gapNames[gapNames.length - 1]}`;
     const total = byFamily.reduce((sum, family) => sum + family.correct, 0);
     return (
       <FocusScreen
-        top={<StepBar value={6} max={6} label="Setup progress" />}
+        top={<StepBar value={progressMax} max={progressMax} label="Setup progress" />}
         footer={
           <button type="button" className="btn-lit" onClick={() => finish(answers)}>
             Start my path <ArrowRight className="h-5 w-5" aria-hidden="true" />
@@ -237,19 +260,21 @@ export default function StartPage() {
         }
       >
         <div className="flex animate-rise flex-col gap-3 pt-7">
-          <p className="t-label">Your skill map</p>
+          <p className="t-label">{stepLabel}</p>
           <h1 className="t-title">
-            {total} of {diagnostic.length} strong moves.
+            {gaps.length === 0 ? `${total} of ${diagnostic.length}. Sharp judgement.` : `${total} of ${diagnostic.length} strong moves.`}
           </h1>
           <p className="t-lede">
-            Your biggest gap is {weakest?.label.toLowerCase()}. You start at Pillar 01, and every pillar builds on the one before.
+            {gaps.length === 0
+              ? 'No gaps in judgement. Now prove it with buyers: pillars unlock with buyer proof, not quiz answers, so strong sellers clear Pillar 01 fast.'
+              : `Your ${gaps.length === 1 ? 'biggest gap is' : 'gaps are'} ${gapText}, so your daily reps start there. Pillars unlock with buyer proof, not quiz answers, so everyone begins at Pillar 01.`}
           </p>
         </div>
         <ul className="mt-7 flex flex-col gap-2.5">
           {byFamily.map((family) => {
             const meta = curriculum.families.find((candidate) => candidate.id === family.familyId);
             const color = FAMILY_COLOR[family.familyId] ?? '#5e6672';
-            const isGap = family.familyId === weakest?.familyId;
+            const isGap = gapIds.has(family.familyId);
             return (
               <li
                 key={family.familyId}

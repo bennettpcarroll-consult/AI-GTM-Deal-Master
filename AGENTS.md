@@ -54,6 +54,7 @@ Every CI run feeds the next change:
 
 ## Lessons from CI
 
+- A talk track the coach teaches must be gradable. When you edit a skill's `talk_track.strong` or a signal's probes, keep `tests/rubric/skills.test.ts` ("talk tracks the coach teaches") green.
 - Playwright `text=Check` also matches labels such as "CHECK 1 OF 3". Use `getByRole('button', { name, exact: true })`.
 - Grammar in generated scenario copy is checked by eye only. Read a sample of every regenerated pack before committing.
 
