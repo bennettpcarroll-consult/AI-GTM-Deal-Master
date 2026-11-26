@@ -1,4 +1,4 @@
-import { Coins, Crosshair, Layers, Lightbulb, Receipt, Swords } from 'lucide-react';
+import { Coins, Layers, Lightbulb, Receipt, Swords } from 'lucide-react';
 import { FAMILY_COLOR, FAMILY_TINT, LAYER_STYLE } from '@/lib/brand';
 import type { Curriculum } from '@/lib/curriculum/load';
 import type { Cluster } from '@/lib/curriculum/schema';
@@ -54,22 +54,12 @@ export function MarketLessonCard({ curriculum, cluster, index, eyebrow }: { curr
         </>
       )}
 
+      {/* Say it once: the card body is the model. The pricing summary already appeared when the learner picked this market. */}
       {index === 2 && (
-        <>
-          <div className="rounded-card p-6" style={{ background: style.tint }}>
-            <Coins className="mb-4 h-8 w-8" style={{ color: style.ink }} strokeWidth={1.75} aria-hidden="true" />
-            <p className="font-display text-[22px] font-bold leading-[1.3] tracking-[-0.015em]">{card.body}</p>
-          </div>
-          <div className="flex items-start gap-3">
-            <IconTile tint="#f4f5f7" color="#0e1116" size="sm">
-              <Crosshair className="h-[18px] w-[18px]" strokeWidth={1.75} />
-            </IconTile>
-            <p className="t-body flex-1">
-              <span className="font-bold">The model in one line: </span>
-              {cluster.pricing_unit.summary}
-            </p>
-          </div>
-        </>
+        <div className="rounded-card p-6" style={{ background: style.tint }}>
+          <Coins className="mb-4 h-8 w-8" style={{ color: style.ink }} strokeWidth={1.75} aria-hidden="true" />
+          <p className="font-display text-[22px] font-bold leading-[1.3] tracking-[-0.015em]">{card.body}</p>
+        </div>
       )}
 
       {index === 3 && (

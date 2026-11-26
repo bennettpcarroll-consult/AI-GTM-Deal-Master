@@ -27,13 +27,30 @@ export function tierSkillIds(curriculum: Curriculum, rubric: Rubric): string[] {
   return [...new Set(rubric.drills.flatMap((_, index) => drillSkillIds(curriculum, rubric, index)))];
 }
 
-/** Where a skill is taught: the pillar and drill numbers. */
-export function whereTaught(curriculum: Curriculum, skillId: string): { tier: Tier; drillIndex: number }[] {
+/** The cluster and vertical a learner sells into. Enough to find an authored arc. */
+export type SkillPath = Pick<Trajectory, 'clusterId' | 'verticalId'>;
+
+/**
+ * Skills a drill builds on this path. An authored arc teaches the skills its scenes play, so a
+ * debrief or recap never credits a skill the learner did not practise. Generated rooms follow the rubric.
+ */
+export function pathDrillSkillIds(curriculum: Curriculum, path: SkillPath | undefined, tier: Tier, drillIndex: number): string[] {
+  const arcDrill = path ? curriculum.arcs[`${path.clusterId}__${path.verticalId}`]?.pillars.find((pillar) => pillar.tier === tier)?.drills[drillIndex] : undefined;
+  if (arcDrill) return [...new Set(arcDrill.beats.map((beat) => beat.skill))];
+  return drillSkillIds(curriculum, curriculum.rubrics[tier], drillIndex);
+}
+
+/** Every skill a pillar teaches on this path. */
+export function pathTierSkillIds(curriculum: Curriculum, path: SkillPath | undefined, tier: Tier): string[] {
+  return [...new Set(curriculum.rubrics[tier].drills.flatMap((_, index) => pathDrillSkillIds(curriculum, path, tier, index)))];
+}
+
+/** Where a skill is taught: the pillar and drill numbers, on the learner's path when one is given. */
+export function whereTaught(curriculum: Curriculum, skillId: string, path?: SkillPath): { tier: Tier; drillIndex: number }[] {
   const out: { tier: Tier; drillIndex: number }[] = [];
   for (const tier of TIERS) {
-    const rubric = curriculum.rubrics[tier];
-    rubric.drills.forEach((_, drillIndex) => {
-      if (drillSkillIds(curriculum, rubric, drillIndex).includes(skillId)) out.push({ tier, drillIndex });
+    curriculum.rubrics[tier].drills.forEach((_, drillIndex) => {
+      if (pathDrillSkillIds(curriculum, path, tier, drillIndex).includes(skillId)) out.push({ tier, drillIndex });
     });
   }
   return out;
@@ -46,16 +63,16 @@ export function whereTaught(curriculum: Curriculum, skillId: string): { tier: Ti
  * Practiced: attempted in a drill or boss fight, answered correctly in the diagnostic, or done as a rep.
  */
 export function skillMastery(curriculum: Curriculum, state: AppState, trajectory: Trajectory | undefined, skillId: string): Mastery {
-  const places = whereTaught(curriculum, skillId);
+  const places = whereTaught(curriculum, skillId, trajectory);
   if (trajectory) {
     if (places.some(({ tier }) => trajectory.boss[String(tier)]?.passed)) return 4;
     if (places.some(({ tier, drillIndex }) => trajectory.drills[drillKey(tier, curriculum.rubrics[tier].drills[drillIndex]?.id ?? '')]?.passed)) {
       return 3;
     }
     const attempted = trajectory.sessions.some((session) => {
-      if (session.mode === 'boss') return tierSkillIds(curriculum, curriculum.rubrics[session.tier]).includes(skillId);
+      if (session.mode === 'boss') return pathTierSkillIds(curriculum, trajectory, session.tier).includes(skillId);
       const index = curriculum.rubrics[session.tier].drills.findIndex((drill) => drill.id === session.drillId);
-      return drillSkillIds(curriculum, curriculum.rubrics[session.tier], index).includes(skillId);
+      return pathDrillSkillIds(curriculum, trajectory, session.tier, index).includes(skillId);
     });
     if (attempted) return 2;
   }

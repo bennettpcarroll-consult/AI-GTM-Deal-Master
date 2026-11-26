@@ -28,13 +28,13 @@ export default function HomePage() {
           <span className="bg-gradient-to-r from-[#d9480f] via-[#c2255c] to-[#7048e8] bg-clip-text text-transparent">Start closing.</span>
         </h1>
         <p className="t-lede">
-          Practice real AI deals against a live buying committee. Every skill is graded on what the buyer says, never on a checkbox.
+          Practice real AI deals against a full buying committee. Every skill is graded on what the buyer says, never on a checkbox.
         </p>
         <ul className="flex flex-col gap-3">
           {[
             ['24 skills', 'Sales fundamentals, MEDDPICC, consumption and executive selling'],
             ['A few minutes a day', 'Two-minute reps between calls, deeper drills when you have time'],
-            ['Proof, not points for showing up', 'You only score when the buyer confirms it in their own words']
+            ['The whole deal cycle', 'Qualify, reframe, prove and close, one pillar at a time']
           ].map(([title, body]) => (
             <li key={title} className="flex items-start gap-3">
               <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-profit-soft text-profit-ink" aria-hidden="true">
@@ -51,7 +51,7 @@ export default function HomePage() {
       <Link href="/start" className="btn-lit">
         Get started
       </Link>
-      <p className="t-small mt-3 text-center">About 8 minutes to set up, including a short diagnostic.</p>
+      <p className="t-small mt-3 text-center">Two taps to set up. No typing, ever.</p>
     </main>
   );
 }

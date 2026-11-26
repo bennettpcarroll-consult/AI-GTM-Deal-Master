@@ -15,15 +15,25 @@ export function repToQuestion(rep: RepQuestion, familyLabel: string): FlowQuesti
   };
 }
 
+/**
+ * The briefing check. The right answer moves to a different slot on each question, from a stable
+ * seed, so it is never always first (authors tend to write it first) and a reload keeps the order.
+ */
 export function lessonQuizQuestions(lesson: Lesson, clusterName: string): FlowQuestion[] {
-  return lesson.quiz.map((item, index) => ({
-    id: `quiz-${index}`,
-    kicker: clusterName,
-    prompt: item.prompt,
-    options: item.options,
-    answer: item.answer,
-    why: item.why
-  }));
+  return lesson.quiz.map((item, index) => {
+    const right = item.options[item.answer]!;
+    const others = item.options.filter((_, optionIndex) => optionIndex !== item.answer);
+    const slot = (seedHash(clusterName) + index) % item.options.length;
+    return {
+      id: `quiz-${index}`,
+      kicker: clusterName,
+      prompt: item.prompt,
+      options: [...others.slice(0, slot), right, ...others.slice(slot)],
+      answer: slot,
+      why: item.why,
+      kind: 'fact' as const
+    };
+  });
 }
 
 /** A missed move from the deal room, asked again in daily reps: same buyer line, options reshuffled. */

@@ -41,10 +41,12 @@ export default function PathPage() {
   const allNodes = pathFor(curriculum, state, trajectory);
   const goalMet = engagement.repsToday >= DAILY_GOAL;
   const dueMoves = dueSharpen(state, trajectory.id, dayKey()).length;
+  // A brand-new learner has one job: start Pillar 01. The daily goal appears once they have practised.
+  const fresh = engagement.lastActiveDay === null && engagement.repsToday === 0;
 
   return (
     <AppShell state={state} trajectory={trajectory}>
-      <section className="card flex items-center gap-4 p-4" aria-label="Daily goal">
+      {!fresh && <section className="card flex items-center gap-4 p-4" aria-label="Daily goal">
         <div className="flex flex-1 flex-col gap-2">
           <div className="flex items-baseline justify-between gap-2">
             <p className="t-item">{goalMet ? 'Daily goal hit.' : 'Daily goal'}</p>
@@ -60,10 +62,10 @@ export default function PathPage() {
         <Link href="/reps" className="btn-quiet shrink-0 px-4" aria-label="Do 2-minute reps">
           <Dumbbell className="h-4 w-4" aria-hidden="true" /> 2 min
         </Link>
-      </section>
+      </section>}
 
       {!state.diagnostic && (
-        <Link href="/placement" className="mt-3 flex min-h-[56px] items-center gap-3 rounded-[20px] border border-hairline px-4 py-3 hover:bg-deep">
+        <Link href="/placement" className={`${fresh ? '' : 'mt-3 '}flex min-h-[56px] items-center gap-3 rounded-[20px] border border-hairline px-4 py-3 hover:bg-deep`}>
           <ScanSearch className="h-5 w-5 shrink-0 text-people-ink" aria-hidden="true" />
           <span className="flex flex-1 flex-col">
             <span className="text-[15px] font-semibold">Take the 2-minute placement check</span>

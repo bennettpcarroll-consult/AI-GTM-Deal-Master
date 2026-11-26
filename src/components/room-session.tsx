@@ -12,10 +12,10 @@ import { dayKey, recordActivity } from '@/lib/engagement';
 import { queueMisses } from '@/lib/sharpen';
 import { gradeSession, type GradeResult } from '@/lib/grader';
 import type { Turn } from '@/lib/simulator';
-import { drillSkillIds, proofCount, skillMastery, tierSkillIds } from '@/lib/skills';
+import { pathDrillSkillIds, pathTierSkillIds, proofCount, skillMastery } from '@/lib/skills';
 import { recordSession, type SessionMiss, type SessionRecord, type Trajectory } from '@/lib/store';
 import { useAppState, type UpdateAppState } from '@/lib/use-app-state';
-import { FocusScreen, MasteryBadge, ProgressBar, SignalState } from './ui';
+import { FocusScreen, MasteryBadge, PeopleGrid, ProgressBar, SignalState } from './ui';
 
 interface RoomSessionProps {
   trajectory: Trajectory;
@@ -56,8 +56,8 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
   const { payload, rc } = setup;
   const scene = rc.arc;
   const skillIds = useMemo(
-    () => (isBoss ? tierSkillIds(curriculum, rubric) : drillSkillIds(curriculum, rubric, drillIndex)),
-    [curriculum, rubric, drillIndex, isBoss]
+    () => (isBoss ? pathTierSkillIds(curriculum, trajectory, tier) : pathDrillSkillIds(curriculum, trajectory, tier, drillIndex)),
+    [curriculum, trajectory, tier, drillIndex, isBoss]
   );
   const skills = skillIds.map((id) => curriculum.skills.find((skill) => skill.id === id)).filter((skill): skill is Skill => Boolean(skill));
   const signalSkill = (signal: SignalId) => curriculum.skills.find((skill) => skill.signal === signal);
@@ -205,20 +205,38 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
           </ul>
         </section>}
 
-        <section className="mt-5 flex flex-col gap-4 pb-2">
-          <div className="flex items-start gap-3">
-            <IconTile tint="#f4f5f7" color="#5e6672" size="sm">
-              <Building2 className="h-[18px] w-[18px]" strokeWidth={1.75} />
-            </IconTile>
-            <p className="t-body flex-1 text-charcoal">{scene ? `${scene.arc.account.name}. ${scene.pillar.problem}` : scenario.situation}</p>
+        {scene ? (
+          // Authored scenes: the setting already tells the story, so the brief adds only who is in the room and the pillar idea.
+          <div className="mt-6 flex flex-col gap-5 pb-2">
+            <PeopleGrid people={castPeople(scene)} color={color} tint={tint} label={`In the room at ${scene.arc.account.name}`} />
+            {scene.kind === 'drill' && (
+              <p className="flex items-start gap-2 text-[14px] leading-snug text-charcoal">
+                <Sparkles className="mt-0.5 h-4 w-4 shrink-0" style={{ color }} aria-hidden="true" />
+                <span>
+                  <span className="font-semibold" style={{ color }}>
+                    Pillar idea:
+                  </span>{' '}
+                  {scene.pillar.concept.title}
+                </span>
+              </p>
+            )}
           </div>
-          <div className="flex items-start gap-3">
-            <IconTile tint="#f4f5f7" color="#5e6672" size="sm">
-              <Users className="h-[18px] w-[18px]" strokeWidth={1.75} />
-            </IconTile>
-            <p className="t-body flex-1 text-charcoal">{scene ? castLine(scene) : meetLine(payload.personas.map((persona) => persona.role))}</p>
-          </div>
-        </section>
+        ) : (
+          <section className="mt-5 flex flex-col gap-4 pb-2">
+            <div className="flex items-start gap-3">
+              <IconTile tint="#f4f5f7" color="#5e6672" size="sm">
+                <Building2 className="h-[18px] w-[18px]" strokeWidth={1.75} />
+              </IconTile>
+              <p className="t-body flex-1 text-charcoal">{scenario.situation}</p>
+            </div>
+            <div className="flex items-start gap-3">
+              <IconTile tint="#f4f5f7" color="#5e6672" size="sm">
+                <Users className="h-[18px] w-[18px]" strokeWidth={1.75} />
+              </IconTile>
+              <p className="t-body flex-1 text-charcoal">{meetLine(payload.personas.map((persona) => persona.role))}</p>
+            </div>
+          </section>
+        )}
       </FocusScreen>
     );
   }
@@ -548,6 +566,7 @@ function Debrief({
   // Misses worth replaying: the last miss on each beat, newest first. Drills repeat a missed beat, so one beat can hold several.
   const misses = [...new Map(room.picks.filter((pick) => pick.kind !== 'elite').map((pick) => [pick.beatId, pick] as const)).values()].reverse();
   const walkoutRole = room.walkedOut ? record.transcript.at(-1)?.speakerRole : undefined;
+  const proofTurn = (id: string | null | undefined) => (id ? record.transcript.find((turn) => turn.id === id && turn.speaker === 'buyer') : undefined);
 
   return (
     <FocusScreen
@@ -628,6 +647,7 @@ function Debrief({
                 key: signal,
                 label: signalLabel(signal),
                 done: bars === 4,
+                proof: proofTurn(grade.bindings[signal].transcript_turn_id),
                 next: bars === 3 ? 'Acknowledged without a number, name or date. Ask a sharper follow-up.' : (curriculum.skills.find((skill) => skill.signal === signal)?.talk_track.move ?? 'Not probed yet.')
               };
             }),
@@ -635,6 +655,7 @@ function Debrief({
               key: item.skill,
               label: curriculum.skills.find((candidate) => candidate.id === item.skill)?.label ?? item.skill,
               done: item.level === 'verbatim',
+              proof: proofTurn(item.transcript_turn_id),
               next: 'The buyer hinted at it. Ask for the numbers.'
             }))
           ].map((row) => (
@@ -651,6 +672,13 @@ function Debrief({
                   <span className="sr-only">{row.done ? ', verified' : ', not verified'}</span>
                 </span>
                 {!row.done && <span className="t-small">{row.next}</span>}
+                {/* The buyer's words sit under the signal they prove, so the debrief quotes each line once. */}
+                {row.done && row.proof && (
+                  <span className="mt-0.5 flex flex-col gap-0.5 border-l-[3px] pl-3" style={{ borderColor: BRAND.profit }}>
+                    <span className="t-quote text-[15px]">“{row.proof.content}”</span>
+                    <span className="t-small">{row.proof.speakerRole}</span>
+                  </span>
+                )}
               </div>
             </li>
           ))}
@@ -731,29 +759,16 @@ function sessionMisses(picks: Pick[]): SessionMiss[] {
   return [...misses.values()];
 }
 
-/** "You will meet Priya Shah, Head of AI Platform, and Daniel Okafor, Head of Model Risk." */
-function castLine(scene: ArcScene): string {
+/** Everyone who speaks in this scene, in the order they first speak. */
+function castPeople(scene: ArcScene): { name: string; role: string }[] {
   const ids = [...new Set(scene.beats.flatMap((beat) => [beat.speaker, ...beat.options.map((option) => option.reply_by).filter((id): id is string => Boolean(id))]))];
-  const people = ids.map((id) => scene.cast[id]).filter((member): member is NonNullable<typeof member> => Boolean(member)).map((member) => `${member.name}, ${member.role}`);
-  if (people.length === 1) return `You will meet ${people[0]}.`;
-  return `You will meet ${people.slice(0, -1).join('; ')} and ${people.at(-1)}.`;
+  return ids.map((id) => scene.cast[id]).filter((member): member is NonNullable<typeof member> => Boolean(member)).map(({ name, role }) => ({ name, role }));
 }
 
 /** The pillar idea for a drill, or the curveball and variant for a capstone. */
 function ArcBrief({ scene, color, tint, onFullCapstone }: { scene: ArcScene; color: string; tint: string; onFullCapstone?: () => void }) {
-  if (scene.kind === 'drill') {
-    return (
-      <section className="mt-5 flex items-start gap-3 rounded-panel p-4" style={{ background: tint }} aria-label="Pillar idea">
-        <Sparkles className="mt-0.5 h-5 w-5 shrink-0" style={{ color }} aria-hidden="true" />
-        <p className="flex flex-col gap-0.5">
-          <span className="t-label" style={{ color }}>
-            The idea this pillar trains
-          </span>
-          <span className="t-item">{scene.pillar.concept.title}</span>
-        </p>
-      </section>
-    );
-  }
+  // A drill's pillar idea sits as one quiet line under the cast, so the mission stays the loudest thing on the brief.
+  if (scene.kind === 'drill') return null;
   return (
     <section className="mt-5 flex flex-col gap-3" aria-label="Capstone">
       {scene.curveball && scene.variant !== 'retry' && (
@@ -792,10 +807,9 @@ function ArcBrief({ scene, color, tint, onFullCapstone }: { scene: ArcScene; col
   );
 }
 
-/** The recap card: what the buyer said, the one habit to fix, and what comes back in daily reps. */
+/** The recap card: the one habit to fix, and what comes back in daily reps. The buyer's words sit under buyer proof. */
 function Recap({ room, record }: { room: RoomState; record: SessionRecord }) {
   const curriculum = loadCurriculum();
-  const proof = record.transcript.filter((turn) => turn.speaker === 'buyer' && turn.reveal === 'verbatim').slice(-4);
   const counts = new Map<string, number>();
   for (const pick of room.picks) if (pick.failure) counts.set(pick.failure, (counts.get(pick.failure) ?? 0) + 1);
   const top = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
@@ -803,22 +817,8 @@ function Recap({ room, record }: { room: RoomState; record: SessionRecord }) {
   const queued = record.misses?.length ?? 0;
   return (
     <section className="card mt-6 flex flex-col gap-4 p-5" aria-label="Recap">
-      <p className="t-label">Recap</p>
-      {proof.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <p className="t-item">What the buyer told you</p>
-          <ul className="flex flex-col gap-2.5">
-            {proof.map((turn) => (
-              <li key={turn.id} className="flex flex-col gap-0.5 border-l-[3px] pl-3" style={{ borderColor: BRAND.profit }}>
-                <span className="t-quote text-[15px]">“{turn.content}”</span>
-                <span className="t-small">{turn.speakerRole}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
       <div className="flex flex-col gap-1">
-        <p className="t-item">One thing to sharpen</p>
+        <p className="t-label">The habit to fix</p>
         <p className="t-body text-charcoal">{habit ? `${habit.label}. ${habit.lesson}` : 'Nothing this time. Every move landed first time.'}</p>
       </div>
       {queued > 0 && (
