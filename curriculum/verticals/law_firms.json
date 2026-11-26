@@ -61,43 +61,51 @@
   "buyer_reveals": {
     "metrics": {
       "speaker": "Innovation Partner",
-      "partial": "We have time-saved numbers from the last pilot, but no one agreed which ones count.",
-      "verbatim": "We will judge this on fixed-fee margin for the first three matter types, and on realization holding at or above our current rate."
+      "setup": "Fixed-fee matters are where the partners feel the pressure.",
+      "partial": "We have time-saved numbers from the last pilot, but nobody agreed which ones count. The partners think in write-offs and realization.",
+      "verbatim": "Fixed-fee margin has to improve on the first three matter types, and realization has to hold at or above where it is today."
     },
     "economic_buyer": {
       "speaker": "Managing Partner",
-      "partial": "Technology spend goes through the executive committee, but I shape its agenda.",
+      "setup": "If the partners like this, I can put the technology spend on the agenda.",
+      "partial": "The executive committee approves technology spend, but I shape its agenda. The production tier would be a bigger decision.",
       "verbatim": "I can approve a firm-wide pilot up to the technology budget line myself. The production tier needs a partnership vote."
     },
     "decision_criteria": {
       "speaker": "General Counsel",
-      "partial": "Confidentiality and ethical walls are non-negotiable for my office.",
-      "verbatim": "A vendor must guarantee zero retention and no training on our data, with matter-level ethical walls, or it is disqualified."
+      "setup": "My office vets every vendor on confidentiality, starting with ethical walls and zero retention.",
+      "partial": "Both are non-negotiable for my office, so neither is really a tie-breaker.",
+      "verbatim": "Anything short of zero retention, no training on our data and matter-level ethical walls. That is disqualifying."
     },
     "decision_process": {
       "speaker": "Managing Partner",
-      "partial": "There is a technology committee, and then a partnership vote for anything firm-wide.",
-      "verbatim": "The technology committee reviews first, then General Counsel signs off on the walls, then I take it to the partnership vote."
+      "setup": "Anything firm-wide eventually goes to the partners.",
+      "partial": "The technology committee looks at it first, and then there is a partnership vote.",
+      "verbatim": "After the technology committee, General Counsel signs off on the walls. Then I take it to the partnership vote."
     },
     "paper_process": {
       "speaker": "General Counsel",
-      "partial": "Some of our largest clients review AI usage in their outside-counsel guidelines.",
-      "verbatim": "Before we load any client matter, we need written client consent under its guidelines and a conflicts clearance. That adds two weeks minimum."
+      "setup": "Our biggest clients have rules on AI in their outside-counsel guidelines, and some require consent.",
+      "partial": "We can start, but each client reviews AI usage under its own guidelines, and conflicts have to clear before any matter is loaded.",
+      "verbatim": "Two weeks minimum, for written consent under each client's guidelines and a conflicts clearance."
     },
     "identify_pain": {
       "speaker": "Managing Partner",
-      "partial": "Our associates spend too many hours on document review that clients will not pay for.",
-      "verbatim": "Write-offs on document review ran eleven percent last year, and we are losing fixed-fee matters because the margin is gone."
+      "setup": "Clients are refusing to pay for a lot of our document review.",
+      "partial": "Too many associate hours we cannot bill, and peer firms are winning on fixed fees.",
+      "verbatim": "Write-offs on document review were eleven percent last year, and we keep losing fixed-fee matters because the margin is gone."
     },
     "champion": {
       "speaker": "Innovation Partner",
-      "partial": "I want this to work, and I am happy to sponsor a practice-group trial.",
-      "verbatim": "I will sponsor the trial with the litigation group myself, and I need the first matter's results before the partnership meets in March."
+      "setup": "I would need to bring the executive committee along before the partners meet in March.",
+      "partial": "I would sponsor a practice-group trial and argue from the results.",
+      "verbatim": "Results from the first matter before March. I will sponsor the trial with the litigation group myself."
     },
     "competition": {
       "speaker": "Managing Partner",
-      "partial": "Two peer firms have announced tools, and our partners keep asking about it.",
-      "verbatim": "A peer firm just won our largest client's transactional work with an AI-assisted fixed fee, so we cannot wait for a perfect pilot."
+      "setup": "Our partners keep asking what peer firms are doing with AI.",
+      "partial": "We will not build it ourselves. Two peer firms have already announced tools.",
+      "verbatim": "One of those peer firms just won our largest client's transactional work with an AI-assisted fixed fee. We cannot wait for a perfect pilot."
     }
   },
   "veto_holder": {
@@ -140,14 +148,14 @@
   },
   "rep_overrides": {
     "account_research": {
-      "buyer_line": "Before we start, what do you already know about how the firm works?",
+      "buyer_line": "What do you already know about how the firm works?",
       "strong": "I saw the litigation group moved two large clients to fixed fees this year. What prompted that?"
     },
     "discovery_questioning": {
-      "strong": "Walk me through how a document review matter gets staffed today, from intake to the bill."
+      "strong": "Walk me through how a contract review gets staffed today, start to finish."
     },
     "listening_summarizing": {
-      "buyer_line": "Honestly the bigger issue is write-offs on review work, not the hours themselves.",
+      "buyer_line": "One thing before we go on. The bigger issue for us is write-offs on fixed-fee review work, not associate hours.",
       "strong": "So the real cost is write-offs on fixed-fee review, not associate hours. Did I get that right?"
     },
     "commercial_insight": {

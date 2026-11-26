@@ -62,43 +62,51 @@
   "buyer_reveals": {
     "metrics": {
       "speaker": "Head of Model Risk (MRM)",
-      "partial": "We track false positives on fraud review queues, but nobody has agreed on a target yet.",
-      "verbatim": "We will only move forward if the agent cuts false-positive fraud alerts below 2 percent without raising missed fraud."
+      "setup": "From a model risk view, the fraud queue is where this gets judged.",
+      "partial": "We track false positives on the fraud queue, but nobody has agreed a target, and missed fraud cannot go up.",
+      "verbatim": "Below 2 percent false positives, with no rise in missed fraud. If the agent cannot hit that, we do not move forward."
     },
     "economic_buyer": {
       "speaker": "CIO",
-      "partial": "The budget sits with my platform group, but the business owner wants to co-sign anything above our threshold.",
-      "verbatim": "I hold the platform budget and I sign the PO myself up to the cap. Anything above that goes to the Chief Risk Officer."
+      "setup": "I like what I am hearing, and I can get this moving on the platform side.",
+      "partial": "My platform group holds the budget, but anything above our approval cap needs a co-signer.",
+      "verbatim": "Up to the cap, I sign the PO myself from the platform budget. Above it, the Chief Risk Officer has the final sign-off."
     },
     "decision_criteria": {
       "speaker": "CISO",
-      "partial": "Security and model risk have their own checklists, and they weight them differently.",
-      "verbatim": "We score every vendor on zero data retention, sub-processor disclosure, bring-your-own keys, and audit logs. A vendor that fails zero retention is out, regardless of price."
+      "setup": "We are looking at three vendors, and security has a long checklist this time: zero retention, encryption keys, audit logs.",
+      "partial": "Security and model risk weight that checklist differently, so there is no single tie-breaker yet.",
+      "verbatim": "Failing zero data retention. That is out on day one, whatever the price. After that we score sub-processor disclosure, bring-your-own keys and audit logs."
     },
     "decision_process": {
       "speaker": "CIO",
-      "partial": "There is a committee review, then legal, then a sign-off, and the order sometimes changes.",
-      "verbatim": "The order is committee review, then InfoSec, then Model Risk, then legal redlines, then procurement signs. Legal alone takes about 90 days."
+      "setup": "If the proof of value works, we will want to move quickly.",
+      "partial": "Day one is a committee review. After that it goes to legal and a sign-off, but the order changes.",
+      "verbatim": "After the committee: InfoSec, then Model Risk, then legal redlines, then procurement signs. Legal alone takes about 90 days."
     },
     "paper_process": {
       "speaker": "CISO",
-      "partial": "Legal will want changes to the data processing agreement, and that takes a while.",
-      "verbatim": "Our agreement redlines run 90 days minimum. If you want to be live this quarter, InfoSec has to start in parallel with your proof of value."
+      "setup": "InfoSec reviews every new vendor before anything goes live, and that includes a proof of value.",
+      "partial": "Possibly. But legal will also want redlines on the data processing agreement, and that takes a while.",
+      "verbatim": "Ninety days minimum. If you want to be live this quarter, InfoSec has to start in parallel with your proof of value."
     },
     "identify_pain": {
       "speaker": "Head of Model Risk (MRM)",
-      "partial": "Our analysts spend too long clearing alerts that turn out to be nothing.",
-      "verbatim": "Our last audit had forty-one open findings on manual alert review, and I cannot keep adding analysts to close them."
+      "setup": "My analysts are buried in fraud alerts, and the last audit noticed.",
+      "partial": "A lot of hours. Most of the alerts they clear turn out to be nothing, and the audit findings keep stacking up.",
+      "verbatim": "We already have forty-one open findings on manual alert review, and I cannot keep adding analysts to close them."
     },
     "champion": {
       "speaker": "Head of Model Risk (MRM)",
-      "partial": "I think this could help my team, and I am willing to push it internally.",
-      "verbatim": "I will carry this to the risk committee myself, and I need a validation pack I can defend in front of the examiners."
+      "setup": "The risk committee will have to approve this, and the examiners will look at it after them.",
+      "partial": "I think it would help my team, and I am willing to push it. I am less sure what the examiners will want.",
+      "verbatim": "A validation pack I can defend in front of the examiners. With that, I will take this to the risk committee myself."
     },
     "competition": {
       "speaker": "CIO",
-      "partial": "We have looked at the big cloud providers' built-in options too.",
-      "verbatim": "We are also evaluating a cloud-native option our platform group already licenses, so you have to beat its price and its auditability."
+      "setup": "I should be honest: we have other options on the table.",
+      "partial": "Building it ourselves is unlikely. But our platform group already licenses a cloud provider's built-in option.",
+      "verbatim": "That cloud-native option is the benchmark. You have to beat its price and its auditability."
     }
   },
   "veto_holder": {

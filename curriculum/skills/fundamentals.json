@@ -17,8 +17,13 @@
         "proof": "Buyer confirms or corrects your hypothesis about the account"
       },
       "rep": {
-        "buyer_line": "Before we start, what do you already know about how we run things here?",
-        "off_move": "I have not looked into it yet. Could you walk me through the basics?"
+        "buyer_line": "What do you already know about how we run things here?",
+        "off_move": "I have not looked into it yet. Could you walk me through the basics?",
+        "replies": {
+          "elite": "Mostly accountability. It sat across three teams and nobody owned the outcome end to end.",
+          "weak": "It is all on our website. I was hoping you would come in with a view.",
+          "trap": "So we are starting from zero. That will make this a short meeting."
+        }
       }
     },
     {
@@ -30,12 +35,18 @@
       "talk_track": {
         "move": "Ask how the work runs today, step by step, before you suggest anything.",
         "strong": "Walk me through how an alert gets worked today, from flag to close.",
-        "weak": "Would faster alert triage help you?",
+        "weak": "Would it help if your team worked faster?",
         "proof": "Buyer describes the current process in their own steps"
       },
       "rep": {
         "buyer_line": "We are open to ideas. Where do you want to start?",
-        "off_move": "Let me show you a quick demo of what we can do."
+        "off_move": "Let me show you a quick demo of what we can do.",
+        "replies": {
+          "elite": "It comes in to a first-line team, they pull information from four systems, and anything unclear goes up a level. That handoff is where it stalls.",
+          "weak": "Faster always helps. That does not tell either of us much.",
+          "trap": "I would rather not jump to a demo before you know how we work."
+        },
+        "seller_led": true
       }
     },
     {
@@ -51,8 +62,13 @@
         "proof": "Buyer confirms your summary of their problem"
       },
       "rep": {
-        "buyer_line": "Honestly the bigger issue is the hours my team burns, not the misses.",
-        "off_move": "Got it. Our product handles misses really well, so let me explain that."
+        "buyer_line": "One thing before we go on. The bigger issue for us is the hours my team burns, not the misses.",
+        "off_move": "Got it. Let me get back to what our product does well.",
+        "replies": {
+          "elite": "Yes, that is it. That is the part I have to defend at budget time.",
+          "weak": "Before we move on, I am not sure that landed. The hours are the problem.",
+          "trap": "You have skipped straight past what I just said."
+        }
       }
     },
     {
@@ -69,7 +85,12 @@
       },
       "rep": {
         "buyer_line": "Thanks for making time. We have about twenty minutes.",
-        "off_move": "Great, I have a 30-slide deck, so I will move quickly."
+        "off_move": "Great, I have a 30-slide deck, so I will move quickly.",
+        "replies": {
+          "elite": "Fair. If it is not a fit, I would rather hear it today than in three months.",
+          "weak": "We can read about the company. I would rather spend the time on our situation.",
+          "trap": "We will not get through thirty slides. Tell me what matters for us."
+        }
       }
     },
     {
@@ -86,7 +107,12 @@
       },
       "rep": {
         "buyer_line": "If the model gets a decision wrong, who carries the liability, you or us?",
-        "off_move": "Our accuracy is industry leading, so that will not happen."
+        "off_move": "Our accuracy is industry leading, so that will not happen.",
+        "replies": {
+          "elite": "The audit trail. If a decision is challenged, we need to show exactly how it was made.",
+          "weak": "Accuracy is not the question. Something will go wrong at some point, and I need to know who owns it.",
+          "trap": "Every vendor tells us that. I need an answer for the day it does happen."
+        }
       }
     },
     {
@@ -97,13 +123,18 @@
       "evidence": "The buyer commits to a named owner and a date.",
       "talk_track": {
         "move": "Propose a specific next step with a date, owner and purpose.",
-        "strong": "Can we put 30 minutes with your CISO on the calendar for Tuesday?",
+        "strong": "Can we put 30 minutes with your security lead on the calendar for Tuesday?",
         "weak": "I will send some information over.",
         "proof": "Buyer agrees a named owner and a date"
       },
       "rep": {
         "buyer_line": "This was useful. What happens next?",
-        "off_move": "I will follow up by email sometime next week."
+        "off_move": "I will follow up by email sometime next week.",
+        "replies": {
+          "elite": "Tuesday afternoon should work. I will check their calendar and confirm today.",
+          "weak": "Sure. Though honestly, a document will sit in my inbox with everything else.",
+          "trap": "Next week is fine, but this will have gone cold by then."
+        }
       }
     }
   ]

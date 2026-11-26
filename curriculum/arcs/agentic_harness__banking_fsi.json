@@ -1953,7 +1953,7 @@
       },
       {
        "speaker": "grace",
-       "line": "A true-up after six months, then.",
+       "line": "So how would that true-up work?",
        "skill": "ramp_commit",
        "why": "Linking the true-up to the metric the validator signed means the commit grows only when the value does, which finance can defend.",
        "options": [

@@ -62,43 +62,51 @@
   "buyer_reveals": {
     "metrics": {
       "speaker": "Chief Underwriting Officer",
-      "partial": "We track loss ratio every month, but the AI piece is not in the scorecard yet.",
-      "verbatim": "I need claims cycle time down from twenty-one days to seven, and loss ratio must improve by at least two points, or this does not get funded."
+      "setup": "Claims cycle time is the number everyone here watches.",
+      "partial": "We track cycle time and loss ratio every month, and the board counts every point, but the AI piece is not in the scorecard yet.",
+      "verbatim": "Cycle time from twenty-one days to seven, and at least two points on loss ratio, or this does not get funded."
     },
     "economic_buyer": {
       "speaker": "Head of Claims",
-      "partial": "Claims owns the workflow, but underwriting controls the budget for shared tools.",
-      "verbatim": "I own the claims operations budget and can approve up to the pilot cap alone. The production tier goes to the CFO."
+      "setup": "Claims would be the first team to use tools like this, so I can sponsor the pilot.",
+      "partial": "I can approve claims tools up to a pilot cap. Shared tools get more complicated.",
+      "verbatim": "The pilot comes out of my claims operations budget, and I approve it alone. The production tier goes to the CFO."
     },
     "decision_criteria": {
       "speaker": "General Counsel",
-      "partial": "Explainability and fair-claims compliance matter a lot to my team.",
-      "verbatim": "Every denial needs a plain-language reason an adjuster can read to a policyholder, and we will not go live without that."
+      "setup": "Compliance will score every vendor, and explainability and fair-claims rules are at the top of the list.",
+      "partial": "Both carry the most weight for my team. Explainability would probably break a tie.",
+      "verbatim": "A denial without a plain-language reason an adjuster can read to a policyholder. We will not go live without that."
     },
     "decision_process": {
       "speaker": "General Counsel",
-      "partial": "Anything touching pricing goes through actuarial review, and the timing depends on the filing.",
-      "verbatim": "Pricing changes go to actuarial review, then the rate filing on a sixty-day clock. Claims automation goes to compliance first."
+      "setup": "After a pilot, nothing moves here without the right reviews.",
+      "partial": "It depends what the pilot touches. Pricing goes through actuarial review, and anything on live claim files goes through compliance.",
+      "verbatim": "Compliance approves the claims-handling change before any live claim file is touched. If pricing is affected, actuarial review and a rate filing follow on a sixty-day clock."
     },
     "paper_process": {
       "speaker": "General Counsel",
-      "partial": "Claims-handling changes need a compliance review before anything runs on live files.",
-      "verbatim": "No automation touches a live claim file until compliance signs off on the claims-handling change, and that review takes about six weeks."
+      "setup": "Legal and compliance will want to see exactly how this changes our claims handling.",
+      "partial": "They can look early, but no automation runs on live claim files until compliance signs off.",
+      "verbatim": "About six weeks from the day they receive the claims-handling change."
     },
     "identify_pain": {
       "speaker": "Head of Claims",
-      "partial": "Adjusters are buried in simple claims while complex ones wait.",
-      "verbatim": "We have a backlog of 4,000 open claims, and severity leakage on simple auto claims costs us real money every quarter."
+      "setup": "Simple claims are piling up, and we think severity leakage on them is getting worse.",
+      "partial": "Real money, though we have not pinned it down. Adjusters are buried in simple claims, and the backlog keeps growing with catastrophe season coming.",
+      "verbatim": "We already have 4,000 open claims. Another catastrophe season on top of that, and severity leakage on simple auto claims gets worse every quarter."
     },
     "champion": {
       "speaker": "Chief Underwriting Officer",
-      "partial": "I like where this is going, and my team has been asking for something like it.",
-      "verbatim": "I will take this to the leadership team myself, and I need the audit trail design in writing before I do."
+      "setup": "Leadership will want to hear about this from one of us, and the regulators will ask questions after.",
+      "partial": "I would back it. My team has been asking for something like this. The regulators are what worries me.",
+      "verbatim": "The audit trail design in writing. With that, I will take this to the leadership team myself."
     },
     "competition": {
       "speaker": "Head of Claims",
-      "partial": "Our core policy vendor has a claims module we have been meaning to look at.",
-      "verbatim": "Our core policy vendor is quoting its own claims automation for free if we renew, so you must show a better loss-ratio case than that."
+      "setup": "Our core policy vendor has been pitching us too.",
+      "partial": "Doing nothing is not really an option. Their claims module is one we have been meaning to look at.",
+      "verbatim": "They are offering their claims automation free if we renew, so you have to show a better loss-ratio case than that."
     }
   },
   "veto_holder": {
@@ -141,15 +149,15 @@
   },
   "rep_overrides": {
     "account_research": {
-      "buyer_line": "Before we start, what do you already know about how we run claims here?",
+      "buyer_line": "What do you already know about how we run claims here?",
       "strong": "I saw your simple auto claims now route through a new triage desk. What prompted that?"
     },
     "discovery_questioning": {
-      "strong": "Walk me through how a simple auto claim gets worked today, from first notice to payment."
+      "strong": "Walk me through how a simple claim gets handled today, start to finish."
     },
     "listening_summarizing": {
-      "buyer_line": "Honestly the bigger issue is the backlog on simple claims, not the complex ones.",
-      "strong": "So the real cost is the simple-claim backlog, not the complex files. Did I get that right?"
+      "buyer_line": "One thing before we go on. The bigger issue for us is the backlog on simple claims, not the complex ones.",
+      "strong": "So the real cost is the simple-claim backlog, not the complex claims. Did I get that right?"
     },
     "commercial_insight": {
       "strong": "Carriers like yours lose more to severity leakage on simple claims than to fraud. Here is the number."

@@ -36,7 +36,6 @@ interface RoomSessionProps {
 
 type Phase = 'brief' | 'room' | 'debrief';
 
-const EARLIER_VISIBLE = 6;
 
 export function RoomSession({ trajectory, tier, mode, drillIndex, update, onRetake, beatIds, fastTrack, onRetry, onFullCapstone }: RoomSessionProps) {
   const curriculum = loadCurriculum();
@@ -68,7 +67,6 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
   const [room, setRoom] = useState<RoomState>(setup.state);
   const [picked, setPicked] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<Outcome | null>(null);
-  const [showTranscript, setShowTranscript] = useState(false);
   const [debrief, setDebrief] = useState<{ grade: GradeResult; record: SessionRecord; points: number; room: RoomState } | null>(null);
   const movesRef = useRef<HTMLDivElement>(null);
 
@@ -81,10 +79,8 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
   const bossLabel = scene ? (scene.variant === 'retry' ? 'Capstone retry' : scene.variant === 'fast' ? 'Capstone fast track' : 'Capstone') : 'Boss fight';
   const kicker = `Pillar ${rubric.pillar} · ${isBoss ? bossLabel : `Drill ${drillIndex + 1} of 3`}`;
 
+  // Turns before this index were on screen before the learner's last move; later ones arrive with a rise.
   const lastLearnerIndex = sim.turns.map((turn) => turn.speaker).lastIndexOf('learner');
-  const latest = sim.turns.slice(lastLearnerIndex + 1).filter((turn) => turn.speaker === 'buyer');
-  const earlier = lastLearnerIndex > 0 ? sim.turns.slice(0, lastLearnerIndex) : [];
-  const hiddenEarlier = Math.max(0, earlier.length - EARLIER_VISIBLE);
 
   useEffect(() => {
     if (phase !== 'room') return;
@@ -274,35 +270,11 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
       }
       footer={footer}
     >
-      <div className="flex flex-1 flex-col gap-4 py-6">
-        {hiddenEarlier > 0 && (
-          <button
-            type="button"
-            onClick={() => setShowTranscript(!showTranscript)}
-            className="flex min-h-[44px] items-center gap-1.5 self-start text-[13px] font-semibold text-work-ink"
-            aria-expanded={showTranscript}
-          >
-            <ChevronDown className={`h-4 w-4 transition ${showTranscript ? 'rotate-180' : ''}`} aria-hidden="true" />
-            {showTranscript ? 'Hide earlier turns' : `Show ${hiddenEarlier} earlier turn${hiddenEarlier === 1 ? '' : 's'}`}
-          </button>
-        )}
-        {(showTranscript ? earlier : earlier.slice(-EARLIER_VISIBLE)).map((turn) => (
-          <TurnBubble key={turn.id} turn={turn} />
-        ))}
-        {lastLearnerIndex >= 0 && (
-          <div className="flex flex-col items-end gap-1">
-            <span className="t-small">You</span>
-            <p className="max-w-[85%] rounded-[24px_24px_4px_24px] bg-work-soft px-4 py-3 text-[15px] leading-[1.45]">{sim.turns[lastLearnerIndex]?.content}</p>
-          </div>
-        )}
-        <div key={sim.turns.length} className="flex animate-rise flex-col gap-4">
-          {latest.map((turn) => (
-            <BuyerTurn key={turn.id} turn={turn} />
-          ))}
-        </div>
+      <div className="flex flex-1 flex-col py-6">
+        <Conversation turns={sim.turns} freshFrom={lastLearnerIndex} />
 
         {beat && !feedback && (
-          <div ref={movesRef} key={`${beat.id}-${room.attempts}`} className="mt-2 flex animate-rise flex-col gap-2.5" role="group" aria-label="Your move">
+          <div ref={movesRef} key={`${beat.id}-${room.attempts}`} className="mt-6 flex animate-rise flex-col gap-2.5 border-t border-rule pt-5" role="group" aria-label="Your move">
             <MoveHeading beat={beat} isBoss={isBoss} retry={room.attempts > 0} color={color} tint={tint} signalLabel={signalLabel} skillLabel={(id) => curriculum.skills.find((skill) => skill.id === id)?.label ?? ''} />
             {beat.moves.map((move, index) => (
               <button key={move.text} type="button" className="choice" aria-pressed={picked === index} onClick={() => setPicked(index)}>
@@ -319,7 +291,7 @@ export function RoomSession({ trajectory, tier, mode, drillIndex, update, onReta
   );
 }
 
-/** One line above the moves. Drills name the goal. Boss fights only say whose turn it is. */
+/** "Your move" above the options, with the coaching goal beside it while the scaffold is on. */
 function MoveHeading({
   beat,
   isBoss,
@@ -337,30 +309,36 @@ function MoveHeading({
   signalLabel: (signal: SignalId) => string;
   skillLabel: (id: string) => string;
 }) {
-  if (isBoss || (beat.speaker && !beat.goal)) return <p className="t-label">Your move{retry && !isBoss ? ' · Try again' : ''}</p>;
-  const goal = beat.goal ??
-    beat.kind === 'objection'
-      ? 'Handle the objection'
-      : beat.signal
-        ? `${beat.kind === 'pin' ? 'Pin down' : 'Open'}: ${signalLabel(beat.signal)}`
-        : beat.kind === 'pin'
-          ? `Pin down: ${skillLabel(beat.skillId ?? '')}`
-          : skillLabel(beat.skillId ?? '');
+  const scaffold = !isBoss && !(beat.speaker && !beat.goal);
+  const goal = !scaffold
+    ? null
+    : (beat.goal ??
+      (beat.kind === 'objection'
+        ? 'Handle the objection'
+        : beat.signal
+          ? `${beat.kind === 'pin' ? 'Pin down' : 'Open'}: ${signalLabel(beat.signal)}`
+          : beat.kind === 'pin'
+            ? `Pin down: ${skillLabel(beat.skillId ?? '')}`
+            : skillLabel(beat.skillId ?? '')));
   return (
-    <div className="flex items-center gap-2">
-      <span className="grid h-7 w-7 place-items-center rounded-lg" style={{ background: tint, color }} aria-hidden="true">
-        {beat.kind === 'objection' ? (
-          <MessageSquareWarning className="h-4 w-4" />
-        ) : beat.signal ? (
-          <SignalIcon signal={beat.signal} className="h-4 w-4" />
-        ) : (
-          <Target className="h-4 w-4" />
-        )}
-      </span>
-      <p className="text-[14px] font-bold" style={{ color }}>
-        {goal}
+    <div className="mb-1 flex flex-col gap-1.5">
+      <p className="t-label">
+        Your move{retry && !isBoss ? ' · Try another line' : ''}
       </p>
-      {retry && <span className="t-small">· Try again</span>}
+      {goal && (
+        <p className="flex items-center gap-2 text-[14px] font-bold" style={{ color }}>
+          <span className="grid h-6 w-6 place-items-center rounded-md" style={{ background: tint, color }} aria-hidden="true">
+            {beat.kind === 'objection' ? (
+              <MessageSquareWarning className="h-3.5 w-3.5" />
+            ) : beat.signal ? (
+              <SignalIcon signal={beat.signal} className="h-3.5 w-3.5" />
+            ) : (
+              <Target className="h-3.5 w-3.5" />
+            )}
+          </span>
+          {goal}
+        </p>
+      )}
     </div>
   );
 }
@@ -489,34 +467,44 @@ function meetLine(roles: string[]): string {
   return `You will meet the ${roles[0]}, the ${roles[1]} and ${rest} other${rest === 1 ? '' : 's'} from the buying committee.`;
 }
 
-function BuyerTurn({ turn }: { turn: Turn }) {
-  const status = turn.objection ? 'Objection' : turn.reveal === 'partial' ? 'Partial. Push for the number.' : turn.reveal === 'verbatim' ? 'Verified' : null;
-  const rule = turn.reveal === 'verbatim' ? BRAND.profit : turn.objection ? BRAND.leak : '#d5d8de';
+/**
+ * The meeting as one chat thread. Every line appears once, in the same bubble style, with the
+ * speaker named once per run of consecutive lines. Evidence and objections carry a small tag
+ * instead of a different layout, so nothing on screen competes with the conversation.
+ */
+function Conversation({ turns, freshFrom }: { turns: Turn[]; freshFrom: number }) {
   return (
-    <div className="flex flex-col gap-2">
-      <p className="t-small">
-        <span className="font-semibold text-ink">{turn.speakerRole}</span>
-        {status && <span className={turn.objection ? 'text-leak-ink' : turn.reveal === 'verbatim' ? 'font-semibold text-profit-ink' : ''}> · {status}</span>}
-      </p>
-      <blockquote className="t-quote border-l-[3px] pl-4" style={{ borderColor: rule }}>
-        {turn.content}
-      </blockquote>
-    </div>
+    <ol className="flex flex-col" aria-label="Conversation" aria-live="polite">
+      {turns.map((turn, index) => {
+        const previous = turns[index - 1];
+        const newSpeaker = !previous || previous.speaker !== turn.speaker || previous.speakerRole !== turn.speakerRole;
+        return <ChatTurn key={turn.id} turn={turn} showName={newSpeaker} spaced={index > 0 && newSpeaker} fresh={index > freshFrom} />;
+      })}
+    </ol>
   );
 }
 
-function TurnBubble({ turn }: { turn: Turn }) {
+function ChatTurn({ turn, showName, spaced, fresh }: { turn: Turn; showName: boolean; spaced: boolean; fresh: boolean }) {
   const isLearner = turn.speaker === 'learner';
+  const tag = turn.objection ? 'Objection' : turn.reveal === 'verbatim' ? 'Verified' : turn.reveal === 'partial' ? 'Partial answer' : null;
+  const bubble = isLearner
+    ? 'rounded-[20px_20px_4px_20px] bg-work-soft'
+    : turn.reveal === 'verbatim'
+      ? 'rounded-[4px_20px_20px_20px] bg-profit-soft'
+      : turn.objection
+        ? 'rounded-[4px_20px_20px_20px] bg-leak-soft'
+        : 'rounded-[4px_20px_20px_20px] bg-deep';
   return (
-    <div className={`flex flex-col gap-1 ${isLearner ? 'items-end' : 'items-start'}`}>
-      <span className="t-small">{isLearner ? 'You' : turn.speakerRole}</span>
-      <p
-        className={`max-w-[85%] px-4 py-2.5 text-[15px] leading-[1.45] ${isLearner ? 'rounded-[20px_20px_4px_20px] bg-work-soft' : 'rounded-[4px_20px_20px_20px] bg-deep'}`}
-        style={turn.reveal === 'verbatim' ? { background: BRAND.profitSoft } : undefined}
-      >
-        {turn.content}
-      </p>
-    </div>
+    <li className={`flex flex-col gap-1 ${isLearner ? 'items-end' : 'items-start'} ${spaced ? 'mt-5' : 'mt-1.5'} ${fresh ? 'animate-rise' : ''}`}>
+      {showName && <span className="t-small font-semibold text-ink">{isLearner ? 'You' : turn.speakerRole}</span>}
+      <p className={`max-w-[85%] px-4 py-2.5 text-[15px] leading-[1.45] ${bubble}`}>{turn.content}</p>
+      {tag && (
+        <span className={`flex items-center gap-1 text-[12px] font-semibold ${turn.objection ? 'text-leak-ink' : turn.reveal === 'verbatim' ? 'text-profit-ink' : 'text-slate'}`}>
+          {turn.reveal === 'verbatim' && <Check className="h-3.5 w-3.5" aria-hidden="true" />}
+          {tag}
+        </span>
+      )}
+    </li>
   );
 }
 

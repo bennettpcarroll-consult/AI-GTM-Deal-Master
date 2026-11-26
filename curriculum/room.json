@@ -27,23 +27,6 @@
       "urgency": -4
     }
   },
-  "reactions": {
-    "elite": [
-      "Fair. That is the right place to start.",
-      "Good. Nobody has asked us that yet.",
-      "Okay, that is useful framing. Go on."
-    ],
-    "weak": [
-      "Walk me through what that means for my team.",
-      "Okay. What does the next step look like?",
-      "Help me understand how that works in practice."
-    ],
-    "trap": [
-      "Hold on. That is a big assumption.",
-      "I am not sure you have understood how we work here.",
-      "That makes me more nervous, not less."
-    ]
-  },
   "objection_moves": {
     "elite": "That is a fair concern. Before I answer, is that the main thing holding you back, or is there something else?",
     "weak": "We hear that a lot, and honestly it never turns out to be a real problem.",
@@ -58,5 +41,10 @@
     "objection": "Objection handled.",
     "weak": "Too soft. Nothing to cite.",
     "trap": "Red flag. That cost trust."
+  },
+  "objection_replies": {
+    "elite": "That is the main one. If we can get comfortable there, the rest is workable.",
+    "weak": "It is a real problem for us, and I need more than reassurance.",
+    "trap": "This is not about price. A discount does not answer the question."
   }
 }
