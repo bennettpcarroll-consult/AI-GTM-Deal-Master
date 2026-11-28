@@ -86,24 +86,24 @@
   "drills": [
     {
       "id": "d1",
-      "title": "Paper process and decision process",
+      "title": "Re-clear risk and security for production",
       "target_signals": [
         "paper_process",
         "decision_process"
       ],
-      "prompt": "Map the approval path and the legal and security lead times before you agree to any pilot scope.",
+      "prompt": "The pilot passed. Map the approval path for each new use case, and start the production security review now.",
       "practices_skills": [
         "bounded_pov"
       ]
     },
     {
       "id": "d2",
-      "title": "Economic buyer and competition",
+      "title": "Defend the workload against the hyperscaler",
       "target_signals": [
         "economic_buyer",
         "competition"
       ],
-      "prompt": "Find who can approve a seasonal commitment, and find out what the buyer already has in place.",
+      "prompt": "Find who funds the expansion, and what the cloud provider's native option would really cost them.",
       "practices_skills": [
         "pricing_unit_fluency",
         "cost_to_serve"
@@ -111,12 +111,12 @@
     },
     {
       "id": "d3",
-      "title": "Metrics for a consumption ramp",
+      "title": "Architect the commit ramp",
       "target_signals": [
         "metrics",
         "identify_pain"
       ],
-      "prompt": "Set the metric the ramp must hit and the pain that makes the consumption worth paying for.",
+      "prompt": "Set the production number the ramp must hit, and price the cost of usage that stalls after launch.",
       "practices_skills": [
         "ramp_commit",
         "usage_forecast"

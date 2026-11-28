@@ -59,8 +59,8 @@
         {
          "kind": "weak",
          "failure": "hand_over_control",
-         "text": "Not much beyond your website, honestly. Could you walk me through how the agent program is set up?",
-         "reply": "That's a long story. Daniel, do you want to take it?"
+         "text": "I read the annual report and the summit agenda. Could you walk me through how the agent program is set up today?",
+         "reply": "Those are written for investors. I was hoping you'd tell us something about our program. Daniel?"
         },
         {
          "kind": "trap",

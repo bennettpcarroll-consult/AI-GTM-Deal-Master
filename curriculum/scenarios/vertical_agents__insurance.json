@@ -2,7 +2,7 @@
   "id": "vertical_agents__insurance",
   "cluster_id": "vertical_agents",
   "vertical_id": "insurance",
-  "situation": "A Insurance (Underwriting & Claims) account is evaluating Vertical Agents for claims document processing. It would pay through a price per resolution. Combined-ratio pressure makes every change look expensive, and every denial must be explainable to a regulator.",
+  "situation": "An Insurance (Underwriting & Claims) account is evaluating Vertical Agents for claims document processing. It would pay through a price per resolution. Combined-ratio pressure makes every change look expensive, and every denial must be explainable to a regulator.",
   "workload": "claims document processing",
   "consumption_profile": {
     "unit": "resolutions",

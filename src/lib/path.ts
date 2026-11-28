@@ -33,7 +33,7 @@ export function pathFor(curriculum: Curriculum, state: AppState, trajectory: Tra
   const pillars = TIERS.map((tier) => {
     const rubric = curriculum.rubrics[tier];
     const pillar = arcPillar(curriculum, trajectory.clusterId, trajectory.verticalId, tier);
-    const unlocked = tierUnlocked(trajectory, tier);
+    const unlocked = tierUnlocked(trajectory, tier, state.reviewer);
     const drills: PathNode[] = rubric.drills.map((drill, index) => ({
       key: drill.id,
       href: `/room/${tier}/drill-${index + 1}`,
@@ -57,7 +57,7 @@ export function pathFor(curriculum: Curriculum, state: AppState, trajectory: Tra
       tier === 1 ? [{ key: 'briefing', href: '/briefing', title: 'Market briefing', kind: 'lesson', state: briefingDone ? 'done' : 'open' }] : [];
     const review: PathNode[] =
       tier === 4
-        ? [{ key: 'review', href: '/review', title: 'Final review', kind: 'review', state: trajectory.finalReview?.passed ? 'done' : complete ? 'open' : 'locked' }]
+        ? [{ key: 'review', href: '/review', title: 'Final review', kind: 'review', state: trajectory.finalReview?.passed ? 'done' : complete || state.reviewer ? 'open' : 'locked' }]
         : [];
     return { tier, pillar, nodes: [...briefing, ...concept, ...drills, recap, ...review] };
   });

@@ -2,7 +2,7 @@
   "id": "agentic_harness__insurance",
   "cluster_id": "agentic_harness",
   "vertical_id": "insurance",
-  "situation": "A Insurance (Underwriting & Claims) account is evaluating Agentic Harness for claims document processing. It would pay through seats growing into VPC usage. Combined-ratio pressure makes every change look expensive, and every denial must be explainable to a regulator.",
+  "situation": "An Insurance (Underwriting & Claims) account is evaluating Agentic Harness for claims document processing. It would pay through seats growing into VPC usage. Combined-ratio pressure makes every change look expensive, and every denial must be explainable to a regulator.",
   "workload": "claims document processing",
   "consumption_profile": {
     "unit": "agent runs",

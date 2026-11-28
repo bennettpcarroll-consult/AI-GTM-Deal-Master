@@ -13,23 +13,30 @@
       "talk_track": {
         "move": "Ask for the number that has to move, and by when.",
         "strong": "What number has to move for this to be worth it, and by when?",
-        "weak": "We typically cut handling time by 40 percent.",
-        "proof": "Buyer states a target, such as false positives below 2 percent",
+        "weak": "What would make this a win for your team this year?",
+        "proof": "Buyer states a target number and a date",
         "pin": "How much do you need to cut this quarter, and how will you measure it?",
-        "settle": "Great, so faster is the goal. Let us move on.",
-        "assume": "I will put down 40 percent. That is what most customers see."
+        "settle": "Understood, efficiency is the priority. I will note that and we can firm up numbers later.",
+        "assume": "I will pencil in 40 percent for now. That is what most customers see."
       },
       "rep": {
         "buyer_line": "The brief from leadership is to make the operation more efficient.",
-        "off_move": "Great, most customers see about 40 percent improvement.",
+        "off_move": "Customers like you typically see a 40 percent efficiency gain. Shall we use that as the target?",
         "replies": {
-          "weak": "That is your benchmark. We have not agreed what good looks like for us yet.",
+          "weak": "A win here gets judged in numbers, and we have not agreed ours yet.",
           "trap": "Please do not put a number in our mouth. Ours could be very different.",
-          "settle": "Faster is not a target. Without a number, this will not get funded.",
+          "settle": "Later is how this gets stuck. Without a number, it will not get funded.",
           "assume": "Do not write that down. Our number has not been agreed, and it will not be yours."
         }
       },
-      "signal": "metrics"
+      "signal": "metrics",
+      "curveball": {
+        "speaker": "CFO",
+        "line": "Your ROI deck says 300 percent. I do not believe it.",
+        "elite": "Fair. Ignore our number. Which one figure would you need to see move, and by how much?",
+        "weak": "It is based on averages across our customer base, so it is quite conservative.",
+        "trap": "Three of your peers saw more than that. I can introduce you to them."
+      }
     },
     {
       "id": "economic_buyer",
@@ -40,23 +47,30 @@
       "talk_track": {
         "move": "Ask who signs the PO and up to what limit.",
         "strong": "Who signs the PO, and up to what amount?",
-        "weak": "Who else should I talk to?",
+        "weak": "Who else is involved in evaluating this on your side?",
         "proof": "Buyer names the signer and a spend limit",
         "pin": "Above that amount, whose budget does this come out of, and who has the final sign-off?",
-        "settle": "Okay, I will take it that you can get this through.",
-        "assume": "Perfect, so you can sign this yourself then."
+        "settle": "Great, I will work through you on the commercials then.",
+        "assume": "Then I will put you down as the signer and plan around your timeline."
       },
       "rep": {
         "buyer_line": "I am excited about this and I can get it moving internally.",
-        "off_move": "Perfect, so you are the decision maker. Let us talk pricing.",
+        "off_move": "Since you are leading this, can we start shaping commercials together?",
         "replies": {
-          "weak": "A few people, depending on what you need. What are you trying to find out?",
-          "trap": "Slow down. I said I could get it moving, not that I sign for it.",
+          "weak": "A few people. Evaluating it is not the same as paying for it, though.",
+          "trap": "Leading the evaluation is not signing for it. Commercials come later.",
           "settle": "Up to a point. Above our threshold it is not my call alone.",
           "assume": "Not above the threshold. You would be forecasting the wrong signature."
         }
       },
-      "signal": "economic_buyer"
+      "signal": "economic_buyer",
+      "curveball": {
+        "speaker": "Director",
+        "line": "Leave the CFO to me. I would rather you did not go over my head.",
+        "elite": "Understood. What would the CFO need to see from us to sign, so you walk in with it?",
+        "weak": "Of course. Just let me know if there is anything I can send to help.",
+        "trap": "No problem. I will connect with the CFO informally so you do not have to."
+      }
     },
     {
       "id": "decision_criteria",
@@ -67,23 +81,30 @@
       "talk_track": {
         "move": "Ask how vendors will be scored and what breaks a tie.",
         "strong": "How will you score vendors? Which criterion breaks a tie?",
-        "weak": "We match every feature on your list.",
+        "weak": "What features matter most to your team?",
         "proof": "Buyer lists the criteria in order",
         "pin": "What would rule us out on day one, regardless of price?",
-        "settle": "Sounds like we tick most of those boxes.",
-        "assume": "We match every feature on your list, so we are good."
+        "settle": "Sounds like we cover most of that. I will send a feature mapping.",
+        "assume": "We cover every item on that list, so I will position us as the front runner."
       },
       "rep": {
         "buyer_line": "We are looking at three vendors right now.",
-        "off_move": "We are better than all three. Here is why.",
+        "off_move": "Happy to share how we compare. Most buyers find us ahead on accuracy.",
         "replies": {
           "weak": "Feature lists all look the same at this stage. That is not how we will decide.",
-          "trap": "The other two said the same thing about you.",
-          "settle": "Everyone ticks most of the boxes. The weighting is what matters.",
-          "assume": "Matching the list gets you on the shortlist. It does not win it."
+          "trap": "Every vendor tells us they lead on accuracy. We will score on more than that.",
+          "settle": "Everyone covers most of it. The weighting is what matters.",
+          "assume": "Covering the list gets you on the shortlist. It does not win it."
         }
       },
-      "signal": "decision_criteria"
+      "signal": "decision_criteria",
+      "curveball": {
+        "speaker": "Procurement",
+        "line": "We have an RFP template. Two hundred questions. Fill it in by Friday.",
+        "elite": "We will. Which five of those questions carry most of the weight in your scoring?",
+        "weak": "No problem. Our team turns these around quickly.",
+        "trap": "We usually skip RFPs and go straight to a pilot. Can we do that instead?"
+      }
     },
     {
       "id": "decision_process",
@@ -94,7 +115,7 @@
       "talk_track": {
         "move": "Walk the steps after a successful pilot, day by day.",
         "strong": "After a successful pilot, what happens on day one, day ten and day thirty?",
-        "weak": "So when do you think you will decide?",
+        "weak": "When are you hoping to have a decision made?",
         "proof": "Buyer names the steps and the approver for each",
         "pin": "Who else needs to approve, and in what order? Walk me through the approval path.",
         "settle": "Okay, so roughly a quarter. I will pencil that in.",
@@ -102,15 +123,22 @@
       },
       "rep": {
         "buyer_line": "If the pilot goes well we will move forward.",
-        "off_move": "Great, so we can expect a contract next month.",
+        "off_move": "If the pilot lands, can we target signature by month end?",
         "replies": {
           "weak": "Hard to say. There are steps after the pilot I have not mapped out yet.",
-          "trap": "Next month is not realistic. A good pilot is only the first step here.",
+          "trap": "Month end is not realistic. A good pilot is only the first step here.",
           "settle": "I would not pencil anything in until you know who else has to approve it.",
           "assume": "Please do not forecast that. There are several approvals between a pilot and a signature."
         }
       },
-      "signal": "decision_process"
+      "signal": "decision_process",
+      "curveball": {
+        "speaker": "Executive sponsor",
+        "line": "Good news. The steering committee loved it. We are moving ahead.",
+        "elite": "Glad to hear it. Moving ahead means what next: whose sign-off comes after the committee, and when?",
+        "weak": "That is great news. When do you think we will have a decision?",
+        "trap": "Great. I will send the order form today so we can get going."
+      }
     },
     {
       "id": "paper_process",
@@ -121,7 +149,7 @@
       "talk_track": {
         "move": "Start the paper process in parallel with the evaluation.",
         "strong": "Can InfoSec start reviewing in parallel with the pilot, not after it?",
-        "weak": "We will bring the lawyers in once you have decided.",
+        "weak": "We can send over our standard terms once the scope is settled.",
         "proof": "Buyer gives lead times for legal, security and procurement",
         "pin": "How long do legal and procurement usually take to review a contract like this?",
         "settle": "Let us not worry about the paperwork yet.",
@@ -129,15 +157,22 @@
       },
       "rep": {
         "buyer_line": "Legal usually gets involved once we pick a vendor.",
-        "off_move": "Sounds good, we can sort the paperwork out at the end.",
+        "off_move": "Our terms are pretty standard, so that part should be quick when we get there.",
         "replies": {
           "weak": "In my experience, leaving legal until the end is how these slip by a quarter.",
-          "trap": "The end is where deals like this stall. Our review is not quick.",
+          "trap": "Nothing moves quickly here. Standard terms are where our reviewers start, not where they finish.",
           "settle": "Someone has to worry about it. Our reviews do not move quickly.",
           "assume": "That is what the last vendor said. Their contract sat with legal for a quarter."
         }
       },
-      "signal": "paper_process"
+      "signal": "paper_process",
+      "curveball": {
+        "speaker": "General Counsel",
+        "line": "We redline every vendor's terms. Expect ours in about six weeks.",
+        "elite": "Understood. Can we send our terms this week so your review runs alongside the pilot?",
+        "weak": "No problem. We will wait for your redlines and turn them around quickly.",
+        "trap": "Six weeks puts us past quarter end. Could you prioritize ours?"
+      }
     },
     {
       "id": "identify_pain",
@@ -147,24 +182,31 @@
       "evidence": "The buyer ties the pain to a cost or a risk.",
       "talk_track": {
         "move": "Ask what the problem costs, in hours, money or risk.",
-        "strong": "What does a false positive cost you in analyst hours each month?",
-        "weak": "That sounds rough.",
+        "strong": "What does this cost you each month, in hours or in risk?",
+        "weak": "That sounds rough. How long has it been like that?",
         "proof": "Buyer ties the pain to a cost or a risk",
         "pin": "What happens if you do nothing and this carries on another year?",
-        "settle": "That sounds rough. Let me show you how we help.",
+        "settle": "Understood. Let me show you how we have helped others with it.",
         "assume": "Our tool makes that a non-issue, so let us move on."
       },
       "rep": {
         "buyer_line": "The current process is a real headache for the team.",
-        "off_move": "Our tool makes queues much less of a headache.",
+        "off_move": "That is exactly what our platform solves. Can I show you how?",
         "replies": {
-          "weak": "It is. But a headache does not get a budget. The cost behind it does.",
+          "weak": "Long enough. But a headache does not get a budget. The cost behind it does.",
           "trap": "You do not know enough about our process to say that yet.",
           "settle": "Before you show me anything, I want to know you understand what this is costing us.",
           "assume": "It is not a non-issue. It is the reason we agreed to this meeting."
         }
       },
-      "signal": "identify_pain"
+      "signal": "identify_pain",
+      "curveball": {
+        "speaker": "CFO",
+        "line": "Honestly, the current process is fine. It works.",
+        "elite": "Then let me test that. What does it cost you today in hours, and what happens if volume doubles?",
+        "weak": "That is fair. A lot of our customers felt the same way at first.",
+        "trap": "That is what most teams say before they see what AI can do. Let me show you."
+      }
     },
     {
       "id": "champion",
@@ -174,24 +216,31 @@
       "evidence": "The buyer shows access to the economic buyer and a personal stake.",
       "talk_track": {
         "move": "Test whether your contact can sell this when you are not in the room.",
-        "strong": "If I am not in the room, how would you make the case to your CRO?",
-        "weak": "Great, you are our champion then.",
+        "strong": "If I am not in the room, how would you make the case to your executive team?",
+        "weak": "That is good to hear. Who else on the team feels the same way?",
         "proof": "Buyer shows access, influence and a personal stake",
         "pin": "What would you need to take this to the committee with confidence?",
-        "settle": "Great to hear you are on board.",
+        "settle": "Good to hear you are with us. I will lean on you to carry it from here.",
         "assume": "Perfect, you are our champion, so you can sell it internally for us."
       },
       "rep": {
         "buyer_line": "I really like what you showed us. I am on your side.",
-        "off_move": "Fantastic, then you are our champion. Can you get us the contract?",
+        "off_move": "Then you are our champion here. Can you get us in front of procurement?",
         "replies": {
-          "weak": "I am on your side, but I am one voice. I will need help making the case.",
-          "trap": "I can open doors. I cannot get you a contract on my own.",
+          "weak": "A couple of people. Liking it is not the same as making the case, though.",
+          "trap": "I can open doors. Procurement will not move until someone senior asks them to.",
           "settle": "On board is one thing. Making the case to the committee is another.",
           "assume": "I can advocate for it. I cannot sell it for you."
         }
       },
-      "signal": "champion"
+      "signal": "champion",
+      "curveball": {
+        "speaker": "Champion",
+        "line": "I am fully behind this. I just need you to send me the slides.",
+        "elite": "I will. Which objection will your boss raise first, and how would you answer it?",
+        "weak": "Of course. I will send the full deck so you have everything.",
+        "trap": "Great. I will make them detailed so you can present without me."
+      }
     },
     {
       "id": "competition",
@@ -202,7 +251,7 @@
       "talk_track": {
         "move": "Ask about every alternative, including build and do nothing.",
         "strong": "What happens if you build this in-house, or do nothing?",
-        "weak": "Nobody in this space does what we do.",
+        "weak": "We see the same names in most deals. Happy to share a comparison sheet.",
         "proof": "Buyer names the alternatives, including build and do nothing",
         "pin": "What are you comparing us against, including what you already pay for?",
         "settle": "We are confident we win on features.",
@@ -210,15 +259,22 @@
       },
       "rep": {
         "buyer_line": "We are talking to a couple of other vendors.",
-        "off_move": "They are behind us on every feature, so do not worry about them.",
+        "off_move": "We win most head-to-heads on accuracy, so I would not worry about them.",
         "replies": {
-          "weak": "I have heard that from everyone we have met this quarter.",
+          "weak": "A comparison sheet from you will say you win. That is not how we will look at it.",
           "trap": "I would not dismiss them. They know our environment well.",
           "settle": "Features are close across the board. That is not where this will be decided.",
           "assume": "Do not assume that. Building it ourselves is a real option."
         }
       },
-      "signal": "competition"
+      "signal": "competition",
+      "curveball": {
+        "speaker": "CTO",
+        "line": "Our cloud provider will give us this for free inside our existing contract.",
+        "elite": "They might. What would you lose by building on their version, and who on your team would own it?",
+        "weak": "Their version is less mature. Most customers find it falls short.",
+        "trap": "We can match free for the first year if that helps."
+      }
     }
   ]
 }

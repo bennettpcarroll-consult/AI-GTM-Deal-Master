@@ -1,6 +1,6 @@
 import type { FlowQuestion } from '@/components/question-flow';
 import type { ArcBeat, ArcPillar, Lesson } from './curriculum/schema';
-import type { RepQuestion } from './skills';
+import { REP_TRUST_COST, type RepQuestion } from './skills';
 
 /** A skill rep as a flow question: the buyer line, three replies, and why the strong one works. */
 export function repToQuestion(rep: RepQuestion, familyLabel: string): FlowQuestion {
@@ -8,10 +8,12 @@ export function repToQuestion(rep: RepQuestion, familyLabel: string): FlowQuesti
     id: rep.skill.id,
     kicker: `${rep.skill.label} · ${familyLabel}`,
     prompt: rep.prompt,
-    speaker: 'The buyer',
+    speaker: rep.speaker ?? 'The buyer',
     options: rep.options,
     answer: rep.answer,
-    why: `${rep.skill.talk_track.move} What counts as proof: ${rep.skill.talk_track.proof.charAt(0).toLowerCase()}${rep.skill.talk_track.proof.slice(1)}.`
+    trustCost: rep.kinds.map((kind) => REP_TRUST_COST[kind]),
+    // Reps are rapid fire: the habit in one line, nothing more.
+    why: rep.skill.talk_track.move
   };
 }
 

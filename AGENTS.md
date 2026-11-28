@@ -23,6 +23,8 @@ This repo follows the spec in the PRD. Read the PRD section that matches your ch
    - Thin-stroke lucide icons, four-bar mastery and signal indicators, dashed borders for unverified or locked states.
    - Gamification stays performance based: streak, daily goal of 5 reps and proof points. Keep it enterprise in tone: no confetti, mascots or cartoon copy.
 5. Zero typing. Learners never write free text. The deal room (`src/lib/deal-room.ts`) offers three moves per beat (elite, weak, trap) and runs the chosen line through the buyer simulator, so proof still comes only from buyer turns. A hidden buyer state (trust, risk alarm, urgency) turns traps into objections, and a buyer with no trust can end the meeting. Elite lines live in each vertical's `talk_tracks`; weak and trap lines live on the skill.
+   - Distractors are B-grade, never strawmen: the weak move is polite surface discovery, the trap is a premature pitch. Daily reps play each skill's `curveball` (an executive situation no drill plays), and a miss costs buyer trust.
+   - `/` is the front door for every visitor; it never redirects. `?preview=1` turns on reviewer mode (every pillar open) and `?preview=0` turns it off.
    - Onboarding is two steps (what you sell, who you sell to). The market briefing is the first node of Pillar 01 and the placement check is optional, both reached from the path.
    - Voice boss fights and tap-to-assemble artifacts need a backend or a new interaction and are deferred. The app stays a static export.
 6. Authored arcs. A trajectory with `curriculum/arcs/<cluster>__<vertical>.json` plays hand-written scenes instead of the generated room (Agentic Harness x Banking, the Northbridge account, is the reference). One account runs through all four pillars, each pillar brings new buyers and a new commercial problem, and the MEDDPICC ladder climbs from identify to quantify to stress-test to orchestrate.
@@ -71,6 +73,8 @@ Every CI run feeds the next change:
 - Every deal-room line is gradable. `tests/rubric/deal-room.test.ts` plays all 320 sessions on the elite path (they must pass with zero red flags) and checks that no weak or trap line earns buyer evidence. When a weak line leaks a partial answer, reword the line rather than the probe.
 - A talk track the coach teaches must be gradable. When you edit a skill's `talk_track.strong` or a signal's probes, keep `tests/rubric/skills.test.ts` ("talk tracks the coach teaches") green.
 - Playwright `text=Check` also matches labels such as "CHECK 1 OF 3". Use `getByRole('button', { name, exact: true })`.
+- 2026-11-28 (CRO audit): shared skill copy leaked one vertical's facts onto every path ("false positives below 2 percent" on a retail brief). Keep skill defaults neutral and put industry lines in `rep_overrides`; `tests/rubric/audit.test.ts` blocks vertical markers in shared copy, strawman distractors, reps that replay a deal-room line, and a Pillar 03 that replays Pillar 01. Pillar-specific buyer lines live in a vertical's `tier_overrides`.
+- A link that moves under the pointer on press (`active:translate-*` on the link itself) can swallow the click. Press an inner face instead.
 - Grammar in generated scenario copy is checked by eye only. Read a sample of every regenerated pack before committing.
 
 ## Conventions

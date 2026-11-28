@@ -4,6 +4,7 @@ import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource-variable/geist';
 import './globals.css';
 import { FreshBuild } from '@/components/fresh-build';
+import { ReviewerMode } from '@/components/reviewer-mode';
 
 export const metadata: Metadata = {
   title: 'Deal Master',
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className="min-h-dvh">
         <FreshBuild />
+        <ReviewerMode />
         {children}
       </body>
     </html>

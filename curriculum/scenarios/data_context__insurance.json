@@ -2,7 +2,7 @@
   "id": "data_context__insurance",
   "cluster_id": "data_context",
   "vertical_id": "insurance",
-  "situation": "A Insurance (Underwriting & Claims) account is evaluating Data & Context for claims document processing. It would pay through pure consumption. Combined-ratio pressure makes every change look expensive, and every denial must be explainable to a regulator.",
+  "situation": "An Insurance (Underwriting & Claims) account is evaluating Data & Context for claims document processing. It would pay through pure consumption. Combined-ratio pressure makes every change look expensive, and every denial must be explainable to a regulator.",
   "workload": "claims document processing",
   "consumption_profile": {
     "unit": "queries",

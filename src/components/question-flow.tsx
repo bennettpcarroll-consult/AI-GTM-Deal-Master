@@ -20,6 +20,8 @@ export interface FlowQuestion {
   missWhy?: string;
   /** A move is a line the seller would say ("Strong move."). A fact is knowledge ("Correct."). Defaults to move when a buyer speaks. */
   kind?: 'move' | 'fact';
+  /** Buyer trust each option costs, for reps. A miss shows the cost beside the verdict. */
+  trustCost?: number[];
 }
 
 /**
@@ -36,7 +38,7 @@ export function QuestionFlow({
   progress
 }: {
   questions: FlowQuestion[];
-  onDone: (results: Record<string, boolean>) => void;
+  onDone: (results: Record<string, boolean>, meta: { trustLost: number }) => void;
   exitHref?: string;
   onBack?: () => void;
   progressLabel: string;
@@ -49,6 +51,7 @@ export function QuestionFlow({
   const [picked, setPicked] = useState<number | null>(null);
   const [checked, setChecked] = useState(false);
   const [results, setResults] = useState<Record<string, boolean>>({});
+  const [trustLost, setTrustLost] = useState(0);
   const question = questions[index];
   const correct = question !== undefined && picked === question.answer;
   const isMove = (question?.kind ?? (question?.speaker ? 'move' : 'fact')) === 'move';
@@ -58,13 +61,14 @@ export function QuestionFlow({
     if (picked === null || !question) return;
     setChecked(true);
     setResults((previous) => ({ ...previous, [question.id]: picked === question.answer }));
+    setTrustLost((previous) => previous + (question.trustCost?.[picked] ?? 0));
   };
 
   const next = () => {
     if (!question) return;
     const finalResults = { ...results, [question.id]: correct };
     if (index + 1 >= questions.length) {
-      onDone(finalResults);
+      onDone(finalResults, { trustLost });
       return;
     }
     setIndex(index + 1);
@@ -125,6 +129,9 @@ export function QuestionFlow({
                 {correct ? <Check className="h-5 w-5" aria-hidden="true" /> : <X className="h-5 w-5" aria-hidden="true" />}
               </span>
               <p className={`t-heading ${correct ? 'text-profit-ink' : 'text-leak-ink'}`}>{correct ? (isMove ? 'Strong move.' : 'Correct.') : 'Not quite.'}</p>
+              {!correct && picked !== null && (question.trustCost?.[picked] ?? 0) > 0 && (
+                <span className="ml-auto rounded-full bg-paper px-2.5 py-1 text-[13px] font-bold tabular-nums text-leak-ink">Trust −{question.trustCost![picked]}</span>
+              )}
             </div>
             {!correct && (
               <p className="t-body mb-2">

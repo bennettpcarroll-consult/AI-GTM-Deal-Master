@@ -9,14 +9,15 @@ import { PILLAR_TINT } from '@/lib/brand';
 import { loadCurriculum } from '@/lib/curriculum/load';
 import type { Tier } from '@/lib/curriculum/schema';
 import { pathFor, type PathNode } from '@/lib/path';
-import { bossesPassed, tierUnlocked } from '@/lib/store';
+import { bossesPassed, setReviewer, tierUnlocked } from '@/lib/store';
 import { useAppState } from '@/lib/use-app-state';
 
 /** Zig-zag offsets so the path reads as a trail, not a list. */
+// Path buttons press their inner face, never the link itself: a link that moves under the pointer on press can swallow the click.
 const OFFSETS = ['0px', '64px', '-48px', '24px', '-24px'];
 
 export default function PathPage() {
-  const { state } = useAppState();
+  const { state, update } = useAppState();
   const curriculum = loadCurriculum();
   if (!state) return <Loading />;
   const trajectory = state.trajectories.find((candidate) => candidate.id === state.activeTrajectoryId);
@@ -39,9 +40,17 @@ export default function PathPage() {
   return (
     <AppShell state={state} trajectory={trajectory}>
       {/* The path opens straight on the pillars: no daily goal, no optional side quests. Reps live in their own tab. */}
+      {state.reviewer && (
+        <p className="t-small -mt-1 mb-4 flex items-center justify-between gap-3 rounded-full bg-people-soft px-4 py-2 font-semibold text-people-ink">
+          Reviewer mode · all pillars open
+          <button type="button" className="underline underline-offset-2" onClick={() => update((current) => setReviewer(current, false))}>
+            Exit
+          </button>
+        </p>
+      )}
       {allNodes.map(({ tier, pillar, nodes }, pillarIndex) => {
         const rubric = curriculum.rubrics[tier];
-        const unlocked = tierUnlocked(trajectory, tier);
+        const unlocked = tierUnlocked(trajectory, tier, state.reviewer);
         const passedSteps = nodes.filter((node) => node.state === 'done').length;
         const pillarCurrent = nodes.find((node) => node.state === 'current');
         const trail = (
@@ -151,12 +160,10 @@ function PathButton({ node }: { node: PathNode }) {
   }
   if (node.state === 'done') {
     return (
-      <Link
-        href={node.href}
-        aria-label={`${label}, practice again`}
-        className={`grid place-items-center bg-profit text-white shadow-[0_5px_0_#08734f] transition active:translate-y-[3px] active:shadow-[0_2px_0_#08734f] ${size}`}
-      >
-        <Check className="h-8 w-8" strokeWidth={3} aria-hidden="true" />
+      <Link href={node.href} aria-label={`${label}, practice again`} className={`group block ${size}`}>
+        <span className={`grid h-full w-full place-items-center bg-profit text-white shadow-[0_5px_0_#08734f] transition group-active:translate-y-[3px] group-active:shadow-[0_2px_0_#08734f] ${size}`}>
+          <Check className="h-8 w-8" strokeWidth={3} aria-hidden="true" />
+        </span>
       </Link>
     );
   }
@@ -164,25 +171,21 @@ function PathButton({ node }: { node: PathNode }) {
   if (!isCurrent) {
     // Upcoming: open to play, but neutral. Only the next step wears the action gradient.
     return (
-      <Link
-        href={node.href}
-        aria-label={label}
-        className={`grid place-items-center border-[3px] border-rule-strong bg-paper text-slate shadow-[0_5px_0_#e5e7eb] transition hover:text-ink active:translate-y-[3px] ${size}`}
-      >
-        <Icon className="h-7 w-7" aria-hidden="true" />
+      <Link href={node.href} aria-label={label} className={`group block ${size}`}>
+        <span className={`grid h-full w-full place-items-center border-[3px] border-rule-strong bg-paper text-slate shadow-[0_5px_0_#e5e7eb] transition group-hover:text-ink group-active:translate-y-[3px] ${size}`}>
+          <Icon className="h-7 w-7" aria-hidden="true" />
+        </span>
       </Link>
     );
   }
   return (
-    <span className="relative">
-      <Link
-        href={node.href}
-        aria-label={label}
-        className={`action-lit grid place-items-center text-white transition active:translate-y-[3px] ${size}`}
+    <Link href={node.href} aria-label={label} className={`group block ${size}`}>
+      <span
+        className={`action-lit grid h-full w-full place-items-center text-white transition group-active:translate-y-[3px] ${size}`}
         style={{ boxShadow: '0 5px 0 rgb(14 17 22 / 0.22), 0 0 0 8px rgb(121 80 242 / 0.14)' }}
       >
         <Icon className="h-8 w-8" fill="currentColor" aria-hidden="true" />
-      </Link>
-    </span>
+      </span>
+    </Link>
   );
 }

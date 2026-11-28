@@ -98,6 +98,8 @@ export interface AppState {
   conceptsDone?: string[];
   /** Missed moves waiting for spaced retrieval. */
   sharpen?: SharpenItem[];
+  /** Reviewer mode (?preview=1): every pillar is open, so a hiring manager can see the executive material. */
+  reviewer?: boolean;
 }
 
 export function drillKey(tier: Tier, drillId: string): string {
@@ -131,6 +133,11 @@ export function addOrActivateTrajectory(
   }
   const trajectory: Trajectory = { id, clusterId, verticalId, createdAt: now, sessions: [], drills, boss: {} };
   return { ...state, activeTrajectoryId: id, trajectories: [...state.trajectories, trajectory] };
+}
+
+/** Turns reviewer mode on or off. Progress is untouched either way. */
+export function setReviewer(state: AppState, on: boolean): AppState {
+  return Boolean(state.reviewer) === on ? state : { ...state, reviewer: on };
 }
 
 export function setActiveTrajectory(state: AppState, id: string): AppState {
@@ -197,8 +204,8 @@ export function bossesPassed(trajectory: Trajectory): number {
   return TIERS.filter((tier) => trajectory.boss[String(tier)]?.passed).length;
 }
 
-export function tierUnlocked(trajectory: Trajectory, tier: Tier): boolean {
-  if (tier === 1) return true;
+export function tierUnlocked(trajectory: Trajectory, tier: Tier, reviewer = false): boolean {
+  if (tier === 1 || reviewer) return true;
   const previous = tier - 1 as Tier;
   return trajectory.boss[String(previous)]?.passed === true;
 }

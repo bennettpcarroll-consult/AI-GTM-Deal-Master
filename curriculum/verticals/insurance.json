@@ -167,6 +167,80 @@
     },
     "answer_first": {
       "strong": "My recommendation: start with simple auto claims. Three reasons."
+    },
+    "identify_pain": {
+      "strong": "What does a slow claim cost you each month, in adjuster hours and leakage?"
+    },
+    "champion": {
+      "strong": "If I am not in the room, how would you make the case to your Chief Underwriting Officer?"
+    }
+  },
+  "tier_overrides": {
+    "3": {
+      "buyer_reveals": {
+        "paper_process": {
+          "speaker": "General Counsel",
+          "setup": "The pilot ran on closed claim files. Moving onto open claims means legal and compliance review it again.",
+          "partial": "They can start early. Open claims also trigger state notice rules in two of our states.",
+          "verbatim": "Seven weeks for the open-claims review, and the two state notices go out first. Start now and you are live before storm season."
+        },
+        "decision_process": {
+          "speaker": "General Counsel",
+          "setup": "Simple auto claims are live. Claims now wants the same on property, and that is a new approval.",
+          "partial": "Property changes the claims-handling guidelines, so compliance and the actuaries both review it. The order is not set.",
+          "verbatim": "Actuarial signs off the reserving impact first, then compliance approves the new guidelines, then the Head of Claims launches. About eight weeks."
+        },
+        "economic_buyer": {
+          "speaker": "Head of Claims",
+          "setup": "Adding property takes this past my pilot budget, so the funding changes.",
+          "partial": "Auto came out of my operations budget. Property sits under a different line of business, so some costs would be shared.",
+          "verbatim": "The property line pays for its own usage, and the CFO signs anything shared across lines. I keep approving auto."
+        },
+        "competition": {
+          "speaker": "Head of Claims",
+          "setup": "Our cloud provider now offers a claims document service natively, and it is cheaper on paper.",
+          "partial": "It is cheaper per page. Our data team also thinks they could rebuild your workflow on it.",
+          "verbatim": "We would compare you to the native service and a rebuild by our data team. You win only if your loss-ratio case beats both."
+        },
+        "metrics": {
+          "speaker": "Chief Underwriting Officer",
+          "setup": "I will back a bigger commit only on numbers from live claims, not the pilot.",
+          "partial": "Auto cycle time came down. For property, the board watches reopened claims as closely as speed.",
+          "verbatim": "Property cycle time down by a third within two quarters, with reopened claims under four percent."
+        },
+        "identify_pain": {
+          "speaker": "Head of Claims",
+          "setup": "Adjusters stopped using the tool on anything beyond the simplest auto claims.",
+          "partial": "They trust it for glass and towing, but still key in the rest by hand. So the backlog barely moved.",
+          "verbatim": "We pay for automation and still staff the full adjuster bench for anything above glass. That is two cost bases on one backlog."
+        }
+      },
+      "talk_tracks": {
+        "paper_process": {
+          "open": "Can legal and compliance start reviewing open claims now, in parallel with the pilot?",
+          "pin": "How long does the compliance review take once the state notice rules are in scope?"
+        },
+        "decision_process": {
+          "open": "For property, what are the steps from live auto claims to production?",
+          "pin": "Who else needs to approve after compliance and the actuaries? Walk me through the approval path."
+        },
+        "economic_buyer": {
+          "open": "With property in scope, whose budget does this come out of?",
+          "pin": "Who signs for the property line, and who has the final sign-off on shared costs?"
+        },
+        "competition": {
+          "open": "Would you use the cheaper native service, or do nothing?",
+          "pin": "What are you comparing us against: the native service, or a rebuild by your data team?"
+        },
+        "metrics": {
+          "open": "Which number must hold on live claims before you back anything bigger?",
+          "pin": "How much do you need to cut property cycle time, and where must reopened claims sit?"
+        },
+        "identify_pain": {
+          "open": "What does it cost you when adjusters stop using the tool?",
+          "pin": "What happens if you do nothing and adjusters still key the rest in by hand?"
+        }
+      }
     }
   }
 }

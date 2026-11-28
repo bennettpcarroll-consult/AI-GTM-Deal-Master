@@ -43,7 +43,7 @@ export function AppShell({ state, trajectory, children }: { state: AppState; tra
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[560px] flex-col">
-      <header ref={headerRef} className="sticky top-0 z-30 border-b border-hairline bg-paper/95 backdrop-blur">
+      <header ref={headerRef} className="sticky top-0 z-40 border-b border-hairline bg-paper">
         <div className="flex items-center justify-between gap-2 px-4 py-2.5">
           {trajectory ? (
             <button
@@ -87,7 +87,7 @@ export function AppShell({ state, trajectory, children }: { state: AppState; tra
         </div>
 
         {open === 'trajectory' && (
-          <div className="absolute inset-x-4 top-full mt-2 animate-rise rounded-panel border border-hairline bg-paper p-2 shadow-float" role="menu">
+          <div className="absolute inset-x-4 top-full z-50 mt-2 animate-drop rounded-panel border border-rule-strong bg-paper p-2 opacity-100 shadow-float" role="menu">
             <p className="t-label px-3 pb-1 pt-2">Switch path</p>
             {state.trajectories.map((candidate) => {
               const active = candidate.id === state.activeTrajectoryId;
@@ -114,7 +114,7 @@ export function AppShell({ state, trajectory, children }: { state: AppState; tra
           </div>
         )}
         {(open === 'streak' || open === 'points') && (
-          <div className="absolute right-4 top-full mt-2 w-[min(300px,calc(100%-2rem))] animate-rise rounded-panel border border-hairline bg-paper p-4 shadow-float" role="status">
+          <div className="absolute right-4 top-full z-50 mt-2 w-[min(300px,calc(100%-2rem))] animate-drop rounded-panel border border-rule-strong bg-paper p-4 opacity-100 shadow-float" role="status">
             {open === 'streak' ? (
               <>
                 <p className="t-item flex items-center gap-2 text-value-ink">

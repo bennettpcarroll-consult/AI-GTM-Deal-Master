@@ -66,7 +66,7 @@ export default function SkillsPage() {
                         <div className="grid gap-2">
                           <div className="rounded-xl bg-profit-soft p-3">
                             <p className="t-label text-profit-ink">Strong move</p>
-                            <p className="t-body mt-1">“{skill.talk_track.strong}”</p>
+                            <p className="t-body mt-1">“{(trajectory && curriculum.verticals[trajectory.verticalId].rep_overrides?.[skill.id]?.strong) ?? skill.talk_track.strong}”</p>
                           </div>
                           <div className="rounded-xl bg-deep p-3">
                             <p className="t-label">Instead of</p>
@@ -80,7 +80,7 @@ export default function SkillsPage() {
                           <div className="flex flex-wrap gap-2">
                             {places.map(({ tier, drillIndex }) => {
                               const rubric = curriculum.rubrics[tier];
-                              const unlocked = tierUnlocked(trajectory, tier);
+                              const unlocked = tierUnlocked(trajectory, tier, state.reviewer);
                               const label = `Pillar ${rubric.pillar} · ${rubric.drills[drillIndex]?.title}`;
                               return unlocked ? (
                                 <Link key={label} href={`/room/${tier}/drill-${drillIndex + 1}`} className="btn-quiet min-h-[40px] px-3 text-[13px]">

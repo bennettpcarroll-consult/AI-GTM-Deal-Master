@@ -30,7 +30,7 @@ export function RoomPage() {
   if (!state) return <Loading text="Opening the deal room…" />;
   if (!trajectory) return <Notice title="No active path" text="Pick what you sell and who you sell to first." href="/start" cta="Get started" />;
   if (!route) return <Notice title="Unknown session" text="That drill does not exist in this pillar." />;
-  if (!tierUnlocked(trajectory, tier as Tier)) {
+  if (!tierUnlocked(trajectory, tier as Tier, state.reviewer)) {
     return <Notice title="Pillar locked" text={`Finish Pillar 0${tier - 1} to unlock this pillar.`} />;
   }
 

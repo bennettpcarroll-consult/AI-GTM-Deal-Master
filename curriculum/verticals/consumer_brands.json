@@ -166,6 +166,80 @@
     },
     "answer_first": {
       "strong": "My recommendation: start with order-status questions before the holiday peak. Three reasons."
+    },
+    "identify_pain": {
+      "strong": "What does a missed answer at peak cost you in abandoned carts each month?"
+    },
+    "champion": {
+      "strong": "If I am not in the room, how would you make the case to your CMO?"
+    }
+  },
+  "tier_overrides": {
+    "3": {
+      "buyer_reveals": {
+        "paper_process": {
+          "speaker": "CFO",
+          "setup": "The pilot ran off the payment flow. Putting the assistant into checkout means a fresh security review.",
+          "partial": "Security can open it now. Checkout also brings the privacy team in, because order history is involved.",
+          "verbatim": "Nine weeks for checkout, privacy included. If it starts this month, you are live for the holiday peak."
+        },
+        "decision_process": {
+          "speaker": "CMO",
+          "setup": "The assistant is live on one brand site. The other four brands want it before the holiday.",
+          "partial": "Each brand runs its own brand review, then the regional teams sign off. Nobody has sequenced it.",
+          "verbatim": "Brand review per site, then regional sign-off, then I approve the launch calendar. Two weeks per brand if we stagger them."
+        },
+        "economic_buyer": {
+          "speaker": "CMO",
+          "setup": "Rolling out to all five brands is beyond what I can fund from digital alone.",
+          "partial": "Each brand has its own marketing budget, and the shared platform cost sits with finance.",
+          "verbatim": "Each brand pays for its own usage from its marketing budget. The shared platform cost needs the CFO's signature."
+        },
+        "competition": {
+          "speaker": "CFO",
+          "setup": "Our cloud provider has offered to host a similar assistant natively, bundled into our spend.",
+          "partial": "The bundle looks cheap. Our e-commerce team also says they could rebuild it with the provider's tools.",
+          "verbatim": "We would put you against the bundled option and an in-house rebuild. You win only if conversion lift beats the bundle by a clear margin."
+        },
+        "metrics": {
+          "speaker": "VP Digital / E-Commerce",
+          "setup": "Finance will not approve a bigger commit on pilot numbers from one brand.",
+          "partial": "The first brand moved cost per resolution. Finance also wants revenue per assisted session across every brand.",
+          "verbatim": "Revenue per assisted session up ten percent across all five brands by the holiday peak, with cost per resolution held."
+        },
+        "identify_pain": {
+          "speaker": "VP Digital / E-Commerce",
+          "setup": "Usage on the first brand has gone flat since the launch campaign ended.",
+          "partial": "Customers use it for order status but still phone in for returns. So contact center costs did not fall.",
+          "verbatim": "We pay for the assistant and still staff returns calls at full strength. Two cost lines, and the CFO has noticed."
+        }
+      },
+      "talk_tracks": {
+        "paper_process": {
+          "open": "Can security start reviewing checkout now, in parallel with the pilot?",
+          "pin": "How long does the checkout review take once privacy and order history are in scope?"
+        },
+        "decision_process": {
+          "open": "For the other four brands, what are the steps from one live site to all five?",
+          "pin": "Who else needs to approve after brand review and the regional teams? Walk me through the approval path."
+        },
+        "economic_buyer": {
+          "open": "For all five brands, whose budget does this come out of?",
+          "pin": "Who signs the shared platform cost, and who has the final sign-off across the brands?"
+        },
+        "competition": {
+          "open": "Would you take the bundled assistant from the provider, or do nothing?",
+          "pin": "What are you comparing us against: the bundled option, or a rebuild by your e-commerce team?"
+        },
+        "metrics": {
+          "open": "Which number must hold across every brand before finance approves anything bigger?",
+          "pin": "How much do you need to improve revenue per assisted session, and by when?"
+        },
+        "identify_pain": {
+          "open": "What does the flat usage cost your team each month?",
+          "pin": "What happens if you do nothing and returns keep going to the phones?"
+        }
+      }
     }
   }
 }
