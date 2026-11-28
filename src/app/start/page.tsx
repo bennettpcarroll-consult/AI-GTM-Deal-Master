@@ -1,8 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ArrowRight, Check, FileWarning, Layers, Receipt, ShieldAlert, Swords } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowRight, Check } from 'lucide-react';
 import { Glyph, IconTile } from '@/components/glyph';
 import { FocusScreen, Loading, StepBar } from '@/components/ui';
 import { LAYER_STYLE } from '@/lib/brand';
@@ -15,9 +15,8 @@ import { placementCreditKeys } from '@/lib/views';
 type Step = 'cluster' | 'vertical';
 
 /**
- * Two-step onboarding: what you sell, then who you sell to. Each choice opens a small preview
- * (the market map, or what you will face), and the learner lands on the path. The market
- * briefing lives on the path, so nothing stands between sign-up and the first rep.
+ * Two-step onboarding: what you sell, then who you sell to. Each card is a name and one muted
+ * line, nothing more: the market briefing on the path teaches the rest, so it is never said twice.
  */
 export default function StartPage() {
   const router = useRouter();
@@ -26,12 +25,6 @@ export default function StartPage() {
   const [step, setStep] = useState<Step>('cluster');
   const [clusterId, setClusterId] = useState<ClusterId | null>(null);
   const [verticalId, setVerticalId] = useState<VerticalId | null>(null);
-  const previewRef = useRef<HTMLDListElement>(null);
-
-  // A choice opens its preview in place. Bring it into view, so a pick near the bottom is not hidden behind the button.
-  useEffect(() => {
-    previewRef.current?.scrollIntoView({ block: 'nearest', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-  }, [clusterId, verticalId]);
 
   if (!state) return <Loading />;
   const isCluster = step === 'cluster';
@@ -77,35 +70,16 @@ export default function StartPage() {
             const pressed = clusterId === id;
             return (
               <div key={id} className="flex flex-col gap-2">
-                <button type="button" className="choice items-start" aria-pressed={pressed} onClick={() => setClusterId(id)}>
+                <button type="button" className="choice" aria-pressed={pressed} onClick={() => setClusterId(id)}>
                   <IconTile tint={style.tint} color={style.ink}>
                     <Glyph name={item.glyph} className="h-6 w-6" />
                   </IconTile>
-                  <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+                  <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <span className="t-item">{item.display_name}</span>
-                    <span className="flex flex-wrap gap-1.5">
-                      {item.archetypal_vendors.map((vendor) => (
-                        <span key={vendor} className="rounded-full bg-deep px-2 py-0.5 text-[12px] font-semibold text-charcoal">
-                          {vendor}
-                        </span>
-                      ))}
-                    </span>
+                    <span className="t-small truncate">{item.card_vendors.join(' · ')}</span>
                   </span>
                   <Tick pressed={pressed} />
                 </button>
-                {pressed && (
-                  <dl ref={previewRef} className="ml-2 flex scroll-mb-28 animate-rise flex-col gap-3 rounded-panel border-l-[3px] bg-paper py-1 pl-4" style={{ borderColor: style.ink }} aria-label="Market map">
-                    <Fact icon={<Layers className="h-4 w-4" />} label="Where it sits" color={style.ink}>
-                      Layer {item.stack_order} of 5 in the AI stack · {item.value_chain_layer}
-                    </Fact>
-                    <Fact icon={<Swords className="h-4 w-4" />} label="How players compete" color={style.ink}>
-                      {item.market_map.competition}
-                    </Fact>
-                    <Fact icon={<Receipt className="h-4 w-4" />} label="What the customer pays for" color={style.ink}>
-                      {item.pricing_unit.summary}
-                    </Fact>
-                  </dl>
-                )}
               </div>
             );
           })}
@@ -121,22 +95,12 @@ export default function StartPage() {
                   <IconTile tint="#f6ebff" color="#8a3cc7">
                     <Glyph name={item.glyph} className="h-6 w-6" />
                   </IconTile>
-                  <span className="flex flex-1 flex-col gap-0.5">
-                    <span className="t-item">{item.display_name}</span>
-                    <span className="t-small">{item.buying_committee.map((member) => member.role).slice(0, 3).join(' · ')}</span>
+                  <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                    <span className="t-item">{item.short_name}</span>
+                    <span className="t-small">Veto: {item.veto_holder.role}</span>
                   </span>
                   <Tick pressed={pressed} />
                 </button>
-                {pressed && (
-                  <dl ref={previewRef} className="ml-2 flex scroll-mb-28 animate-rise flex-col gap-3 border-l-[3px] border-people-ink py-1 pl-4" aria-label="What you will face">
-                    <Fact icon={<ShieldAlert className="h-4 w-4" />} label={`Real veto holder · ${item.veto_holder.role}`} color="#8a3cc7">
-                      {item.veto_holder.reason}
-                    </Fact>
-                    <Fact icon={<FileWarning className="h-4 w-4" />} label="Paper process blocker" color="#8a3cc7">
-                      {item.paper_process_blockers[0]}
-                    </Fact>
-                  </dl>
-                )}
               </div>
             );
           })}
@@ -151,17 +115,5 @@ function Tick({ pressed }: { pressed: boolean }) {
     <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full ${pressed ? 'bg-people-ink text-white' : 'border-2 border-rule-strong'}`} aria-hidden="true">
       {pressed && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
     </span>
-  );
-}
-
-function Fact({ icon, label, color, children }: { icon: ReactNode; label: string; color: string; children: ReactNode }) {
-  return (
-    <div className="flex flex-col gap-0.5">
-      <dt className="flex items-center gap-1.5 text-[13px] font-bold" style={{ color }}>
-        <span aria-hidden="true">{icon}</span>
-        {label}
-      </dt>
-      <dd className="t-body text-charcoal">{children}</dd>
-    </div>
   );
 }

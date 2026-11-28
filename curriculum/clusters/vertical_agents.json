@@ -11,6 +11,11 @@
     "Harvey",
     "Salesforce Agentforce"
   ],
+  "card_vendors": [
+    "Sierra",
+    "Harvey",
+    "Agentforce"
+  ],
   "pricing_unit": {
     "model": "Outcome-based pricing per resolution, with action credits or flex credits",
     "units": [

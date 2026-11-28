@@ -11,6 +11,11 @@
     "Cohere",
     "Mistral"
   ],
+  "card_vendors": [
+    "Anthropic",
+    "OpenAI",
+    "Google"
+  ],
   "pricing_unit": {
     "model": "API token commitments and enterprise workspace seats",
     "units": [

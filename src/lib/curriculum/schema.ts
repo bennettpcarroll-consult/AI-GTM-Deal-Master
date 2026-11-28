@@ -58,6 +58,8 @@ export const clusterSchema = z.object({
   /** Position in the AI value chain, 1 = closest to silicon. */
   stack_order: z.number().int().min(1).max(5),
   archetypal_vendors: z.array(nonEmpty).min(1),
+  /** Three short vendor names for the onboarding card, so it fits one line. */
+  card_vendors: z.array(nonEmpty).length(3),
   pricing_unit: z.object({
     model: nonEmpty,
     units: z.array(nonEmpty).min(1),

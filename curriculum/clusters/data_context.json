@@ -10,6 +10,11 @@
     "Palantir Ontology",
     "Pinecone"
   ],
+  "card_vendors": [
+    "Snowflake",
+    "Databricks",
+    "Pinecone"
+  ],
   "pricing_unit": {
     "model": "Pure consumption",
     "units": [

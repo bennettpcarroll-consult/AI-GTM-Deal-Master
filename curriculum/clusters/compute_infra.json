@@ -10,6 +10,11 @@
     "CoreWeave",
     "NVIDIA"
   ],
+  "card_vendors": [
+    "AWS",
+    "Google Cloud",
+    "NVIDIA"
+  ],
   "pricing_unit": {
     "model": "Multi-year capacity commitments",
     "units": [
