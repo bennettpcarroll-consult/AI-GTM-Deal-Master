@@ -317,22 +317,8 @@ const effectSchema = z.object({ trust: z.number(), risk: z.number(), urgency: z.
 const moveKindRecord = <T extends z.ZodTypeAny>(item: T) => z.object({ elite: item, weak: item, trap: item });
 
 /** Deal-room rules: the hidden buyer state and the generic objection moves with their replies. */
-/** The front door's 20-second buyer move: one buyer line and three replies (elite, polite surface discovery, premature pitch). */
-const teaserSchema = z.object({
-  id: nonEmpty,
-  label: nonEmpty,
-  speaker: nonEmpty,
-  line: nonEmpty,
-  options: z
-    .array(z.object({ kind: z.enum(['elite', 'weak', 'trap']), text: nonEmpty, verdict: nonEmpty, why: nonEmpty }))
-    .length(3)
-    .refine((options) => options.filter((option) => option.kind === 'elite').length === 1, 'Exactly one elite option')
-});
-export type Teaser = z.infer<typeof teaserSchema>;
-
 export const roomSchema = z.object({
   id: z.literal('room'),
-  teaser: z.array(teaserSchema).min(1),
   mood: z.object({
     start: effectSchema,
     walkout_trust: z.number(),
