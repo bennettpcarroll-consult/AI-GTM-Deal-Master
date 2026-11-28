@@ -111,9 +111,33 @@ export const verticalSchema = z.object({
   /** Industry versions of the elite deal-room lines, so a law firm never hears a bank's question. */
   talk_tracks: z.object(talkTracksShape),
   /** Industry versions of a skill's buyer line or strong reply, used in deal-room beats. */
-  rep_overrides: z.record(skillIdSchema, z.object({ buyer_line: nonEmpty.optional(), strong: nonEmpty.optional() })).optional()
+  rep_overrides: z.record(skillIdSchema, z.object({ buyer_line: nonEmpty.optional(), strong: nonEmpty.optional() })).optional(),
+  /**
+   * Pillar-specific buyer lines and ladders, keyed by tier. A pillar that revisits a signal plays a new
+   * situation (Pillar 03 is post-land expansion), so no pillar replays another pillar's questions.
+   */
+  tier_overrides: z
+    .record(
+      z.enum(['2', '3', '4']),
+      z.object({
+        buyer_reveals: z.object(buyerRevealsShape).partial(),
+        talk_tracks: z.object(talkTracksShape).partial()
+      })
+    )
+    .optional()
 });
 export type Vertical = z.infer<typeof verticalSchema>;
+
+/** The vertical as one pillar plays it: its tier overrides laid over the base lines. */
+export function verticalForTier(vertical: Vertical, tier: number): Vertical {
+  const override = vertical.tier_overrides?.[String(tier) as '2' | '3' | '4'];
+  if (!override) return vertical;
+  return {
+    ...vertical,
+    buyer_reveals: { ...vertical.buyer_reveals, ...override.buyer_reveals },
+    talk_tracks: { ...vertical.talk_tracks, ...override.talk_tracks }
+  };
+}
 
 export const signalDefinitionSchema = z.object({
   id: signalIdSchema,
@@ -243,6 +267,11 @@ export const skillSchema = z.object({
     /** The seller drives this beat, so the buyer does not set it up mid-meeting. */
     seller_led: z.boolean().optional()
   }),
+  /**
+   * A rapid-fire executive curveball for daily reps: a situation no drill plays, so reps never
+   * repeat a deal-room line. Elite, weak (polite but empty) and trap (premature pitch) replies.
+   */
+  curveball: z.object({ speaker: nonEmpty, line: nonEmpty, elite: nonEmpty, weak: nonEmpty, trap: nonEmpty }),
   signal: signalIdSchema.optional(),
   probes: probesSchema.optional(),
   scenario_reveal: z.enum(SCENARIO_REVEAL_IDS).optional()
@@ -288,8 +317,22 @@ const effectSchema = z.object({ trust: z.number(), risk: z.number(), urgency: z.
 const moveKindRecord = <T extends z.ZodTypeAny>(item: T) => z.object({ elite: item, weak: item, trap: item });
 
 /** Deal-room rules: the hidden buyer state and the generic objection moves with their replies. */
+/** The front door's 20-second buyer move: one buyer line and three replies (elite, polite surface discovery, premature pitch). */
+const teaserSchema = z.object({
+  id: nonEmpty,
+  label: nonEmpty,
+  speaker: nonEmpty,
+  line: nonEmpty,
+  options: z
+    .array(z.object({ kind: z.enum(['elite', 'weak', 'trap']), text: nonEmpty, verdict: nonEmpty, why: nonEmpty }))
+    .length(3)
+    .refine((options) => options.filter((option) => option.kind === 'elite').length === 1, 'Exactly one elite option')
+});
+export type Teaser = z.infer<typeof teaserSchema>;
+
 export const roomSchema = z.object({
   id: z.literal('room'),
+  teaser: z.array(teaserSchema).min(1),
   mood: z.object({
     start: effectSchema,
     walkout_trust: z.number(),

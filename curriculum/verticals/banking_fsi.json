@@ -92,7 +92,7 @@
     },
     "identify_pain": {
       "speaker": "Head of Model Risk (MRM)",
-      "setup": "My analysts are buried in fraud alerts, and the last audit noticed.",
+      "setup": "My analysts are buried in false positive fraud alerts, and the last audit noticed.",
       "partial": "A lot of hours. Most of the alerts they clear turn out to be nothing, and the audit findings keep stacking up.",
       "verbatim": "We already have forty-one open findings on manual alert review, and I cannot keep adding analysts to close them."
     },
@@ -145,6 +145,100 @@
     "competition": {
       "open": "What happens if you build this in-house, or do nothing?",
       "pin": "What are you comparing us against, including what your platform group already licenses?"
+    }
+  },
+  "rep_overrides": {
+    "account_research": {
+      "strong": "I saw fraud operations moved under the CIO last quarter. What prompted that?"
+    },
+    "discovery_questioning": {
+      "strong": "Walk me through how an alert gets worked today, start to finish."
+    },
+    "listening_summarizing": {
+      "strong": "So the real cost is analyst hours, not missed fraud. Did I get that right?"
+    },
+    "commercial_insight": {
+      "strong": "Banks like yours lose more to alert fatigue than to missed fraud. Here is the number."
+    },
+    "value_messaging": {
+      "strong": "Today, 4 hours per case. After, 20 minutes, proven with a bank your size."
+    },
+    "answer_first": {
+      "strong": "My recommendation: start with fraud operations. Three reasons."
+    },
+    "identify_pain": {
+      "strong": "What does a false positive cost you in analyst hours each month?"
+    },
+    "champion": {
+      "strong": "If I am not in the room, how would you make the case to your CRO?"
+    }
+  },
+  "tier_overrides": {
+    "3": {
+      "buyer_reveals": {
+        "paper_process": {
+          "speaker": "CISO",
+          "setup": "The pilot cleared InfoSec, but production is a new review. Live customer data changes the scope.",
+          "partial": "We can open it early. The production review also covers data residency and audit log retention.",
+          "verbatim": "Eight weeks for the production review, and residency has to be signed off first. Start it now and you make the quarter."
+        },
+        "decision_process": {
+          "speaker": "CIO",
+          "setup": "The pilot workload is live. Now three other business lines want it, and each one counts as a new use case.",
+          "partial": "Each new use case goes back through Model Risk, then a change board. Nobody has mapped the order for an expansion.",
+          "verbatim": "Model Risk validates each use case first, then the change board, then the business line head signs. About six weeks per use case."
+        },
+        "economic_buyer": {
+          "speaker": "CIO",
+          "setup": "Expanding to three business lines is a different budget conversation from the pilot.",
+          "partial": "The pilot came from my platform budget. An expansion across business lines needs a shared funding line.",
+          "verbatim": "The business lines fund their own usage, and the Chief Risk Officer signs anything that spans more than one. I approve the platform layer."
+        },
+        "competition": {
+          "speaker": "CIO",
+          "setup": "Now that it works, our cloud provider is offering to run the same workload natively, at cost.",
+          "partial": "Their native option is tempting. My platform team also thinks they could rebuild it on the provider's tools.",
+          "verbatim": "We would compare you against the native option at cost, plus a rebuild by my team. You need to win on auditability and run cost per alert."
+        },
+        "metrics": {
+          "speaker": "Head of Model Risk (MRM)",
+          "setup": "Before anyone signs a bigger commit, I want the production numbers, not the pilot numbers.",
+          "partial": "The pilot hit its false positive target. In production we also report alerts per analyst, across all three business lines, to the examiners.",
+          "verbatim": "Alerts per analyst down by half across all three lines within two quarters, with false positives held under the pilot rate."
+        },
+        "identify_pain": {
+          "speaker": "Head of Model Risk (MRM)",
+          "setup": "Usage on the first line has gone flat, and I have to explain why to the committee.",
+          "partial": "Analysts trust it for simple alerts but still clear complex ones by hand. So the savings stalled.",
+          "verbatim": "We are paying for the platform and still staffing the complex queue in full. That is two cost bases, and the committee sees both."
+        }
+      },
+      "talk_tracks": {
+        "paper_process": {
+          "open": "Can InfoSec start reviewing for production now, in parallel with the pilot?",
+          "pin": "How long does the production review take once residency and audit log retention are in scope?"
+        },
+        "decision_process": {
+          "open": "For each new use case, what are the steps from the live pilot to production?",
+          "pin": "Who else needs to approve after Model Risk and the change board? Walk me through the approval path."
+        },
+        "economic_buyer": {
+          "open": "For the expansion across business lines, whose budget does this come from?",
+          "pin": "Who signs the shared funding line, and who has the final sign-off across business lines?"
+        },
+        "competition": {
+          "open": "Would you run it natively with the provider, or do nothing and keep the workload where it is?",
+          "pin": "What are you comparing us against: their native option, or a rebuild by your platform team?"
+        },
+        "metrics": {
+          "open": "Which number must hold in production before you sign anything bigger?",
+          "pin": "How much do you need to cut alerts per analyst across the three lines, and by when?"
+        },
+        "identify_pain": {
+          "open": "What does the flat usage cost you each month?",
+          "pin": "What happens if you do nothing and analysts keep clearing complex alerts by hand?"
+        }
+      }
     }
   }
 }

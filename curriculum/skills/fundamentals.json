@@ -12,18 +12,25 @@
       "evidence": "The buyer confirms or corrects your account hypothesis.",
       "talk_track": {
         "move": "Open with what you already know, then ask why.",
-        "strong": "I saw fraud operations moved under the CIO last quarter. What prompted that?",
-        "weak": "Can you tell me a bit about your company?",
+        "strong": "I read that this team moved under a new executive last quarter. What prompted that?",
+        "weak": "Before I share anything, how would you describe your top priorities this year?",
         "proof": "Buyer confirms or corrects your hypothesis about the account"
       },
       "rep": {
         "buyer_line": "What do you already know about how we run things here?",
-        "off_move": "I have not looked into it yet. Could you walk me through the basics?",
+        "off_move": "Most teams like yours start with our core platform. Let me show you where it fits.",
         "replies": {
           "elite": "Mostly accountability. It sat across three teams and nobody owned the outcome end to end.",
-          "weak": "It is all on our website. I was hoping you would come in with a view.",
-          "trap": "So we are starting from zero. That will make this a short meeting."
+          "weak": "Those are in our annual report. I was hoping you would come in with a view.",
+          "trap": "You are fitting us to your slide before you know how we work."
         }
+      },
+      "curveball": {
+        "speaker": "CEO",
+        "line": "Thirty seconds. Why are you in my calendar?",
+        "elite": "Your last earnings call named operating cost as the priority. I think one workflow can move it this year.",
+        "weak": "Thanks for making the time. I wanted to learn more about your goals for the year.",
+        "trap": "We are the leading platform in this space and I would love to show you a demo."
       }
     },
     {
@@ -34,19 +41,26 @@
       "evidence": "The buyer describes their current process in their own steps.",
       "talk_track": {
         "move": "Ask how the work runs today, step by step, before you suggest anything.",
-        "strong": "Walk me through how an alert gets worked today, from flag to close.",
-        "weak": "Would it help if your team worked faster?",
+        "strong": "Walk me through how a case gets worked today, from first touch to close.",
+        "weak": "What are the biggest challenges your team is facing right now?",
         "proof": "Buyer describes the current process in their own steps"
       },
       "rep": {
         "buyer_line": "We are open to ideas. Where do you want to start?",
-        "off_move": "Let me show you a quick demo of what we can do.",
+        "off_move": "Teams like yours usually stall at the handoff. Our agents remove it. Want to see how?",
         "replies": {
           "elite": "It comes in to a first-line team, they pull information from four systems, and anything unclear goes up a level. That handoff is where it stalls.",
-          "weak": "Faster always helps. That does not tell either of us much.",
-          "trap": "I would rather not jump to a demo before you know how we work."
+          "weak": "The usual ones. Volume, headcount, too many systems. That is true everywhere.",
+          "trap": "You are solving a handoff I have not described. Ask me how it works first."
         },
         "seller_led": true
+      },
+      "curveball": {
+        "speaker": "COO",
+        "line": "My team already told your competitor everything. Why should we repeat it?",
+        "elite": "You should not. Walk me through only the step where work waits longest, and I will build from there.",
+        "weak": "Every company is different, so it helps us to hear it first hand from you.",
+        "trap": "No need. We have seen enough companies like yours to know where the gaps are."
       }
     },
     {
@@ -57,18 +71,25 @@
       "evidence": "The buyer confirms your summary, or corrects it.",
       "talk_track": {
         "move": "Summarize in their words and check you got it right.",
-        "strong": "So the real cost is analyst hours, not missed fraud. Did I get that right?",
-        "weak": "Great, that makes sense. Moving on.",
+        "strong": "So the real cost is the hours your team spends, not the misses. Did I get that right?",
+        "weak": "Understood. Let me note that down and keep us moving through the agenda.",
         "proof": "Buyer confirms your summary of their problem"
       },
       "rep": {
         "buyer_line": "One thing before we go on. The bigger issue for us is the hours my team burns, not the misses.",
-        "off_move": "Got it. Let me get back to what our product does well.",
+        "off_move": "That is exactly why customers buy our platform. It gives those hours back on day one.",
         "replies": {
           "elite": "Yes, that is it. That is the part I have to defend at budget time.",
-          "weak": "Before we move on, I am not sure that landed. The hours are the problem.",
-          "trap": "You have skipped straight past what I just said."
+          "weak": "Before you note anything, I am not sure that landed. The hours are the problem.",
+          "trap": "You went straight to your platform. I have not finished explaining the problem."
         }
+      },
+      "curveball": {
+        "speaker": "CFO",
+        "line": "Let me be clear. I do not care about speed. I care about headcount next year.",
+        "elite": "So the test is whether you can hold headcount flat as volume grows. Is that the number?",
+        "weak": "Understood. Speed and headcount usually move together, so both will improve.",
+        "trap": "Then you will like our case study. One customer cut forty roles in six months."
       }
     },
     {
@@ -80,17 +101,24 @@
       "talk_track": {
         "move": "Set time, agenda and outcome, and give the buyer permission to say no.",
         "strong": "We have 20 minutes. If this is useful we agree a next step. If not, we say so. Fair?",
-        "weak": "Thanks for the time. Let me tell you about our company.",
+        "weak": "Thanks for the time. I will give a quick overview, then leave room for questions at the end.",
         "proof": "Buyer agrees to the agenda and outcome"
       },
       "rep": {
         "buyer_line": "Thanks for making time. We have about twenty minutes.",
-        "off_move": "Great, I have a 30-slide deck, so I will move quickly.",
+        "off_move": "Great. I have prepared a tailored demo, so I will dive straight in.",
         "replies": {
           "elite": "Fair. If it is not a fit, I would rather hear it today than in three months.",
-          "weak": "We can read about the company. I would rather spend the time on our situation.",
-          "trap": "We will not get through thirty slides. Tell me what matters for us."
+          "weak": "Questions at the end usually means no time for them. I would rather spend it on our situation.",
+          "trap": "A demo tailored to what? We have not told you our situation yet."
         }
+      },
+      "curveball": {
+        "speaker": "CRO",
+        "line": "I have a hard stop in fifteen. Go.",
+        "elite": "Then one goal: decide if a second meeting is worth your time. If not, we stop there. Fair?",
+        "weak": "No problem. I will move fast through the overview and save questions for the end.",
+        "trap": "Understood. I will skip the intro and jump straight into the demo."
       }
     },
     {
@@ -102,17 +130,24 @@
       "talk_track": {
         "move": "Acknowledge, then ask a clarifying question before you answer.",
         "strong": "That is a fair concern. When you say liability, is it the decision itself or the audit trail?",
-        "weak": "Do not worry, our model is very accurate.",
+        "weak": "That is a fair question. Our contract has standard indemnity language that covers it.",
         "proof": "Buyer narrows the objection to one root cause"
       },
       "rep": {
         "buyer_line": "If the model gets a decision wrong, who carries the liability, you or us?",
-        "off_move": "Our accuracy is industry leading, so that will not happen.",
+        "off_move": "We have never had a customer face that. Our accuracy benchmarks lead the market.",
         "replies": {
           "elite": "The audit trail. If a decision is challenged, we need to show exactly how it was made.",
-          "weak": "Accuracy is not the question. Something will go wrong at some point, and I need to know who owns it.",
+          "weak": "Standard language is what worries me. I need to know who owns a wrong decision, not who pays for it.",
           "trap": "Every vendor tells us that. I need an answer for the day it does happen."
         }
+      },
+      "curveball": {
+        "speaker": "CISO",
+        "line": "Your last release had a public security incident. Why would I trust you?",
+        "elite": "That is fair to raise. Is the concern the incident itself, or how we disclosed and fixed it?",
+        "weak": "That was a minor issue, fully resolved within a week. It did not affect customers.",
+        "trap": "Every vendor has incidents. Ours was smaller than what your current provider had."
       }
     },
     {
@@ -124,17 +159,24 @@
       "talk_track": {
         "move": "Propose a specific next step with a date, owner and purpose.",
         "strong": "Can we put 30 minutes with your security lead on the calendar for Tuesday?",
-        "weak": "I will send some information over.",
+        "weak": "I will send a recap with next steps and a few times that could work.",
         "proof": "Buyer agrees a named owner and a date"
       },
       "rep": {
         "buyer_line": "This was useful. What happens next?",
-        "off_move": "I will follow up by email sometime next week.",
+        "off_move": "Let us loop back after you have socialized it internally.",
         "replies": {
           "elite": "Tuesday afternoon should work. I will check their calendar and confirm today.",
-          "weak": "Sure. Though honestly, a document will sit in my inbox with everything else.",
-          "trap": "Next week is fine, but this will have gone cold by then."
+          "weak": "A recap will sit in my inbox. Put the time on the calendar while we are here.",
+          "trap": "If we wait for that, this goes cold. Nobody here owns the next step yet."
         }
+      },
+      "curveball": {
+        "speaker": "VP Operations",
+        "line": "Send me something and I will take a look.",
+        "elite": "I will. Can we also hold twenty minutes on Thursday with your finance lead to test the numbers?",
+        "weak": "Happy to. I will send the deck and a summary by end of day.",
+        "trap": "Sure. I will check back in a couple of weeks to see where you landed."
       }
     }
   ]

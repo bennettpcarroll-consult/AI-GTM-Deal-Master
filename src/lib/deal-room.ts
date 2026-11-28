@@ -1,5 +1,5 @@
 import { scenarioFor, signalDefinitions, type Curriculum } from './curriculum/load';
-import { SIGNAL_IDS, type Arc, type ArcBeat, type ArcPillar, type ClusterId, type RoomRules, type Rubric, type SignalId, type Skill, type Tier, type Vertical, type VerticalId } from './curriculum/schema';
+import { SIGNAL_IDS, type Arc, type ArcBeat, type ArcPillar, type ClusterId, type RoomRules, type Rubric, type SignalId, type Skill, type Tier, type Vertical, type VerticalId, verticalForTier } from './curriculum/schema';
 import { composeScenario, type ScenarioPayload, type SessionMode } from './composer';
 import { sendLearnerMessage, startSimulation, type SimContext, type SimState, type Turn } from './simulator';
 import { buildSkillProbes } from './skills';
@@ -462,7 +462,7 @@ export interface RoomInput {
 
 export function setUpRoom(curriculum: Curriculum, input: RoomInput): { payload: ScenarioPayload; rc: RoomContext; state: RoomState } {
   const cluster = curriculum.clusters[input.clusterId];
-  const vertical = curriculum.verticals[input.verticalId];
+  const vertical = verticalForTier(curriculum.verticals[input.verticalId], input.tier);
   const rubric = curriculum.rubrics[input.tier];
   const payload = composeScenario({ cluster, vertical, rubric, mode: input.mode, drillIndex: input.drillIndex });
   const signals = signalDefinitions(curriculum);

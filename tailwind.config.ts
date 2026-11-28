@@ -33,9 +33,10 @@ const config: Config = {
       },
       keyframes: {
         rise: { from: { opacity: '0', transform: 'translateY(12px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+        drop: { from: { transform: 'translateY(-6px)' }, to: { transform: 'translateY(0)' } },
         pop: { '0%': { transform: 'scale(0.9)' }, '60%': { transform: 'scale(1.04)' }, '100%': { transform: 'scale(1)' } }
       },
-      animation: { rise: 'rise 240ms ease-out both', pop: 'pop 320ms ease-out both' }
+      animation: { rise: 'rise 240ms ease-out both', drop: 'drop 160ms ease-out both', pop: 'pop 320ms ease-out both' }
     }
   },
   plugins: []

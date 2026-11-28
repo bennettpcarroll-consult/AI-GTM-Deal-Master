@@ -16,7 +16,7 @@ export default function RepsPage() {
   const { state, update } = useAppState();
   const curriculum = loadCurriculum();
   const [round, setRound] = useState(0);
-  const [result, setResult] = useState<{ correct: number; total: number } | null>(null);
+  const [result, setResult] = useState<{ correct: number; total: number; trust: number } | null>(null);
 
   const trajectory = state?.trajectories.find((candidate) => candidate.id === state.activeTrajectoryId);
   const questions = useMemo(() => {
@@ -75,9 +75,9 @@ export default function RepsPage() {
           <h1 className="t-display">
             {result.correct} of {result.total}
           </h1>
-          <p className="t-lede">strong moves picked</p>
+          <p className="t-lede">strong moves</p>
           <p className="t-body">
-            {engagement.streak} day streak
+            Buyer trust {result.trust}% · {engagement.streak}-day streak
           </p>
         </div>
       </FocusScreen>
@@ -90,7 +90,7 @@ export default function RepsPage() {
       questions={questions}
       exitHref="/path"
       progressLabel="Reps progress"
-      onDone={(answers) => {
+      onDone={(answers, { trustLost }) => {
         const beats = Object.fromEntries(
           Object.entries(answers)
             .filter(([id]) => id.startsWith('beat:'))
@@ -104,7 +104,7 @@ export default function RepsPage() {
           const reviewed = trajectory ? reviewSharpen(current, trajectory.id, beats, dayKey()) : current;
           return recordActivity(reviewed, { reps: questions.length, proofs: 0, skills: correctSkills });
         });
-        setResult({ correct, total: questions.length });
+        setResult({ correct, total: questions.length, trust: Math.max(0, 100 - trustLost) });
       }}
     />
   );

@@ -12,18 +12,25 @@
       "evidence": "The buyer reacts to the reframe as new.",
       "talk_track": {
         "move": "Lead with an insight that reframes their problem.",
-        "strong": "Banks like yours lose more to alert fatigue than to missed fraud. Here is the number.",
-        "weak": "Let me walk you through our features.",
+        "strong": "Teams like yours lose more to manual review than to the errors it catches. Here is the number.",
+        "weak": "We are seeing a lot of interest in AI across your industry. Let me share some trends.",
         "proof": "Buyer reacts to the reframe, for example “we have never measured that”"
       },
       "rep": {
         "buyer_line": "We think our process is pretty good already.",
-        "off_move": "Our product has 40 features. Let me show you the top ten.",
+        "off_move": "Our platform covers that end to end. Let me show you the three features customers use most.",
         "replies": {
           "elite": "That is not how we have looked at it. Show me the number.",
-          "weak": "I have sat through a lot of feature walkthroughs. Tell me something about us I do not already know.",
-          "trap": "Ten features is a long list. I still do not know why we should change anything."
+          "weak": "We read the same analyst reports. Tell me something about us I do not already know.",
+          "trap": "Three features is still a pitch. I do not know why we should change anything."
         }
+      },
+      "curveball": {
+        "speaker": "Board member",
+        "line": "Everyone is talking about AI. What do you know that we do not?",
+        "elite": "That most of your peers measure accuracy, and lose more to the review work around it. Here is that cost.",
+        "weak": "AI adoption is accelerating fast. Companies that wait risk falling behind.",
+        "trap": "Our models are the most advanced on the market. Let me show you the benchmarks."
       }
     },
     {
@@ -34,18 +41,25 @@
       "evidence": "The buyer repeats the outcome in their own words.",
       "talk_track": {
         "move": "State before, after, and proof from a similar customer.",
-        "strong": "Today, 4 hours per case. After, 20 minutes, proven with a bank your size.",
-        "weak": "We have a best-in-class AI platform.",
+        "strong": "Today, four hours per case. After, twenty minutes, proven with a customer your size.",
+        "weak": "We help teams like yours work smarter and move faster with AI.",
         "proof": "Buyer repeats the outcome in their words"
       },
       "rep": {
         "buyer_line": "Why should I care about another AI tool?",
-        "off_move": "Because our platform is best in class and fully AI powered.",
+        "off_move": "Because we are rated a leader by the top analyst firms this year.",
         "replies": {
           "elite": "If that holds up on our data, it is worth a closer look.",
           "weak": "Every vendor in my inbox says that. What changes for my team?",
-          "trap": "That is a slogan, not a reason."
+          "trap": "An analyst rating is not a reason. What would change for us?"
         }
+      },
+      "curveball": {
+        "speaker": "CEO",
+        "line": "In one sentence, what changes for us?",
+        "elite": "The work that takes your team a week today takes a day, proven at a company your size.",
+        "weak": "You get an AI platform that makes your whole operation smarter.",
+        "trap": "You get the most advanced AI on the market, with every feature included."
       }
     },
     {
@@ -56,18 +70,25 @@
       "evidence": "The executive engages with the recommendation.",
       "talk_track": {
         "move": "Lead with the answer, then the reasons.",
-        "strong": "My recommendation: start with fraud operations. Three reasons.",
-        "weak": "So, to give you some background first...",
+        "strong": "My recommendation: start with your highest-volume workflow. Three reasons.",
+        "weak": "Of course. Let me quickly frame the context, then get to the recommendation.",
         "proof": "Executive engages with the recommendation"
       },
       "rep": {
         "buyer_line": "I have five minutes. What should I do?",
-        "off_move": "Let me start with some background on our company history.",
+        "off_move": "There are a few options. Let me walk you through the pros and cons of each.",
         "replies": {
           "elite": "Go ahead. Give me the three.",
-          "weak": "Skip the background. What do you recommend?",
-          "trap": "I do not have time for the history. What is your recommendation?"
+          "weak": "Skip the context. What do you recommend?",
+          "trap": "I do not have time for options. What is your recommendation?"
         }
+      },
+      "curveball": {
+        "speaker": "CEO",
+        "line": "I read your proposal. Too long. What is the decision you need from me?",
+        "elite": "Approve a four-week proof on one workflow, with a go or no-go on the numbers. That is it.",
+        "weak": "Let me take you through the key sections so the context is clear.",
+        "trap": "There are a few decisions. Let me walk you through each option."
       }
     },
     {
@@ -79,17 +100,24 @@
       "talk_track": {
         "move": "Show multi-year ROI and the cost of a year’s delay, from their inputs.",
         "strong": "Using your numbers, three-year ROI is 4x, and the cost of waiting a year is about 2 million dollars.",
-        "weak": "It pays for itself, trust me.",
+        "weak": "Most customers see payback inside the first year.",
         "proof": "Finance accepts the inputs and the method"
       },
       "rep": {
         "buyer_line": "Finance will ask why we should spend this now.",
-        "off_move": "Because the price goes up next quarter.",
+        "off_move": "If you sign this quarter, I can hold the current pricing for you.",
         "replies": {
           "elite": "The cost of waiting is the line finance will react to. Send me the model behind it.",
-          "weak": "Finance will not take that on trust. They need the numbers.",
-          "trap": "A price increase is your problem, not a reason for us to buy."
+          "weak": "Most customers are not us. Finance will need our own numbers.",
+          "trap": "A pricing deadline is your problem, not a reason for us to buy."
         }
+      },
+      "curveball": {
+        "speaker": "CFO",
+        "line": "Every project on my desk says it pays back. Why does yours go first?",
+        "elite": "Because the cost of waiting is the biggest: using your volumes, each quarter of delay costs about this much.",
+        "weak": "Our payback is under a year, which is faster than most projects.",
+        "trap": "Because our pricing goes up next quarter, so waiting costs you more."
       }
     }
   ]

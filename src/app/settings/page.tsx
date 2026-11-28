@@ -7,7 +7,7 @@ import { Loading } from '@/components/ui';
 import { CREDIT_THRESHOLD } from '@/lib/constants';
 import { bossesPassed, emptyAppState, resetTrajectory, setActiveTrajectory } from '@/lib/store';
 import { useAppState } from '@/lib/use-app-state';
-import { trajectoryLabel } from '@/lib/views';
+import { plural, trajectoryLabel } from '@/lib/views';
 
 export default function SettingsPage() {
   const { state, update } = useAppState();
@@ -18,12 +18,12 @@ export default function SettingsPage() {
     <AppShell state={state} trajectory={active}>
       <div className="flex flex-col gap-2">
         <p className="t-label">Settings</p>
-        <h1 className="t-title">Your trajectories</h1>
+        <h1 className="t-title">Your paths</h1>
         <p className="t-lede">Each pairs what you sell with who you sell to. Switching never changes progress in the others.</p>
       </div>
 
-      <section className="card mt-6 divide-y divide-hairline" aria-label="Saved trajectories">
-        {state.trajectories.length === 0 && <p className="t-body p-5 text-slate">No trajectories yet.</p>}
+      <section className="card mt-6 divide-y divide-hairline" aria-label="Saved paths">
+        {state.trajectories.length === 0 && <p className="t-body p-5 text-slate">No paths yet.</p>}
         {state.trajectories.map((trajectory) => {
           const isActive = trajectory.id === state.activeTrajectoryId;
           return (
@@ -34,7 +34,7 @@ export default function SettingsPage() {
                   {isActive && <span className="ml-2 rounded-full bg-profit-soft px-2 py-0.5 text-[12px] text-profit-ink">Active</span>}
                 </p>
                 <p className="t-small">
-                  {bossesPassed(trajectory)} of 4 pillars complete · {trajectory.sessions.length} sessions
+                  {bossesPassed(trajectory)} of 4 pillars complete · {plural(trajectory.sessions.length, 'session')}
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -47,7 +47,7 @@ export default function SettingsPage() {
                   type="button"
                   className="btn-quiet text-leak-ink"
                   onClick={() => {
-                    if (window.confirm(`Reset progress for ${trajectoryLabel(trajectory)}? Other trajectories are not affected.`)) {
+                    if (window.confirm(`Reset progress for ${trajectoryLabel(trajectory)}? Other paths are not affected.`)) {
                       update((current) => resetTrajectory(current, trajectory.id));
                     }
                   }}
@@ -61,14 +61,14 @@ export default function SettingsPage() {
       </section>
 
       <Link href="/start" className="btn-quiet mt-4 w-full">
-        <Plus className="h-4 w-4" aria-hidden="true" /> Add a trajectory
+        <Plus className="h-4 w-4" aria-hidden="true" /> Add a path
       </Link>
 
       <section className="card mt-6 flex flex-col gap-2 p-5">
         <h2 className="t-heading">Transferable MEDDPICC score</h2>
         <p className="t-body text-slate">
-          Your best verified score across all trajectories is <span className="font-bold text-ink">{state.globalCompetencies.meddpicc}%</span>. At{' '}
-          {CREDIT_THRESHOLD}% or higher, new trajectories give placement credit on the first drill.
+          Your best verified score across all paths is <span className="font-bold text-ink">{state.globalCompetencies.meddpicc}%</span>. At{' '}
+          {CREDIT_THRESHOLD}% or higher, new paths give placement credit on the first drill.
         </p>
       </section>
 

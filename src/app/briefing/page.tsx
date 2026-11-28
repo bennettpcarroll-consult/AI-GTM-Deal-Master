@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
@@ -42,9 +43,17 @@ export default function BriefingPage() {
       <FocusScreen
         top={<StepBar exitHref={card === 0 ? '/path' : undefined} onBack={card === 0 ? undefined : () => setCard(card - 1)} value={card} max={progressMax} label="Briefing progress" />}
         footer={
-          <button type="button" className="btn-lit" onClick={() => (last ? setStep('quiz') : setCard(card + 1))}>
-            {last ? 'Check what you learned' : 'Next'} <ArrowRight className="h-5 w-5" aria-hidden="true" />
-          </button>
+          <div className="flex flex-col items-center gap-2">
+            <button type="button" className="btn-lit w-full" onClick={() => (last ? setStep('quiz') : setCard(card + 1))}>
+              {last ? 'Check what you learned' : 'Next'} <ArrowRight className="h-5 w-5" aria-hidden="true" />
+            </button>
+            {/* Experienced sellers can go straight to the buyer. The briefing stays on the path for later. */}
+            {card === 0 && (
+              <Link href="/room/1/drill-1" className="t-small min-h-[44px] content-center font-semibold text-slate underline-offset-2 hover:text-ink hover:underline">
+                Skip to the buyer room
+              </Link>
+            )}
+          </div>
         }
       >
         <div key={card} className="animate-rise pt-6">

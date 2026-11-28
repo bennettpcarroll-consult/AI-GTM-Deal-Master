@@ -13,17 +13,24 @@
       "talk_track": {
         "move": "Translate the unit into cost per piece of the buyer’s work.",
         "strong": "At your volume, that is about this much per case and this much per month.",
-        "weak": "Here is our rate card per million tokens.",
+        "weak": "Pricing is per million tokens. I can share the rate card after this.",
         "proof": "Buyer restates the cost in workload terms"
       },
       "rep": {
         "buyer_line": "I do not understand how tokens turn into a monthly bill.",
-        "off_move": "It depends. Here is the full rate card so you can work it out.",
+        "off_move": "Most customers find it lands below their current spend, so I would not worry about it yet.",
         "replies": {
           "elite": "That I can take to finance. Per case is how we budget anyway.",
           "weak": "I cannot take a rate card to finance. I need it in terms of our work.",
-          "trap": "If I have to work it out myself, it will not get approved."
+          "trap": "Not worrying is how bills surprise us. I need it in terms finance can check."
         }
+      },
+      "curveball": {
+        "speaker": "CFO",
+        "line": "Usage pricing scares me. I cannot budget for a number that moves.",
+        "elite": "Then let us fix it: at your volume, here is the monthly cost, with a ceiling we both agree.",
+        "weak": "Most customers find it evens out over the year, so it is quite predictable.",
+        "trap": "We can switch you to a flat license instead. It costs more, but it is fixed."
       }
     },
     {
@@ -35,17 +42,24 @@
       "talk_track": {
         "move": "Bound the pilot: one workload, a pass bar, and a stop date.",
         "strong": "Four weeks, one workload, and we stop if accuracy is under 95 percent. Agreed?",
-        "weak": "Try it free for as long as you like and see.",
+        "weak": "Sure. We can start with a free pilot and expand scope as your team gets comfortable.",
         "proof": "Buyer agrees scope, exit criteria and an end date"
       },
       "rep": {
         "buyer_line": "Can we just pilot it for a while and see how it goes?",
-        "off_move": "Sure, take as long as you need. It is free.",
+        "off_move": "Let us pilot it across all three teams at once, so you see the full value quickly.",
         "replies": {
           "elite": "Agreed. A fixed end date makes it easier to get the team's time.",
-          "weak": "Open-ended pilots tend to drift here. We still have two running from last year.",
-          "trap": "Without an end date, this will sit behind everything else on the team's list."
+          "weak": "Open-ended pilots drift here. We still have two running from last year.",
+          "trap": "Three teams at once is a rollout, not a pilot. Nobody will own the result."
         }
+      },
+      "curveball": {
+        "speaker": "VP Engineering",
+        "line": "We want a three-month pilot across every use case before we commit.",
+        "elite": "Let us make it four weeks on the use case with the clearest number, with a pass bar agreed now.",
+        "weak": "Happy to support that. We can staff it so every team gets attention.",
+        "trap": "Sure. We will waive the fee so there is no risk on your side."
       }
     },
     {
@@ -57,18 +71,18 @@
       "talk_track": {
         "move": "Propose a commit below forecast and on-demand above it.",
         "strong": "Commit to 60 percent of the forecast and run the rest on demand until usage proves out.",
-        "weak": "Let us sign the biggest deal we can for the best discount.",
+        "weak": "If you sign for the full forecast upfront, I can get you our best discount.",
         "proof": "Buyer accepts a ramp schedule",
         "pin": "Can we ramp the commit in phases, so year-one volume matches real usage?",
         "settle": "Let us figure out the commit size later.",
-        "assume": "Let us lock the biggest commit we can for the best discount."
+        "assume": "Let us lock the biggest commit we can, so you get the best discount."
       },
       "rep": {
         "buyer_line": "Procurement will want to know exactly what we are signing up for in year one.",
-        "off_move": "Then you will pay full list price. The discount needs a big upfront deal.",
+        "off_move": "Most customers sign a three-year deal, so procurement gets price certainty.",
         "replies": {
           "weak": "I need the commit sized to what we will actually use, not to the discount.",
-          "trap": "That reads like pressure. I will not sign for volume we have not seen yet.",
+          "trap": "Three years on volume we have not seen yet is not certainty. It is risk.",
           "settle": "Later is how we end up overcommitted. I would rather size it now.",
           "assume": "We have been burned by that before. Shelfware is hard to explain."
         }
@@ -86,7 +100,14 @@
           "on[- ]demand.*(until|while|above|beyond)"
         ]
       },
-      "scenario_reveal": "ramp"
+      "scenario_reveal": "ramp",
+      "curveball": {
+        "speaker": "Procurement",
+        "line": "Give us your best price for a three-year, all-in commitment.",
+        "elite": "I can, but I would rather you start lower and step up as usage proves out. Here is that shape.",
+        "weak": "Here is the three-year number. It includes our biggest discount tier.",
+        "trap": "If you sign by Friday, I can add another ten percent off."
+      }
     },
     {
       "id": "usage_forecast",
@@ -97,7 +118,7 @@
       "talk_track": {
         "move": "Ask for today’s volume, next year’s growth and the peaks.",
         "strong": "How much volume do you handle a month today, and what do you expect next year?",
-        "weak": "Most customers your size use about this much.",
+        "weak": "Roughly what size is the team that would use this?",
         "proof": "Buyer supplies the volume numbers",
         "pin": "What does peak-season volume look like versus a normal month?",
         "settle": "Okay, lots of volume. Got it.",
@@ -105,10 +126,10 @@
       },
       "rep": {
         "buyer_line": "Before we talk price, you should know our volumes are not small.",
-        "off_move": "Great, I will assume about the same as our average customer.",
+        "off_move": "No problem. I will size it on our typical customer profile and we can true up later.",
         "replies": {
-          "weak": "I would not plan on an average. Our volume swings a lot through the year.",
-          "trap": "If you size this on a guess, the bill will surprise both of us.",
+          "weak": "Headcount will not tell you much. Our volume swings a lot through the year.",
+          "trap": "If you size this on a typical profile, the bill will surprise both of us.",
           "settle": "Lots is not a forecast. I can get you real numbers if you ask for them.",
           "assume": "We are not average. Our peaks would break that assumption."
         }
@@ -126,7 +147,14 @@
           "(peak|season|spike).*(volume|usage)"
         ]
       },
-      "scenario_reveal": "forecast"
+      "scenario_reveal": "forecast",
+      "curveball": {
+        "speaker": "CFO",
+        "line": "Last year's AI vendor bill came in at triple the estimate. Explain why you are different.",
+        "elite": "Only if we build the estimate together, from your monthly volume and your peaks. Can we do that now?",
+        "weak": "Our estimates are usually within ten percent, so that should not happen.",
+        "trap": "That vendor priced poorly. Our rates are much lower, so you are safe."
+      }
     },
     {
       "id": "adoption_plan",
@@ -137,17 +165,24 @@
       "talk_track": {
         "move": "Name the first users and their week-one use case.",
         "strong": "Who are the first 50 users, and what does week-one adoption look like for them?",
-        "weak": "Once you sign, you are all set.",
+        "weak": "Let me set up a refresher training session for the whole team.",
         "proof": "Buyer names users and a usage target"
       },
       "rep": {
         "buyer_line": "Usage is at 30 percent of what we forecast. What now?",
-        "off_move": "That is fine, the commit is already paid for.",
+        "off_move": "That is normal early on. Usage usually catches up by the second quarter.",
         "replies": {
           "elite": "The senior team leads would go first. Week one is a stretch, but we can name them.",
-          "weak": "Signing is not the problem. People are not using it.",
-          "trap": "Paid for and unused is exactly what I have to explain upstairs."
+          "weak": "Training everyone again will not fix it. People do not see why they should use it.",
+          "trap": "Waiting for it to catch up is what I have to explain upstairs."
         }
+      },
+      "curveball": {
+        "speaker": "COO",
+        "line": "We signed. Now my managers say their teams have no time to learn a new tool.",
+        "elite": "Then let us start with ten people whose week it saves most, and show the others their numbers.",
+        "weak": "We have great training content. I will share the full library with every manager.",
+        "trap": "Usage will grow once they see it. Most teams come around within a quarter."
       }
     },
     {
@@ -159,17 +194,24 @@
       "talk_track": {
         "move": "Trade a concession for scope, term or volume.",
         "strong": "If we discount, we narrow the scope, so the unit cost still works for both of us.",
-        "weak": "Sure, I can do 30 percent off.",
+        "weak": "Let me see what I can do. I can probably get approval for 15 percent.",
         "proof": "Buyer agrees a trade for any concession"
       },
       "rep": {
         "buyer_line": "Your price is 20 percent higher than the other vendor.",
-        "off_move": "No problem, I will match it.",
+        "off_move": "If that is what it takes, I will match their price to get this done.",
         "replies": {
           "elite": "That is reasonable. Show me the narrower scope and I will compare like for like.",
           "weak": "That was quick. It makes me wonder what the original price was based on.",
           "trap": "If you can match it that easily, I am not sure what I was paying for."
         }
+      },
+      "curveball": {
+        "speaker": "Procurement",
+        "line": "Take twenty percent off or we walk.",
+        "elite": "I can move on price if we move on something else. Would a longer term or narrower scope work?",
+        "weak": "Twenty is hard. Let me see if I can get you twelve.",
+        "trap": "Understood. I will get you the twenty so we can close this week."
       }
     }
   ]

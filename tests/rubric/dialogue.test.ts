@@ -31,7 +31,8 @@ function buyerLines(verticalId: VerticalId): string[] {
     const override = vertical.rep_overrides?.[skill.id];
     return [override?.buyer_line ?? skill.rep.buyer_line, ...Object.values(skill.rep.replies)];
   });
-  const reveals = Object.values(vertical.buyer_reveals).flatMap((reveal) => [reveal.setup, reveal.partial, reveal.verbatim]);
+  const tierReveals = Object.values(vertical.tier_overrides ?? {}).flatMap((override) => Object.values(override.buyer_reveals));
+  const reveals = [...Object.values(vertical.buyer_reveals), ...tierReveals].flatMap((reveal) => (reveal ? [reveal.setup, reveal.partial, reveal.verbatim] : []));
   const scenarios = CLUSTER_IDS.flatMap((clusterId) => {
     const { reveals: lines } = scenarioFor(curriculum, clusterId, verticalId).consumption_profile;
     return [lines.forecast.partial, lines.forecast.verbatim, lines.ramp.partial, lines.ramp.verbatim];
@@ -64,7 +65,7 @@ const sellerWords = new Set(
 function accountTerms(clusterId: ClusterId, verticalId: VerticalId): Set<string> {
   const vertical = curriculum.verticals[verticalId];
   const scenario = scenarioFor(curriculum, clusterId, verticalId);
-  const corpus = JSON.stringify([vertical.buyer_reveals, vertical.signature_objections, vertical.rep_overrides ?? {}, vertical.talk_tracks, scenario.consumption_profile, scenario.workload]);
+  const corpus = JSON.stringify([vertical.buyer_reveals, vertical.signature_objections, vertical.rep_overrides ?? {}, vertical.talk_tracks, vertical.tier_overrides ?? {}, scenario.consumption_profile, scenario.workload]);
   return new Set(words(corpus).filter((word) => !sellerWords.has(word) && !COMMON.has(word)));
 }
 const known = (context: Set<string>, word: string) => [...context].some((seen) => seen.startsWith(word.slice(0, Math.min(5, word.length))));

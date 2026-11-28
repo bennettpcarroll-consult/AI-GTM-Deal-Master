@@ -166,6 +166,80 @@
     },
     "answer_first": {
       "strong": "My recommendation: start with the litigation group on fixed-fee review. Three reasons."
+    },
+    "identify_pain": {
+      "strong": "What do write-offs on fixed-fee matters cost the firm each quarter?"
+    },
+    "champion": {
+      "strong": "If I am not in the room, how would you make the case to the Managing Partner?"
+    }
+  },
+  "tier_overrides": {
+    "3": {
+      "buyer_reveals": {
+        "paper_process": {
+          "speaker": "General Counsel",
+          "setup": "The pilot ran on internal know-how only. Loading live client matters means a new security review.",
+          "partial": "Security can open it early. Live matters also need ethical walls tested for every practice group.",
+          "verbatim": "Six weeks for the security review and the wall testing together. Start now and the next practice group is live this quarter."
+        },
+        "decision_process": {
+          "speaker": "Managing Partner",
+          "setup": "Litigation is live on it. Now corporate and real estate want in, and each group decides differently.",
+          "partial": "Each practice group head has a say, and the risk committee reviews the walls. Nobody has set the order.",
+          "verbatim": "The risk committee clears the walls, then each practice group head signs, then I confirm at the partners' meeting. About a month per group."
+        },
+        "economic_buyer": {
+          "speaker": "Managing Partner",
+          "setup": "Three practice groups is a bigger number than the pilot line I approved.",
+          "partial": "Each group has its own technology allocation. A firm-wide license is a different conversation.",
+          "verbatim": "Each group funds its own usage from its allocation. A firm-wide license needs the executive committee's approval, and I chair it."
+        },
+        "competition": {
+          "speaker": "Managing Partner",
+          "setup": "Our document platform vendor just bundled a similar tool into our renewal.",
+          "partial": "The bundle is nearly free. Our knowledge team also thinks they could rebuild your prompts on it.",
+          "verbatim": "We would compare you against the bundled tool and our own rebuild. You win only if realization holds and the walls stay clean."
+        },
+        "metrics": {
+          "speaker": "Innovation Partner",
+          "setup": "The partners will not sign a bigger commit on litigation results alone.",
+          "partial": "Litigation saw fewer write-offs. Corporate partners care more about turnaround on first drafts.",
+          "verbatim": "First-draft turnaround down by half in corporate within two quarters, with write-offs held where litigation got them."
+        },
+        "identify_pain": {
+          "speaker": "Managing Partner",
+          "setup": "Associates outside litigation have barely touched the tool since launch.",
+          "partial": "They use it for research but still draft from old precedents by hand. So the hours did not move.",
+          "verbatim": "We pay for the license and still write off the same drafting hours. The partners see two costs for one piece of work."
+        }
+      },
+      "talk_tracks": {
+        "paper_process": {
+          "open": "Can security start reviewing live matters now, in parallel with the pilot?",
+          "pin": "How long does the security review take once the walls are tested for every practice group?"
+        },
+        "decision_process": {
+          "open": "For corporate and real estate, what are the steps from one live group to three?",
+          "pin": "Who else needs to approve after the risk committee and the group heads? Walk me through the approval path."
+        },
+        "economic_buyer": {
+          "open": "Across three practice groups, whose budget does this come out of?",
+          "pin": "Who signs for a firm-wide license, and who has the final say across the groups?"
+        },
+        "competition": {
+          "open": "Would you go with the bundled tool from your vendor, or do nothing?",
+          "pin": "What are you comparing us against: the bundled tool, or a rebuild by your knowledge team?"
+        },
+        "metrics": {
+          "open": "Which number must hold beyond litigation before the partners sign anything bigger?",
+          "pin": "How much do you need to cut first-draft turnaround in corporate, and by when?"
+        },
+        "identify_pain": {
+          "open": "What does it cost you when associates barely touch the tool?",
+          "pin": "What happens if you do nothing and associates keep drafting from old precedents?"
+        }
+      }
     }
   }
 }

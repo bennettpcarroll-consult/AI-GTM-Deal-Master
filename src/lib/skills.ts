@@ -89,11 +89,24 @@ export function familyOf(curriculum: Curriculum, skillId: string): string {
   return curriculum.families.find((family) => family.skills.some((skill) => skill.id === skillId))?.id ?? '';
 }
 
+export type RepKind = 'elite' | 'weak' | 'trap';
+
 export interface RepQuestion {
   skill: Skill;
   prompt: string;
   options: string[];
   answer: number;
+  /** The move behind each option, so a miss can cost the buyer's trust. */
+  kinds: RepKind[];
+  /** Who says the prompt. Curveballs come from a named executive. */
+  speaker?: string;
+}
+
+/** Buyer trust lost by a weak or trap reply in a rep. A trap costs more: it is a red flag, not a missed chance. */
+export const REP_TRUST_COST: Record<RepKind, number> = { elite: 0, weak: 10, trap: 25 };
+
+function order3(seed: string, id: string): number[] {
+  return [0, 1, 2].sort((a, b) => hash(`${seed}:${id}:${a}`) - hash(`${seed}:${id}:${b}`));
 }
 
 /** Small deterministic hash so the same seed always shuffles the same way. */
@@ -109,12 +122,33 @@ function hash(text: string): number {
 /** One quick rep: the buyer's line and three replies, only one of them strong. */
 export function buildRep(skill: Skill, seed: string): RepQuestion {
   const replies = [skill.talk_track.strong, skill.talk_track.weak, skill.rep.off_move];
-  const order = [0, 1, 2].sort((a, b) => hash(`${seed}:${skill.id}:${a}`) - hash(`${seed}:${skill.id}:${b}`));
+  const order = order3(seed, skill.id);
+  const kinds: RepKind[] = ['elite', 'weak', 'trap'];
   return {
     skill,
     prompt: skill.rep.buyer_line,
     options: order.map((index) => replies[index] as string),
-    answer: order.indexOf(0)
+    answer: order.indexOf(0),
+    kinds: order.map((index) => kinds[index]!)
+  };
+}
+
+/**
+ * One executive curveball: a situation no drill plays, so reps never repeat a deal-room line.
+ * The copy is written to hold on every path, so no vertical's facts leak into another.
+ */
+export function buildCurveball(skill: Skill, seed: string): RepQuestion {
+  const { speaker, line, elite, weak, trap } = skill.curveball;
+  const replies = [elite, weak, trap];
+  const kinds: RepKind[] = ['elite', 'weak', 'trap'];
+  const order = order3(seed, skill.id);
+  return {
+    skill,
+    speaker,
+    prompt: line,
+    options: order.map((index) => replies[index]!),
+    answer: order.indexOf(0),
+    kinds: order.map((index) => kinds[index]!)
   };
 }
 
@@ -126,13 +160,13 @@ export function diagnosticQuestions(curriculum: Curriculum): RepQuestion[] {
   });
 }
 
-/** Today's reps: the weakest skills first, rotated by day so the set changes daily. */
+/** Today's reps: executive curveballs on the weakest skills first, rotated by day so the set changes daily. */
 export function dailyReps(curriculum: Curriculum, mastery: Record<string, Mastery>, day: string, count = 5): RepQuestion[] {
   const ranked = [...curriculum.skills].sort((a, b) => {
     const byMastery = (mastery[a.id] ?? 1) - (mastery[b.id] ?? 1);
     return byMastery !== 0 ? byMastery : hash(`${day}:${a.id}`) - hash(`${day}:${b.id}`);
   });
-  return ranked.slice(0, count).map((skill) => buildRep(skill, day));
+  return ranked.slice(0, count).map((skill) => buildCurveball(skill, day));
 }
 
 /** Family score for the diagnostic result: correct answers out of the family's items. */

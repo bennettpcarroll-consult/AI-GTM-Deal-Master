@@ -2,7 +2,7 @@
   "id": "compute_infra__insurance",
   "cluster_id": "compute_infra",
   "vertical_id": "insurance",
-  "situation": "A Insurance (Underwriting & Claims) account is evaluating Compute & Cloud Infra for claims document processing. It would pay through reserved GPU capacity. Combined-ratio pressure makes every change look expensive, and every denial must be explainable to a regulator.",
+  "situation": "An Insurance (Underwriting & Claims) account is evaluating Compute & Cloud Infra for claims document processing. It would pay through reserved GPU capacity. Combined-ratio pressure makes every change look expensive, and every denial must be explainable to a regulator.",
   "workload": "claims document processing",
   "consumption_profile": {
     "unit": "GPU hours",
