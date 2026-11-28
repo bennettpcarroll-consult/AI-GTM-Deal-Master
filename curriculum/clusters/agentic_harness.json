@@ -10,6 +10,11 @@
     "Braintrust",
     "MuleSoft Agent Fabric"
   ],
+  "card_vendors": [
+    "LangChain",
+    "Arize",
+    "Braintrust"
+  ],
   "pricing_unit": {
     "model": "Product-led seats that grow into hybrid VPC deployments, plus compute and trace units",
     "units": [
